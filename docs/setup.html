@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Bookdown Setup | DEQ R Methods Encyclopedia</title>
+  <meta name="description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Bookdown Setup | DEQ R Methods Encyclopedia" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  <meta name="github-repo" content="openscapes/series" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Bookdown Setup | DEQ R Methods Encyclopedia" />
+  
+  <meta name="twitter:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  
+
+<meta name="author" content="DEQ R Development Team" />
+
+
+<meta name="date" content="2022-03-01" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="queryInternalDataSources.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="lib/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/style.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/lesson.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DEQ R Methods Encyclopedia</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#want-to-contribute"><i class="fa fa-check"></i><b>1.1</b> Want to Contribute?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="setup.html"><a href="setup.html"><i class="fa fa-check"></i><b>2</b> Bookdown Setup</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="setup.html"><a href="setup.html#get-bookdown-tutorial-going-on-your-local-computer"><i class="fa fa-check"></i><b>2.1</b> Get “bookdown-tutorial” going on your local computer</a></li>
+<li class="chapter" data-level="2.2" data-path="setup.html"><a href="setup.html#create-your-awesome-book-github-repo"><i class="fa fa-check"></i><b>2.2</b> Create your “awesome-book” GitHub repo</a></li>
+<li class="chapter" data-level="2.3" data-path="setup.html"><a href="setup.html#turn-bookdown-tutorial-into-awesome-book"><i class="fa fa-check"></i><b>2.3</b> Turn “bookdown-tutorial” into “awesome-book”</a></li>
+<li class="chapter" data-level="2.4" data-path="setup.html"><a href="setup.html#publish-awesome-book"><i class="fa fa-check"></i><b>2.4</b> Publish “awesome-book”</a></li>
+<li class="chapter" data-level="2.5" data-path="setup.html"><a href="setup.html#moving-forward"><i class="fa fa-check"></i><b>2.5</b> Moving forward</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="queryInternalDataSources.html"><a href="queryInternalDataSources.html"><i class="fa fa-check"></i><b>3</b> Query Internal Data Sources</a></li>
+<li class="chapter" data-level="4" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>4</b> Spatial Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html#spatialDataFromTabularData"><i class="fa fa-check"></i><b>4.1</b> Spatial Data from Tabular Data</a></li>
+<li class="chapter" data-level="4.2" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html#interactiveMapping"><i class="fa fa-check"></i><b>4.2</b> Interactive Mapping</a></li>
+<li class="chapter" data-level="4.3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html#watershed-delineation"><i class="fa fa-check"></i><b>4.3</b> Watershed Delineation</a></li>
+<li class="chapter" data-level="4.4" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html#landcover-analysis"><i class="fa fa-check"></i><b>4.4</b> Landcover analysis</a></li>
+<li class="chapter" data-level="4.5" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html#spatial-joins"><i class="fa fa-check"></i><b>4.5</b> Spatial joins</a></li>
+<li class="chapter" data-level="4.6" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html#converting-tabular-data-to-spatial-data"><i class="fa fa-check"></i><b>4.6</b> Converting tabular data to spatial data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html"><i class="fa fa-check"></i><b>5</b> Shiny App Pro Tips</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html#shiny-file-organization"><i class="fa fa-check"></i><b>5.1</b> Shiny file organization</a></li>
+<li class="chapter" data-level="5.2" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html#shiny-tricks"><i class="fa fa-check"></i><b>5.2</b> Shiny Tricks</a></li>
+<li class="chapter" data-level="5.3" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html#markdown-and-user-friendly-output-files"><i class="fa fa-check"></i><b>5.3</b> Markdown and User-Friendly Output Files</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="miscTips.html"><a href="miscTips.html"><i class="fa fa-check"></i><b>6</b> Miscellaeous Tips and Tricks</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="miscTips.html"><a href="miscTips.html#regular-expression-and-pattern-matching"><i class="fa fa-check"></i><b>6.1</b> Regular expression and pattern matching</a></li>
+<li class="chapter" data-level="6.2" data-path="miscTips.html"><a href="miscTips.html#non-standard-evaluation"><i class="fa fa-check"></i><b>6.2</b> Non standard evaluation</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DEQ R Methods Encyclopedia</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="setup" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Bookdown Setup</h1>
+<p>The <code>bookdown</code> package and <a href="https://bookdown.org/yihui/bookdown/get-started.html">book</a> is definitely the best way to get started. However, in practice I always find myself copying an existing, working book and modifying it instead of starting from scratch. So this tutorial is going to have you do that as well, using this book as the one you copy from.</p>
+<p>[more setup here]</p>
+<p>You will have to name your book’s repository. To differentiate your book’s repo name from this “bookdown-tutorial” repo, here we’ll call your book “awesome-book” <em>but you should consistently name it what you want to name it</em>.</p>
+<div id="get-bookdown-tutorial-going-on-your-local-computer" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Get “bookdown-tutorial” going on your local computer</h2>
+<ol style="list-style-type: decimal">
+<li>Go to <a href="https://github.com/jules32/bookdown-tutorial" class="uri">https://github.com/jules32/bookdown-tutorial</a></li>
+<li>Click the green “clone or download” button and DOWNLOAD ZIP.</li>
+<li>Locally on your computer, unzip the folder, save it in a reasonable place</li>
+<li>Rename 2 things from “bookdown-tutorial” to “awesome-book.” You can do this in the finder/windows explorer:</li>
+</ol>
+<ul>
+<li>the folder itself (that you just unzipped)</li>
+<li>the .Rproj file</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>Double-click the .Rproj file to launch RStudio</li>
+<li>Install packages and restart</li>
+</ol>
+<ul>
+<li><code>install.packages("bookdown")</code><br />
+</li>
+<li><code>install.packages("usethis")</code><br />
+</li>
+<li>Use the menu item Session &gt; Restart R<br />
+</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>Click on the Build tab in the top right pane</li>
+<li>Click on Build Book!</li>
+</ol>
+<p>Nice job! Now let’s make it yours, and connect it to GitHub.</p>
+</div>
+<div id="create-your-awesome-book-github-repo" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Create your “awesome-book” GitHub repo</h2>
+<ol style="list-style-type: decimal">
+<li>Go to your GitHub account: github.com/username</li>
+<li>Click on Repositories, and the green button “New” to create a new repo</li>
+<li>Name this new repo “awesome-book”</li>
+<li>DO NOT initialize this repo with a README</li>
+<li>Click the green “create repository” button — this will take you to your new repo</li>
+<li>Click the tiny “clone or download” button near the top and COPY URL</li>
+</ol>
+</div>
+<div id="turn-bookdown-tutorial-into-awesome-book" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Turn “bookdown-tutorial” into “awesome-book”</h2>
+<p><em>The following is from Jenny Bryan’s <a href="https://happygitwithr.com/existing-github-last.html">Happy Git With R</a></em></p>
+<ol style="list-style-type: decimal">
+<li>Go back to RStudio, to your “awesome-book” project</li>
+<li>In the Console, type <code>usethis::use_git()</code> and say Yes to the two prompts. This will restart R and give you a new Git tab in the upper right pane.</li>
+<li>Now, click on the Terminal tab next to the Console tab.</li>
+<li>Type <code>git remote add origin &lt;paste your copied awesome-book github url here&gt;</code></li>
+<li>Type <code>git push --set-upstream origin master</code></li>
+</ol>
+</div>
+<div id="publish-awesome-book" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Publish “awesome-book”</h2>
+<p>Last steps!</p>
+<ol style="list-style-type: decimal">
+<li>Go back to github.com/username/“awesome-book” and refresh — our files should be there! But we want it to be a book published as <a href="https://username.github.io/awesome-book" class="uri">https://username.github.io/awesome-book</a>.</li>
+<li>Click Settings</li>
+<li>Scroll down to GitHub Settings</li>
+<li>Change the Source pulldown from “None” to “master branch /docs folder”</li>
+<li>It should say “Your site is ready to be published at <a href="https://username.github.io/awesome-book/" class="uri">https://username.github.io/awesome-book/</a>” — click the link to see!</li>
+</ol>
+<p>Now, you’re set — you just need to write your book.</p>
+</div>
+<div id="moving-forward" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Moving forward</h2>
+<p>As you write your .Rmd files, build the book and commit all files, including the docs/ folder, and your published book will be updated!</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="queryInternalDataSources.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["series.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

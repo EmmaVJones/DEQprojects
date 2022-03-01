@@ -1,0 +1,31 @@
+# Shiny App Pro Tips{#shinyAppHelp}
+
+[Shiny apps](https://shiny.rstudio.com/) are interactive web based applications built in R to increase accessibility to analytical tools, workflows, and visualizations to non-R users. DEQ relies on these tools (hosted on the [internal Connect platform](https://rconnect.deq.virginia.gov/connect/)) to extend data querying, manipulation, analysis, visualization, and reporting techniques to all staff, regardless of programming experience. Complicated workflows can be programmed in R using the shiny package to develop an easy to use front end interface, all in the R language. 
+
+Shiny apps are easy to build. Many tutorials are available, but the best starting point is to follow the [shiny tutorial](https://shiny.rstudio.com/tutorial/) by RStudio. More advanced shiny techniques employed regularly by DEQ staff to improve application responsiveness, user experience, or back end development are outlined below.
+
+
+
+Coming soon: 
+
+* Shiny file organization - Using functions and modules to improve code organization, how to integrate nested modules without namespace issues
+* Shiny Tricks:
+    + Using HTML to help reset a complex UI
+    + How to integrate tool-tip HTML without calling new packages
+    + Escaping characters in user inputs
+* Markdown and User-Friendly Output Files:
+    + readxlsx tips for formatting excel outputs
+    + Markdown files with "child' sub-markdown files
+    + Markdown tips in general for TinyTex and HTML
+
+## Shiny file organization
+
+Coming Soon!
+
+## Shiny Tricks
+
+Coming Soon!
+
+## Markdown and User-Friendly Output Files
+
+Coming Soon!

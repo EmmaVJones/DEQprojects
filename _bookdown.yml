@@ -1,0 +1,13 @@
+book_filename: "series"
+language:
+  ui:
+    chapter_name: "Chapter "
+rmd_files: [
+  "index.Rmd",
+  #"setup.Rmd",
+  "queryInternalDataSources.Rmd",
+  "spatialAnalysis.Rmd",
+  "shinyAppHelp.Rmd",
+  "miscTips.Rmd"]
+delete_merged_file: true 
+output_dir: "docs"

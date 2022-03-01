@@ -1,0 +1,188 @@
+---
+title: "Watershed Delineation"
+author: "Emma Jones"
+date: "3/1/2022"
+output: html_document
+runtime: shiny
+---
+
+First, load in the necessary packages and functions to complete this task. 
+
+```{r watershedDelineation setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# for later download
+myScriptPath<-'./functions/StreamStatsAutoDelineation.R'
+
+# saved data for faster rendering
+# saveRDS(multistationDelineation, 'data/multistationDelineation.RDS')
+# saveRDS(stationDelineation, 'data/stationDelineation.RDS')
+multistationDelineation <- readRDS('data/multistationDelineation.RDS')
+stationDelineation <- readRDS('data/stationDelineation.RDS')
+```
+
+```{r libraries, message=FALSE, warning=FALSE}
+library(tidyverse) # for tidy data manipulation
+library(sf) # for spatial analysis
+library(leaflet) # for interactive mapping
+library(inlmisc) # for interactive mapping on top of leaflet
+
+source('../functions/StreamStatsAutoDelineation.R') # for custom web scraping tool to hit USGS StreamStats API
+
+```
+
+
+```{r downloadScript}
+ downloadHandler(
+    filename = function(){
+      "RFileDownload.R"},
+    content = function(file) {
+      x<-read_file(myScriptPath)
+      write_file(x,file)
+    }
+  )
+```
+
+
+
+Create an example dataset of stations that we want to delineate. Note: we are using the tibble::tribble() function to define a tibble row by row, which makes for easy visualization of test datasets. This is just one of many ways to create a [tibble](https://tibble.tidyverse.org/).
+
+```{r example data}
+exampleSites <-  tribble(
+  ~StationID, ~Latitude,  ~Longitude,
+  "Station_1", 37.812840, -80.063946,
+  "Station_2", 37.782322, -79.961449,
+  "Station_3", 37.801644, -79.968441)
+
+exampleSites
+```
+
+
+The above dataset is simply tabular data. One could use a spatial dataset for this task by stripping out the coordinate information from the geometry listcolumn. See [Spatial Data from Tabular Data](#spatialDataFromTabularData) for more information on this topic.
+
+### Single Station Delineation 
+
+Next let's use USGS's automated delineation tools to delineate single station. We will first select only one site from our `exampleSites` object we created in the previous step and name it `stationToDelineate`. Then, we will feed our streamStats_Delineation() function (called into our environment when we sourced the 'StreamStatsAutoDelineation.R' script) the necessary location information (state, longitude, and latitude arguments). The state argument tells StreamStats which state NHD we want to use for delineation, "VA" (Virginia) for our example. Lastly, the UID argument is the unique identifier we wish to associate with the spatial information we pull back from StreamStats. If we do not provide this information, we will not know which watersheds belong to which sites as we start to batch process these jobs.
+
+```{r delineate single station, eval=FALSE}
+stationToDelineate <- filter(exampleSites, StationID == 'Station_1')
+
+stationDelineation <- streamStats_Delineation(state= 'VA',
+                                     longitude = stationToDelineate$Longitude, 
+                                     latitude = stationToDelineate$Latitude, 
+                                     UID = stationToDelineate$StationID)
+```
+
+The information returned from StreamStats is a list object containing point information (the location we supplied to delineate from) and polygon information (the resultant upstream shape returned from the pour point). We can easily unpack this information into easily used objects using the script below.
+
+```{r unpack single station}
+stationDelineationWatershed <- stationDelineation$polygon %>%
+  reduce(rbind) %>%
+  arrange(UID)
+stationDelineationPoint <- stationDelineation$point %>%
+  reduce(rbind) %>%
+  arrange(UID)
+```
+
+We can plot the results quickly to verify the desired watershed was returned. StreamStats returns a watershed for the input coordinates to the best of its ability; however, the accuracy of the coordinates, datum, projection, etc. can influence the accuracy of the returned watershed. It is best practice to always review the returned watershed. Below is a minimal example of how to do this in R with an interactive map. Note: you can switch basemaps to the USGS Hydrography layer for further information using the layers button in the top left corner.
+
+The following interactive map is created with the [inlmisc package](https://github.com/USGS-R/inlmisc), see the package author's article for a [detailed tutorial](https://waterdata.usgs.gov/blog/inlmiscmaps/). The [interactive mapping](#interactiveMapping) section covers some basics with [leaflet](https://rstudio.github.io/leaflet/).  
+
+```{r review single watershed}
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+    addPolygons(data= stationDelineationWatershed,  color = 'black', weight = 1,
+                  fillColor='blue', fillOpacity = 0.4,stroke=0.1,
+                  group="Watershed",
+                  popup=leafpop::popupTable(stationDelineationWatershed, zcol=c('UID'))) %>%
+    addCircleMarkers(data = stationDelineationPoint, color='orange', fillColor='black', radius = 5,
+                     fillOpacity = 1, opacity=1,weight = 1,stroke=T, group="Station",
+                     label = ~UID,
+                     popup=leafpop::popupTable(stationDelineationPoint)) %>%
+    addLayersControl(baseGroups=c("Topo","Imagery","Hydrography"),
+                       overlayGroups = c('Station','Watershed'),
+                       options=layersControlOptions(collapsed=T),
+                       position='topleft')
+
+```
+
+### Multiple Station Delineation 
+
+Using the dataset created above (`exampleSites`), we will now batch process the sites to StreamStats for an efficient data workflow. Remember, you are hitting the USGS API repeatedly, so there can be losses in connectivity resulting in missed watersheds. We will overview the QA process after we receive the watershed information back from USGS. 
+
+
+```{r delineate multiple stations, eval=FALSE}
+multistationDelineation <- streamStats_Delineation(state= 'VA',
+                                                   longitude = exampleSites$Longitude, 
+                                                   latitude = exampleSites$Latitude, 
+                                                   UID = exampleSites$StationID)
+```
+
+The information returned from StreamStats is a list object containing point information (the location we supplied to delineate from) and polygon information (the resultant upstream shape returned from the pour point). We can easily unpack this information into easily used objects using the script below.
+
+```{r unpack multistation}
+watersheds <- multistationDelineation$polygon %>%
+  reduce(rbind) %>%
+  arrange(UID)
+points <- multistationDelineation$point %>%
+  reduce(rbind) %>%
+  arrange(UID)
+```
+
+
+The next chunk overviews how to efficiently check to make sure all the desired sites were in fact delineated. If there are missing sites, the script will run back out to StreamStats to get anyone that is missing and smash that into the original dataset. 
+    
+```{r fix missing sites (rerun as necessary)}
+# fix anything that is missing
+if(nrow(points) != nrow(watersheds) | nrow(exampleSites) != nrow(watersheds)){
+  missing <- unique(
+    c(as.character(points$UID[!(points$UID %in% watersheds$UID)]),
+      as.character(exampleSites$StationID[!(exampleSites$StationID %in% watersheds$UID)])))
+  missingDat <- filter(exampleSites, StationID %in% missing)
+  
+  #remove missing site from the paired dataset
+  points <- filter(points, ! UID %in% missing)
+  watersheds <- filter(watersheds, ! UID %in% missing)
+  
+  dat <- streamStats_Delineation(state= 'VA', 
+                                 longitude = missingDat$Long, 
+                                 latitude = missingDat$Lat, 
+                                 UID = missingDat$StationID)
+  
+  watersheds_missing <- dat$polygon %>%
+    reduce(rbind)
+  
+  points_missing <- dat$point %>%
+    reduce(rbind)
+  
+  watersheds <- rbind(watersheds, watersheds_missing) %>%
+    arrange(UID)
+  
+  points <- rbind(points, points_missing) %>%
+    arrange(UID)
+  
+  rm(missingDat); rm(dat); rm(watersheds_missing); rm(points_missing)
+}
+
+```
+    
+Now let's map our results to ensure StreamStats delineated the correct watersheds.
+
+```{r review multiwatershed}
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+    addPolygons(data= watersheds,  color = 'black', weight = 1,
+                  fillColor='blue', fillOpacity = 0.4,stroke=0.1,
+                  group="Watershed",
+                  popup=leafpop::popupTable(watersheds, zcol=c('UID'))) %>%
+    addCircleMarkers(data = points, color='orange', fillColor='black', radius = 5,
+                     fillOpacity = 1, opacity=1,weight = 1,stroke=T, group="Station",
+                     label = ~UID,
+                     popup=leafpop::popupTable(points)) %>%
+    addLayersControl(baseGroups=c("Topo","Imagery","Hydrography"),
+                       overlayGroups = c('Station','Watershed'),
+                       options=layersControlOptions(collapsed=T),
+                       position='topleft')
+```
+    
+### QA
+
+Should any of the returned watersheds prove incorrect based on visual analysis, you must remove that watershed from your dataset, manually delineate the watershed using [StreamStats](https://streamstats.usgs.gov/ss/), and include that new watershed into your polygon dataset. See the [Using Spatial Datasets](#usingSpatialDatasets) section for example workflows.

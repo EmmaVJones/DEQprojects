@@ -1,0 +1,6 @@
+# Miscellaeous Tips and Tricks {#miscTips}
+
+
+## Regular expression and pattern matching 
+
+## Non standard evaluation

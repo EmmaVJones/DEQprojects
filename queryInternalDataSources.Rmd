@@ -1,0 +1,11 @@
+# Query Internal Data Sources{#queryInternalDataSources}
+
+Coming soon: 
+
+- Connecting to ODS locally
+- Connecting to R Connect (for pinned data)
+- Querying ODS from R
+- Common WQM queries
+- Common WQA queries
+- Common TMDL queries
+- etc.

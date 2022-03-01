@@ -1,0 +1,41 @@
+# Spatial Analysis {#spatialAnalysis}
+
+```{r spatialAnalysis setup, include=FALSE}
+```
+
+
+Coming soon: 
+
+## Spatial Data from Tabular Data{#spatialDataFromTabularData}
+
+Coming Soon!
+
+## Using Spatial Datasets{#usingSpatialDatasets}
+
+Coming Soon!
+
+## Interactive Mapping{#interactiveMapping}
+
+with leaflet. Coming soon!
+
+## Watershed Delineation 
+
+This module overviews the basics of delineating watersheds directly in your local R environment by scraping [USGS's StreamStats](https://www.usgs.gov/mission-areas/water-resources/science/streamstats-streamflow-statistics-and-spatial-analysis-tools) API. General web scraping techniques are beyond the scope of this module, but the basics can be gleaned by unpacking the referenced functions.
+
+All watersheds delineated using this technique use USGS's StreamStats delineation techniques from a 1:24k NHD. You may manually explore the tool [here](https://streamstats.usgs.gov/ss/).
+
+
+```{r child = 'subchapters/watershedDelineation.Rmd'}
+```
+
+## Landcover analysis
+
+Coming Soon
+
+## Spatial joins
+
+Coming Soon
+
+## Converting tabular data to spatial data
+
+Coming Soon
