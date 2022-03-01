@@ -19,4 +19,3 @@ markdown-and-user-friendly-output-files
 miscTips
 regular-expression-and-pattern-matching
 non-standard-evaluation
-output-bookdowngitbook

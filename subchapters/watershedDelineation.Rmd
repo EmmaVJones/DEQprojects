@@ -3,7 +3,6 @@ title: "Watershed Delineation"
 author: "Emma Jones"
 date: "3/1/2022"
 output: html_document
-runtime: shiny
 ---
 
 First, load in the necessary packages and functions to complete this task. 
@@ -11,14 +10,11 @@ First, load in the necessary packages and functions to complete this task.
 ```{r watershedDelineation setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# for later download
-myScriptPath<-'./functions/StreamStatsAutoDelineation.R'
-
 # saved data for faster rendering
 # saveRDS(multistationDelineation, 'data/multistationDelineation.RDS')
 # saveRDS(stationDelineation, 'data/stationDelineation.RDS')
-multistationDelineation <- readRDS('data/multistationDelineation.RDS')
-stationDelineation <- readRDS('data/stationDelineation.RDS')
+multistationDelineation <- readRDS('../data/multistationDelineation.RDS')
+stationDelineation <- readRDS('../data/stationDelineation.RDS')
 ```
 
 ```{r libraries, message=FALSE, warning=FALSE}
@@ -26,24 +22,13 @@ library(tidyverse) # for tidy data manipulation
 library(sf) # for spatial analysis
 library(leaflet) # for interactive mapping
 library(inlmisc) # for interactive mapping on top of leaflet
-
-source('../functions/StreamStatsAutoDelineation.R') # for custom web scraping tool to hit USGS StreamStats API
-
 ```
 
+You will also need to use a custom function built for scraping the StreamStats API. This function is contained in the sourced script [StreamStatsAutoDelineation.R](https://github.com/EmmaVJones/DEQprojects/blob/main/functions/StreamStatsAutoDelineation.R) which be downloaded for sourcing locally in your environment.
 
-```{r downloadScript}
- downloadHandler(
-    filename = function(){
-      "RFileDownload.R"},
-    content = function(file) {
-      x<-read_file(myScriptPath)
-      write_file(x,file)
-    }
-  )
+```{r sourcedScript, eval = F} 
+source('StreamStatsAutoDelineation.R') # for custom web scraping tool to hit USGS StreamStats API
 ```
-
-
 
 Create an example dataset of stations that we want to delineate. Note: we are using the tibble::tribble() function to define a tibble row by row, which makes for easy visualization of test datasets. This is just one of many ways to create a [tibble](https://tibble.tidyverse.org/).
 

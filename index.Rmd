@@ -11,7 +11,6 @@ link-citations: yes
 github-repo: openscapes/series
 description: "Simple reprex of common tasks DEQ staff encounter and how to complete them with R."
 split_by: "section"
-edit : FALSE
 ---
 
 # Background
