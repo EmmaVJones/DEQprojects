@@ -24,14 +24,14 @@
 <meta name="author" content="DEQ R Development Team" />
 
 
-<meta name="date" content="2022-03-01" />
+<meta name="date" content="2022-03-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="queryInternalDataSources.html"/>
+<link rel="prev" href="commonTMDLqueries.html"/>
 <link rel="next" href="spatialDataFromTabularData.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -52,6 +52,13 @@
 
 
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -147,7 +154,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="1.1" data-path="want-to-contribute.html"><a href="want-to-contribute.html"><i class="fa fa-check"></i><b>1.1</b> Want to Contribute?</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="queryInternalDataSources.html"><a href="queryInternalDataSources.html"><i class="fa fa-check"></i><b>2</b> Query Internal Data Sources</a></li>
+<li class="chapter" data-level="2" data-path="queryInternalDataSources.html"><a href="queryInternalDataSources.html"><i class="fa fa-check"></i><b>2</b> Query Internal Data Sources</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html"><i class="fa fa-check"></i><b>2.1</b> Connecting to R Connect (for Pinned Data)</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#api-keys"><i class="fa fa-check"></i><b>2.1.1</b> API Keys</a></li>
+<li class="chapter" data-level="2.1.2" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#connect-to-the-r-server"><i class="fa fa-check"></i><b>2.1.2</b> Connect to the R server</a></li>
+<li class="chapter" data-level="2.1.3" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#browse-available-pins"><i class="fa fa-check"></i><b>2.1.3</b> Browse Available Pins</a></li>
+<li class="chapter" data-level="2.1.4" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#access-a-pin"><i class="fa fa-check"></i><b>2.1.4</b> Access a Pin</a></li>
+<li class="chapter" data-level="2.1.5" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#query-some-of-a-pin"><i class="fa fa-check"></i><b>2.1.5</b> Query (some of) a Pin</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="connectToODS.html"><a href="connectToODS.html"><i class="fa fa-check"></i><b>2.2</b> Connect to ODS</a></li>
+<li class="chapter" data-level="2.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html"><i class="fa fa-check"></i><b>2.3</b> Querying Data from ODS</a></li>
+<li class="chapter" data-level="2.4" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html"><i class="fa fa-check"></i><b>2.4</b> Common WQM queries</a></li>
+<li class="chapter" data-level="2.5" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common WQA queries</a></li>
+<li class="chapter" data-level="2.6" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common TMDL queries</a></li>
+</ul></li>
 <li class="chapter" data-level="3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>3</b> Spatial Analysis</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="spatialDataFromTabularData.html"><a href="spatialDataFromTabularData.html"><i class="fa fa-check"></i><b>3.1</b> Spatial Data from Tabular Data</a></li>
@@ -196,14 +218,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="spatialAnalysis" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Spatial Analysis</h1>
-<p>Coming soon:</p>
+<p>R is a powerful tool for spatial analysis. Among the many benefits to using R as a GIS are the reproducibility of codified methods, which make sharing procedures and updating results after underlying data updates easy and efficient.</p>
+<p>There are many resources for learning how to use R for geospatial operations. A favorite is the <a href="https://geocompr.robinlovelace.net/">Geocomputation with R</a> online book (free) by <a href="https://www.robinlovelace.net/">Robin Lovelace</a>.</p>
+<p>To familiarize yourself with common geospatial procedures in R, the following chapter has been developed by DEQ staff to help colleagues with typical geospatial tasks. This is by no means a comprehensive introduction to geospatial techniques in R. Please see other resources for more background information on underlying geospatial principles and methods in R.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="queryInternalDataSources.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="commonTMDLqueries.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="spatialDataFromTabularData.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

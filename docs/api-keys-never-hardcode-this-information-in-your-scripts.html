@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Query Internal Data Sources | DEQ R Methods Encyclopedia</title>
+  <title>2.2 API Keys- NEVER HARDCODE THIS INFORMATION IN YOUR SCRIPTS | DEQ R Methods Encyclopedia</title>
   <meta name="description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Query Internal Data Sources | DEQ R Methods Encyclopedia" />
+  <meta property="og:title" content="2.2 API Keys- NEVER HARDCODE THIS INFORMATION IN YOUR SCRIPTS | DEQ R Methods Encyclopedia" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Query Internal Data Sources | DEQ R Methods Encyclopedia" />
+  <meta name="twitter:title" content="2.2 API Keys- NEVER HARDCODE THIS INFORMATION IN YOUR SCRIPTS | DEQ R Methods Encyclopedia" />
   
   <meta name="twitter:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="want-to-contribute.html"/>
-<link rel="next" href="connectToConnectPins.html"/>
+<link rel="prev" href="connectToConnectPins.html"/>
+<link rel="next" href="connectToODS.html"/>
 <script src="libs/header-attrs-2.6/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -156,19 +156,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="2" data-path="queryInternalDataSources.html"><a href="queryInternalDataSources.html"><i class="fa fa-check"></i><b>2</b> Query Internal Data Sources</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html"><i class="fa fa-check"></i><b>2.1</b> Connecting to R Connect (for Pinned Data)</a>
-<ul>
-<li class="chapter" data-level="2.1.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#api-keys"><i class="fa fa-check"></i><b>2.1.1</b> API Keys</a></li>
-<li class="chapter" data-level="2.1.2" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#connect-to-the-r-server"><i class="fa fa-check"></i><b>2.1.2</b> Connect to the R server</a></li>
-<li class="chapter" data-level="2.1.3" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#browse-available-pins"><i class="fa fa-check"></i><b>2.1.3</b> Browse Available Pins</a></li>
-<li class="chapter" data-level="2.1.4" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#access-a-pin"><i class="fa fa-check"></i><b>2.1.4</b> Access a Pin</a></li>
-<li class="chapter" data-level="2.1.5" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#query-some-of-a-pin"><i class="fa fa-check"></i><b>2.1.5</b> Query (some of) a Pin</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2" data-path="connectToODS.html"><a href="connectToODS.html"><i class="fa fa-check"></i><b>2.2</b> Connect to ODS</a></li>
-<li class="chapter" data-level="2.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html"><i class="fa fa-check"></i><b>2.3</b> Querying Data from ODS</a></li>
-<li class="chapter" data-level="2.4" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html"><i class="fa fa-check"></i><b>2.4</b> Common WQM queries</a></li>
-<li class="chapter" data-level="2.5" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common WQA queries</a></li>
-<li class="chapter" data-level="2.6" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common TMDL queries</a></li>
+<li class="chapter" data-level="2.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html"><i class="fa fa-check"></i><b>2.1</b> Connecting to R Connect (for Pinned Data)</a></li>
+<li class="chapter" data-level="2.2" data-path="api-keys-never-hardcode-this-information-in-your-scripts.html"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html"><i class="fa fa-check"></i><b>2.2</b> API Keys- NEVER HARDCODE THIS INFORMATION IN YOUR SCRIPTS</a></li>
+<li class="chapter" data-level="2.3" data-path="connectToODS.html"><a href="connectToODS.html"><i class="fa fa-check"></i><b>2.3</b> Connect to ODS</a></li>
+<li class="chapter" data-level="2.4" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html"><i class="fa fa-check"></i><b>2.4</b> Querying Data from ODS</a></li>
+<li class="chapter" data-level="2.5" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common WQM queries</a></li>
+<li class="chapter" data-level="2.6" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common WQA queries</a></li>
+<li class="chapter" data-level="2.7" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.7</b> Common TMDL queries</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>3</b> Spatial Analysis</a>
 <ul>
@@ -216,20 +210,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="queryInternalDataSources" class="section level1" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Query Internal Data Sources</h1>
-<p>Accessing internal DEQ data sources has been a longtime goal of many R programmers. Connecting a local R instance to raw data allows for increased automation and reduces redundant data copies on local drives. However, querying data directly from internal resources into one’s local environment is a privilege and requires a number of R skills and approval from OIS.</p>
-<p>Database operations rely on the SQL language. Users must first familiarize themselves with the basics of database operations with SQL. The <a href="https://www.datacamp.com/courses/introduction-to-sql">DataCamp Introduction to SQL course</a> is a good starting point. Additionally, the <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">DataCarpentry SQL databases and R</a> course provides is a good practice before seeking a direct, read-only connection to ODS (the SQLServer back end of CEDS).</p>
-<p>After you have *demonstrated proficiency** manipulating smaller, local data sources in R, you may submit a <a href="https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf">Special Network Access Form</a> to OIS seeking access to ODS data view using your Microsoft credentials. After OIS approval, you may access ODS from R following the connection instructions in the <a href="connectToODS.html#connectToODS">Connect to ODS</a> module.</p>
-<p>Alternatively, data “pinned” on the R server are available to all staff (on the internal network or VPN) without OIS authorization. Many pre-analyzed data sources are available to be pulled into your local R environment to assist with projects. See the <a href="connectToConnectPins.html#connectToConnectPins">Connecting to R Connect (for Pinned Data)</a> module for more information on connecting your local environment to the R server to query these internal data resources.</p>
+<div id="api-keys--never-hardcode-this-information-in-your-scripts" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> API Keys- NEVER HARDCODE THIS INFORMATION IN YOUR SCRIPTS</h2>
+<p>To connect to the R server, you must use the appropriate API key. <strong>NEVER HARD CODE ACCESS CODES INTO YOUR SCRIPTS</strong> This means you should <strong>NEVER</strong> place the actual API key into your code <strong>ANYWHERE</strong>. You must source this information from a secret DEQconfig.yml file (obtained from Emma Jones and stored locally on your computer) in order to access data from the R server in your local R environment. <a href="https://cran.r-project.org/web/packages/config/vignettes/introduction.html">Read more about config files</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Server connection things</span></span>
+<span id="cb2-2"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb2-2" aria-hidden="true" tabindex="-1"></a>conn <span class="ot">&lt;-</span> config<span class="sc">::</span><span class="fu">get</span>(<span class="at">file =</span> <span class="st">&quot;PINSconfig.yml&quot;</span>, <span class="st">&quot;connectionSettings&quot;</span>) <span class="co"># get configuration settings</span></span>
+<span id="cb2-3"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">board_register_rsconnect</span>(<span class="at">key =</span> conn<span class="sc">$</span>CONNECT_API_KEY, </span>
+<span id="cb2-5"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb2-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">server =</span> conn<span class="sc">$</span>CONNECT_SERVER)</span></code></pre></div>
+<p>Once you are connected to the R server, you can view available pins and metadata.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_tibble</span>(<span class="fu">pin_find</span>(<span class="at">board =</span> <span class="st">&#39;rsconnect&#39;</span>))</span></code></pre></div>
+<div id="htmlwidget-6c5da133e5e17fa17c09" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c5da133e5e17fa17c09">{"x":{"filter":"none","data":[["ejones/benSamps","ejones/benSampsStations","ejones/benthics","ejones/habObs","ejones/habSamps","ejones/habValues","ejones/IR2022bioassessmentDecisions_test","ejones/LRBS","ejones/masterTaxaGenus","ejones/totalHabitatScore","ejones/VCPMI63results","ejones/VCPMI65results","ejones/VSCIresults","ejones/WQM-Sta-GIS-View","ejones/WQM-Sta-GIS-View-Stations","ejones/WQM-Station-Full","ejones/WQM-Stations-Spatial","ejones/WQM-Stations-View","shummel/EstProbMon_DCLS_Params","shummel/EstProbMon_Field_Data","shummel/EstProbMon_Stations","shummel/FishTissue_Field_data","shummel/FishTissue_Metals_results","shummel/FishTissue_Species","shummel/WQM-Spc_Parameter_Codes"],["Edas_Benthic_Sample_View from ODS. ","Unique Stations from BenSamps with sampling metrics, US Level 3 Ecoregion, and Assessment Region information. ","Edas_Benthic_View from ODS. ","Edas_Habitat_Observations_View from ODS. ","Edas_Habitat_Sample_View from ODS. ","Edas_Habitat_Values_View from ODS. ","Test dataset for developing IR2022 bioassessment fact sheet tool 2022-03-15 13:21:53. ","TMDL Summary LRBS results, last run 02/24/2022. ","Edas_Benthic_Master_Taxa_View from ODS. ","Calculated Total Habitat Score from ODS. ","VCPMI63 + Chowan results calculated from ODS. ","VCPMI65 - Chowan results calculated from ODS. ","VSCI results calculated from ODS_test. ","Wqm_Sta_GIS_View from ODS. ","Station_Id and lat/lng available in CEDS. ","first 25k records from WQM Stations (full) from GIS REST service. ","","Wqm_Stations_View from ODS. ","","","","",""," joined with Wqm_Species_Cds_Codes_Wqm_View by Spd_Psp_Spe_Id=Spe_Code_Num. ","Parameter Codes and descriptions. "],["table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table"],["rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>name<\/th>\n      <th>description<\/th>\n      <th>type<\/th>\n      <th>board<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"lftip","pageLength":5,"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<p>To bring a particular pin into your local R environment, simply create an object and call the pin from the R server.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb4-1" aria-hidden="true" tabindex="-1"></a>totalHabitat <span class="ot">&lt;-</span> <span class="fu">pin_get</span>(<span class="st">&#39;ejones/totalHabitatScore&#39;</span>, <span class="at">board =</span> <span class="st">&#39;rsconnect&#39;</span>)</span>
+<span id="cb4-2"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="api-keys-never-hardcode-this-information-in-your-scripts.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(totalHabitat)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 8
+##   StationID `Collection Date`   HabSampID `Field Team` `HabSample Comm~ Gradient
+##   &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;   
+## 1 2-LIJ003~ 2021-10-18 10:00:00 2-LIJ165~ bvw, rtt, j~ &lt;NA&gt;             High    
+## 2 2-XUL000~ 2013-04-09 09:30:00 2-XUL     GJD          &lt;NA&gt;             High    
+## 3 6BTHC000~ 2020-05-12 12:30:00 6BTHC159~ LLS          &lt;NA&gt;             High    
+## 4 6CLAE001~ 2020-06-04 12:30:00 6CLAE159~ LLS          &lt;NA&gt;             High    
+## 5 1AABR000~ 2012-10-23 14:30:00 ABR1577   rtt          &lt;NA&gt;             High    
+## 6 6AABR000~ 2021-04-07 14:45:00 ABR16496  LLS          &lt;NA&gt;             High    
+## # ... with 2 more variables: Season &lt;chr&gt;, `Total Habitat Score` &lt;dbl&gt;</code></pre>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="want-to-contribute.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="connectToConnectPins.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="connectToConnectPins.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="connectToODS.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

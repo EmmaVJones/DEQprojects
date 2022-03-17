@@ -1,6 +1,17 @@
 background
 want-to-contribute
 queryInternalDataSources
+connectToConnectPins
+api-keys
+connect-to-the-r-server
+browse-available-pins
+access-a-pin
+query-some-of-a-pin
+connectToODS
+queryDataFromODS
+commonWQMqueries
+commonWQAqueries
+commonTMDLqueries
 spatialAnalysis
 spatialDataFromTabularData
 usingSpatialDatasets

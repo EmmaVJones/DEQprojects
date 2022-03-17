@@ -39,3 +39,6 @@ rsconnect/
 
 # R Environment Variables
 .Renviron
+*.yml
+data/
+rsconnect/

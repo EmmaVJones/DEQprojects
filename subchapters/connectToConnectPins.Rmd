@@ -1,0 +1,104 @@
+---
+title: "Connecting to R Connect (for Pinned Data)"
+author: "Emma Jones"
+date: "3/17/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DT)
+```
+
+[Pinned data](https://www.r-bloggers.com/2019/09/pins-pin-discover-and-share-resources-2/) are powerful internal data sources that are developed by R programmers that expedite analyses by offering "pre-analyzed" data for others to use. The data products are often the end result of multiple analytical steps that one would need to repeat each time certain datasets are needed for analyses. Because these common datasets could prove useful for many end users, these datasets are "pinned" to the R server to expedite (and standardize) the acquisition of common data needs. Examples of pinned data are VSCI/VCPMI scores, station level geospatial data, station level Water Quality Standards (WQS) information, and many more. 
+
+To access this data, you must first link your local R environment to the R Connect server. **YOU MUST BE ON THE DEQ NETWORK OR VPN IN ORDER TO ACCESS ANY INTERNAL DATA RESOURCES**
+
+Additionally, you must access pinned data using the **pins library version 0.4.3**. More recent versions of the pins package will not successfully connect to the version of pins on the R server.
+
+```{r pins library, message=FALSE, warning=FALSE}
+#install.packages(https://cran.r-project.org/src/contrib/Archive/pins/pins_0.4.3.tar.gz, repos=NULL, type="source")
+library(tidyverse)
+library(pins)
+library(config)
+```
+
+Each time you wish to access pinned data, you must connect to the R server like you might connect to a database. To gain access to the R server, you need to have the API key information. Obtain this information by emailing Emma Jones (emma.jones@deq.virginia.gov) and specify you want access to pinned data on the R server.
+
+### API Keys
+
+To connect to the R server, you must use the appropriate API key. **NEVER HARD CODE ACCESS CODES INTO YOUR SCRIPTS** This means you should **NEVER** place the actual API key into your code **ANYWHERE**. You must source this information from a secret DEQconfig.yml file (obtained from Emma Jones and stored locally on your computer) in order to access data from the R server in your local R environment. [Read more about config files](https://cran.r-project.org/web/packages/config/vignettes/introduction.html). 
+
+### Connect to the R server
+
+Use the following script to source the server API key and connect to the R server.
+
+```{r config, eval=F}
+# Server connection things
+conn <- config::get(file = "PINSconfig.yml", "connectionSettings") # get configuration settings
+
+board_register_rsconnect(key = conn$CONNECT_API_KEY, 
+                         server = conn$CONNECT_SERVER)
+
+```
+
+
+### Browse Available Pins
+
+Once you are connected to the R server, you can view available pins and metadata.
+
+```{r, browse pin code, eval=FALSE}
+as_tibble(pin_find(board = 'rsconnect'))
+```
+```{r browse pin table, echo = F }
+#saveRDS(as_tibble(pin_find(board = 'rsconnect')), '../data/availablePins.RDS')
+z <- readRDS('../data/availablePins.RDS')
+datatable(z, rownames = F,
+          options = list(dom = 'lftip', pageLength = 5, scrollX = TRUE))
+```
+
+### Access a Pin
+
+To bring a particular pin into your local R environment, simply create an object and call the pin from the R server.
+
+```{r bring in pin, eval=F}
+totalHabitat <- pin_get('ejones/totalHabitatScore', board = 'rsconnect')
+
+head(totalHabitat)
+```
+```{r, echo = F}
+#saveRDS(pin_get('ejones/totalHabitatScore', board = 'rsconnect'), '../data/totalHabitatScore.RDS')
+totalHabitat <- readRDS('../data/totalHabitatScore.RDS')
+head(totalHabitat)
+```
+
+
+### Query (some of) a Pin
+
+Sometimes you do not want to bring an entire dataset into your environment. You can query just the information you want to bring back from a pinned data source by using simple dplyr verbs.
+
+```{r query part of pin, eval = F}
+pin_get('ejones/VSCIresults', board = 'rsconnect') %>% 
+  # Query one station between a set date range
+  filter(StationID == '2-JKS023.61' & 
+           between(as.Date(`Collection Date`), as.Date('2015-01-01'), as.Date('2020-12-31'))) %>% 
+  # only bring back rarified Samples
+  filter(`Target Count` == 110) %>% 
+  dplyr::select(StationID, `Collection Date`, everything()) %>% 
+  datatable(rownames = F,
+          options = list(dom = 'lftip', pageLength = 5, scrollX = TRUE))
+```
+
+```{r query, echo = F}
+# saveRDS(pin_get('ejones/VSCIresults', board = 'rsconnect') %>% 
+#   # Query one station between a set date range
+#   filter(StationID == '2-JKS023.61' & 
+#            between(as.Date(`Collection Date`), as.Date('2015-01-01'), as.Date('2020-12-31'))) %>% 
+#   # only bring back rarified Samples
+#   filter(`Target Count` == 110) %>% 
+#   dplyr::select(StationID, `Collection Date`, everything()), '../data/VSCIsnippet.RDS')
+datatable(readRDS('../data/VSCIsnippet.RDS'),
+          rownames = F,
+          options = list(dom = 'lftip', pageLength = 5, scrollX = TRUE))
+```
+

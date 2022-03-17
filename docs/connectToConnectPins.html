@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.1 Connecting to R Connect (for Pinned Data) | DEQ R Methods Encyclopedia</title>
+  <meta name="description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.1 Connecting to R Connect (for Pinned Data) | DEQ R Methods Encyclopedia" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  <meta name="github-repo" content="openscapes/series" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.1 Connecting to R Connect (for Pinned Data) | DEQ R Methods Encyclopedia" />
+  
+  <meta name="twitter:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  
+
+<meta name="author" content="DEQ R Development Team" />
+
+
+<meta name="date" content="2022-03-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="queryInternalDataSources.html"/>
+<link rel="next" href="connectToODS.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="lib/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/style.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/lesson.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DEQ R Methods Encyclopedia</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="want-to-contribute.html"><a href="want-to-contribute.html"><i class="fa fa-check"></i><b>1.1</b> Want to Contribute?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="queryInternalDataSources.html"><a href="queryInternalDataSources.html"><i class="fa fa-check"></i><b>2</b> Query Internal Data Sources</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html"><i class="fa fa-check"></i><b>2.1</b> Connecting to R Connect (for Pinned Data)</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#api-keys"><i class="fa fa-check"></i><b>2.1.1</b> API Keys</a></li>
+<li class="chapter" data-level="2.1.2" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#connect-to-the-r-server"><i class="fa fa-check"></i><b>2.1.2</b> Connect to the R server</a></li>
+<li class="chapter" data-level="2.1.3" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#browse-available-pins"><i class="fa fa-check"></i><b>2.1.3</b> Browse Available Pins</a></li>
+<li class="chapter" data-level="2.1.4" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#access-a-pin"><i class="fa fa-check"></i><b>2.1.4</b> Access a Pin</a></li>
+<li class="chapter" data-level="2.1.5" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#query-some-of-a-pin"><i class="fa fa-check"></i><b>2.1.5</b> Query (some of) a Pin</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="connectToODS.html"><a href="connectToODS.html"><i class="fa fa-check"></i><b>2.2</b> Connect to ODS</a></li>
+<li class="chapter" data-level="2.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html"><i class="fa fa-check"></i><b>2.3</b> Querying Data from ODS</a></li>
+<li class="chapter" data-level="2.4" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html"><i class="fa fa-check"></i><b>2.4</b> Common WQM queries</a></li>
+<li class="chapter" data-level="2.5" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common WQA queries</a></li>
+<li class="chapter" data-level="2.6" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common TMDL queries</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>3</b> Spatial Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="spatialDataFromTabularData.html"><a href="spatialDataFromTabularData.html"><i class="fa fa-check"></i><b>3.1</b> Spatial Data from Tabular Data</a></li>
+<li class="chapter" data-level="3.2" data-path="usingSpatialDatasets.html"><a href="usingSpatialDatasets.html"><i class="fa fa-check"></i><b>3.2</b> Using Spatial Datasets</a></li>
+<li class="chapter" data-level="3.3" data-path="interactiveMapping.html"><a href="interactiveMapping.html"><i class="fa fa-check"></i><b>3.3</b> Interactive Mapping</a></li>
+<li class="chapter" data-level="3.4" data-path="watershed-delineation.html"><a href="watershed-delineation.html"><i class="fa fa-check"></i><b>3.4</b> Watershed Delineation</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="watershed-delineation.html"><a href="watershed-delineation.html#single-station-delineation"><i class="fa fa-check"></i><b>3.4.1</b> Single Station Delineation</a></li>
+<li class="chapter" data-level="3.4.2" data-path="watershed-delineation.html"><a href="watershed-delineation.html#multiple-station-delineation"><i class="fa fa-check"></i><b>3.4.2</b> Multiple Station Delineation</a></li>
+<li class="chapter" data-level="3.4.3" data-path="watershed-delineation.html"><a href="watershed-delineation.html#qa"><i class="fa fa-check"></i><b>3.4.3</b> QA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="landcover-analysis.html"><a href="landcover-analysis.html"><i class="fa fa-check"></i><b>3.5</b> Landcover analysis</a></li>
+<li class="chapter" data-level="3.6" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.6</b> Spatial joins</a></li>
+<li class="chapter" data-level="3.7" data-path="converting-tabular-data-to-spatial-data.html"><a href="converting-tabular-data-to-spatial-data.html"><i class="fa fa-check"></i><b>3.7</b> Converting tabular data to spatial data</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html"><i class="fa fa-check"></i><b>4</b> Shiny App Pro Tips</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="shiny-file-organization.html"><a href="shiny-file-organization.html"><i class="fa fa-check"></i><b>4.1</b> Shiny file organization</a></li>
+<li class="chapter" data-level="4.2" data-path="shiny-tricks.html"><a href="shiny-tricks.html"><i class="fa fa-check"></i><b>4.2</b> Shiny Tricks</a></li>
+<li class="chapter" data-level="4.3" data-path="markdown-and-user-friendly-output-files.html"><a href="markdown-and-user-friendly-output-files.html"><i class="fa fa-check"></i><b>4.3</b> Markdown and User-Friendly Output Files</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="miscTips.html"><a href="miscTips.html"><i class="fa fa-check"></i><b>5</b> Miscellaeous Tips and Tricks</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html"><i class="fa fa-check"></i><b>5.1</b> Regular expression and pattern matching</a></li>
+<li class="chapter" data-level="5.2" data-path="non-standard-evaluation.html"><a href="non-standard-evaluation.html"><i class="fa fa-check"></i><b>5.2</b> Non standard evaluation</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DEQ R Methods Encyclopedia</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="connectToConnectPins" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Connecting to R Connect (for Pinned Data)</h2>
+<p><strong>Section Contact: Emma Jones (<a href="mailto:emma.jones@deq.virginia.gov" class="email">emma.jones@deq.virginia.gov</a>)</strong></p>
+<p><a href="https://www.r-bloggers.com/2019/09/pins-pin-discover-and-share-resources-2/">Pinned data</a> are powerful internal data sources that are developed by R programmers that expedite analyses by offering “pre-analyzed” data for others to use. The data products are often the end result of multiple analytical steps that one would need to repeat each time certain datasets are needed for analyses. Because these common datasets could prove useful for many end users, these datasets are “pinned” to the R server to expedite (and standardize) the acquisition of common data needs. Examples of pinned data are VSCI/VCPMI scores, station level geospatial data, station level Water Quality Standards (WQS) information, and many more.</p>
+<p>To access this data, you must first link your local R environment to the R Connect server. <strong>YOU MUST BE ON THE DEQ NETWORK OR VPN IN ORDER TO ACCESS ANY INTERNAL DATA RESOURCES</strong></p>
+<p>Additionally, you must access pinned data using the <strong>pins library version 0.4.3</strong>. More recent versions of the pins package will not successfully connect to the version of pins on the R server.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="connectToConnectPins.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages(https://cran.r-project.org/src/contrib/Archive/pins/pins_0.4.3.tar.gz, repos=NULL, type=&quot;source&quot;)</span></span>
+<span id="cb1-2"><a href="connectToConnectPins.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="connectToConnectPins.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pins)</span>
+<span id="cb1-4"><a href="connectToConnectPins.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(config)</span></code></pre></div>
+<p>Each time you wish to access pinned data, you must connect to the R server like you might connect to a database. To gain access to the R server, you need to have the API key information. Obtain this information by emailing Emma Jones (<a href="mailto:emma.jones@deq.virginia.gov" class="email">emma.jones@deq.virginia.gov</a>) and specify you want access to pinned data on the R server.</p>
+<div id="api-keys" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> API Keys</h3>
+<p>To connect to the R server, you must use the appropriate API key. <strong>NEVER HARD CODE ACCESS CODES INTO YOUR SCRIPTS</strong> This means you should <strong>NEVER</strong> place the actual API key into your code <strong>ANYWHERE</strong>. You must source this information from a secret DEQconfig.yml file (obtained from Emma Jones and stored locally on your computer) in order to access data from the R server in your local R environment. <a href="https://cran.r-project.org/web/packages/config/vignettes/introduction.html">Read more about config files</a>.</p>
+</div>
+<div id="connect-to-the-r-server" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Connect to the R server</h3>
+<p>Use the following script to source the server API key and connect to the R server.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="connectToConnectPins.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Server connection things</span></span>
+<span id="cb2-2"><a href="connectToConnectPins.html#cb2-2" aria-hidden="true" tabindex="-1"></a>conn <span class="ot">&lt;-</span> config<span class="sc">::</span><span class="fu">get</span>(<span class="at">file =</span> <span class="st">&quot;PINSconfig.yml&quot;</span>, <span class="st">&quot;connectionSettings&quot;</span>) <span class="co"># get configuration settings</span></span>
+<span id="cb2-3"><a href="connectToConnectPins.html#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="connectToConnectPins.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">board_register_rsconnect</span>(<span class="at">key =</span> conn<span class="sc">$</span>CONNECT_API_KEY, </span>
+<span id="cb2-5"><a href="connectToConnectPins.html#cb2-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">server =</span> conn<span class="sc">$</span>CONNECT_SERVER)</span></code></pre></div>
+</div>
+<div id="browse-available-pins" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Browse Available Pins</h3>
+<p>Once you are connected to the R server, you can view available pins and metadata.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="connectToConnectPins.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_tibble</span>(<span class="fu">pin_find</span>(<span class="at">board =</span> <span class="st">&#39;rsconnect&#39;</span>))</span></code></pre></div>
+<div id="htmlwidget-bdec0a6ea97afc491302" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bdec0a6ea97afc491302">{"x":{"filter":"none","data":[["ejones/benSamps","ejones/benSampsStations","ejones/benthics","ejones/habObs","ejones/habSamps","ejones/habValues","ejones/IR2022bioassessmentDecisions_test","ejones/LRBS","ejones/masterTaxaGenus","ejones/totalHabitatScore","ejones/VCPMI63results","ejones/VCPMI65results","ejones/VSCIresults","ejones/WQM-Sta-GIS-View","ejones/WQM-Sta-GIS-View-Stations","ejones/WQM-Station-Full","ejones/WQM-Stations-Spatial","ejones/WQM-Stations-View","shummel/EstProbMon_DCLS_Params","shummel/EstProbMon_Field_Data","shummel/EstProbMon_Stations","shummel/FishTissue_Field_data","shummel/FishTissue_Metals_results","shummel/FishTissue_Species","shummel/WQM-Spc_Parameter_Codes"],["Edas_Benthic_Sample_View from ODS. ","Unique Stations from BenSamps with sampling metrics, US Level 3 Ecoregion, and Assessment Region information. ","Edas_Benthic_View from ODS. ","Edas_Habitat_Observations_View from ODS. ","Edas_Habitat_Sample_View from ODS. ","Edas_Habitat_Values_View from ODS. ","Test dataset for developing IR2022 bioassessment fact sheet tool 2022-03-15 13:21:53. ","TMDL Summary LRBS results, last run 02/24/2022. ","Edas_Benthic_Master_Taxa_View from ODS. ","Calculated Total Habitat Score from ODS. ","VCPMI63 + Chowan results calculated from ODS. ","VCPMI65 - Chowan results calculated from ODS. ","VSCI results calculated from ODS_test. ","Wqm_Sta_GIS_View from ODS. ","Station_Id and lat/lng available in CEDS. ","first 25k records from WQM Stations (full) from GIS REST service. ","","Wqm_Stations_View from ODS. ","","","","",""," joined with Wqm_Species_Cds_Codes_Wqm_View by Spd_Psp_Spe_Id=Spe_Code_Num. ","Parameter Codes and descriptions. "],["table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table"],["rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect","rsconnect"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>name<\/th>\n      <th>description<\/th>\n      <th>type<\/th>\n      <th>board<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"lftip","pageLength":5,"scrollX":true,"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="access-a-pin" class="section level3" number="2.1.4">
+<h3><span class="header-section-number">2.1.4</span> Access a Pin</h3>
+<p>To bring a particular pin into your local R environment, simply create an object and call the pin from the R server.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="connectToConnectPins.html#cb4-1" aria-hidden="true" tabindex="-1"></a>totalHabitat <span class="ot">&lt;-</span> <span class="fu">pin_get</span>(<span class="st">&#39;ejones/totalHabitatScore&#39;</span>, <span class="at">board =</span> <span class="st">&#39;rsconnect&#39;</span>)</span>
+<span id="cb4-2"><a href="connectToConnectPins.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="connectToConnectPins.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(totalHabitat)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 8
+##   StationID `Collection Date`   HabSampID `Field Team` `HabSample Comm~ Gradient
+##   &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;   
+## 1 2-LIJ003~ 2021-10-18 10:00:00 2-LIJ165~ bvw, rtt, j~ &lt;NA&gt;             High    
+## 2 2-XUL000~ 2013-04-09 09:30:00 2-XUL     GJD          &lt;NA&gt;             High    
+## 3 6BTHC000~ 2020-05-12 12:30:00 6BTHC159~ LLS          &lt;NA&gt;             High    
+## 4 6CLAE001~ 2020-06-04 12:30:00 6CLAE159~ LLS          &lt;NA&gt;             High    
+## 5 1AABR000~ 2012-10-23 14:30:00 ABR1577   rtt          &lt;NA&gt;             High    
+## 6 6AABR000~ 2021-04-07 14:45:00 ABR16496  LLS          &lt;NA&gt;             High    
+## # ... with 2 more variables: Season &lt;chr&gt;, `Total Habitat Score` &lt;dbl&gt;</code></pre>
+</div>
+<div id="query-some-of-a-pin" class="section level3" number="2.1.5">
+<h3><span class="header-section-number">2.1.5</span> Query (some of) a Pin</h3>
+<p>Sometimes you do not want to bring an entire dataset into your environment. You can query just the information you want to bring back from a pinned data source by using simple dplyr verbs.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="connectToConnectPins.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pin_get</span>(<span class="st">&#39;ejones/VSCIresults&#39;</span>, <span class="at">board =</span> <span class="st">&#39;rsconnect&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="connectToConnectPins.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Query one station between a set date range</span></span>
+<span id="cb6-3"><a href="connectToConnectPins.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(StationID <span class="sc">==</span> <span class="st">&#39;2-JKS023.61&#39;</span> <span class="sc">&amp;</span> </span>
+<span id="cb6-4"><a href="connectToConnectPins.html#cb6-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">between</span>(<span class="fu">as.Date</span>(<span class="st">`</span><span class="at">Collection Date</span><span class="st">`</span>), <span class="fu">as.Date</span>(<span class="st">&#39;2015-01-01&#39;</span>), <span class="fu">as.Date</span>(<span class="st">&#39;2020-12-31&#39;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="connectToConnectPins.html#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># only bring back rarified Samples</span></span>
+<span id="cb6-6"><a href="connectToConnectPins.html#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Target Count</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">110</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-7"><a href="connectToConnectPins.html#cb6-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(StationID, <span class="st">`</span><span class="at">Collection Date</span><span class="st">`</span>, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-8"><a href="connectToConnectPins.html#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">datatable</span>(<span class="at">rownames =</span> F,</span>
+<span id="cb6-9"><a href="connectToConnectPins.html#cb6-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">options =</span> <span class="fu">list</span>(<span class="at">dom =</span> <span class="st">&#39;lftip&#39;</span>, <span class="at">pageLength =</span> <span class="dv">5</span>, <span class="at">scrollX =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<div id="htmlwidget-2afb7f1c43dfb650ca2c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2afb7f1c43dfb650ca2c">{"x":{"filter":"none","data":[["2-JKS023.61","2-JKS023.61","2-JKS023.61","2-JKS023.61","2-JKS023.61","2-JKS023.61"],["2015-08-25T11:30:00Z","2015-08-25T11:30:00Z","2016-11-02T14:30:00Z","2017-08-23T09:30:00Z","2017-08-23T09:30:00Z","2020-10-13T13:31:00Z"],["JKS7821R110","JKS8498R110","JKS9493R110","JKS10471R110","JKS10700R110","JKS19668R110"],[7,15,10,10,14,14],[1,2,0,1,1,3],[0,0.91,0,0,0,0.91],[0.91,0,0,0.91,3.64,0.91],[60.91,27.27,10,32.73,16.36,13.64],[5.45,20.91,10,10.91,36.36,14.55],[78.18,44.55,67.27,57.27,49.09,56.36],[6.95,6.78,7.49,7.13,6.76,7.01],[0,1.48,0,0,0,1.48],[2.55,0,0,2.55,10.21,2.55],[31.82,68.18,45.45,45.45,63.64,63.64],[94.55,79.09,90,89.09,63.64,85.45],[9.09,18.18,0,9.09,9.09,27.27],[100,52.85,19.38,63.42,31.71,26.43],[31.53,80.14,47.29,61.74,73.57,63.06],[44.92,47.36,36.97,42.25,47.66,43.98],[39.31,43.41,29.89,39.2,37.44,39.23],["VSCI","VSCI","VSCI","VSCI","VSCI","VSCI"],[60,60,60,60,60,60],[1,1,1,1,1,1],[null,null,null,null,"N= 166, empty midge retreats, pupae and many worm pieces possibly counted during sorting.  Sample reduced due to high number in first grid.",null],["GEORGEJ DEVLIN","GEORGEJ DEVLIN","RICHARD (DREW)D MILLER","GEORGEJ DEVLIN","GEORGEJ DEVLIN","BRETT STERN"],["GJD","GJD","RDM","GJD","GJD","BS"],["GJD","RDM","RDM","RDM","GJD","JDLOYD"],["GEORGEJ DEVLIN","RICHARD (DREW)D MILLER","RICHARD (DREW)D MILLER","RICHARD (DREW)D MILLER","GEORGEJ DEVLIN","BRETT STERN"],["2016-03-15T00:00:00Z","2017-01-10T00:00:00Z","2017-08-18T00:00:00Z","2018-04-30T00:00:00Z","2018-10-01T00:00:00Z","2021-03-03T15:14:16Z"],["Riffle","Boatable","Riffle","Riffle","Boatable","Riffle"],[110,110,110,110,110,110],["Fall","Fall","Fall","Fall","Fall","Fall"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>StationID<\/th>\n      <th>Collection Date<\/th>\n      <th>BenSampID<\/th>\n      <th>Family Total Taxa<\/th>\n      <th>Family EPT Taxa<\/th>\n      <th>%Ephem<\/th>\n      <th>%PT - Hydropsychidae<\/th>\n      <th>%FamilyScraper<\/th>\n      <th>%Chiro<\/th>\n      <th>Family %2 Dominant<\/th>\n      <th>Family HBI<\/th>\n      <th>%Ephem Score<\/th>\n      <th>%PT-H Score<\/th>\n      <th>Fam Richness Score<\/th>\n      <th>%Chironomidae Score<\/th>\n      <th>Fam EPT Score<\/th>\n      <th>Fam %Scraper Score<\/th>\n      <th>Fam %2Dom Score<\/th>\n      <th>Fam %MFBI Score<\/th>\n      <th>SCI Score<\/th>\n      <th>SCI<\/th>\n      <th>SCI Threshold<\/th>\n      <th>RepNum<\/th>\n      <th>Sample Comments<\/th>\n      <th>Collected By<\/th>\n      <th>Field Team<\/th>\n      <th>Entered By<\/th>\n      <th>Taxonomist<\/th>\n      <th>Entered Date<\/th>\n      <th>Gradient<\/th>\n      <th>Target Count<\/th>\n      <th>Season<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"lftip","pageLength":5,"scrollX":true,"columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,22,30]}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="queryInternalDataSources.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="connectToODS.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": null
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["series.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
