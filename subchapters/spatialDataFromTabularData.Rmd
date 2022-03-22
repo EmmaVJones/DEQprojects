@@ -1,0 +1,85 @@
+---
+title: "Spatial Data from Tabular Data"
+author: "Emma Jones"
+date: "3/17/2022"
+output: html_document
+---
+
+Location information can be critical to efficiently analyzing a dataset. Often, spatial data is included into spreadsheets as Latitude and Longitude fields, which can quickly be turned into spatial objects in R for further spatial analysis. This short example demonstrates a method of turning tabular data into spatial data, but this is not the only way to do so. 
+
+```{r Spatial Data from Tabular Data setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+First, load in the necessary packages.
+
+```{r Spatial Data from Tabular Data load packages}
+library(tidyverse) # for tidy data manipulation
+library(sf) # for spatial analysis
+library(leaflet) # for interactive mapping
+library(inlmisc) # for interactive mapping on top of leaflet
+```
+
+Create an example tabular dataset of stations that we want to make into a spatial dataset. Note: we are using the tibble::tribble() function to define a tibble row by row, which makes for easy visualization of test datasets. This is just one of many ways to create a [tibble](https://tibble.tidyverse.org/).
+
+```{r Spatial Data from Tabular Data example data}
+exampleSites <-  tribble(
+  ~StationID, ~Latitude,  ~Longitude,
+  "Station_1", 37.812840, -80.063946,
+  "Station_2", 37.782322, -79.961449,
+  "Station_3", 37.801644, -79.968441)
+
+exampleSites
+```
+
+Using the [sf package](https://r-spatial.github.io/sf/), we can use the Latitude and Longitude fields to convert this object into a spatial object. Note we are using [EPSG 4326](https://epsg.io/4326) for our [coordinate reference system](https://geocompr.robinlovelace.net/spatial-class.html#crs-intro). We chose that CRS 
+
+```{r Spatial Data from Tabular Data st as sf}
+exampleSites_sf <- exampleSites %>% 
+  st_as_sf(coords = c("Longitude", "Latitude"),  # make spatial layer using these columns
+           remove = F, # don't remove these lat/lon cols from df
+           crs = 4326) # 
+```
+
+Now look at the difference in the object. The geometry listcolumn is where all the spatial magic is stored.
+
+```{r Spatial Data from Tabular Data example sites sf}
+exampleSites_sf
+```
+
+You can operate on a spatial dataset created using this method just like any other tidy object and the "sticky" geometry will come along for the ride.
+
+```{r Spatial Data from Tabular Data sticky geometry}
+justOneSite <- filter(exampleSites_sf, StationID == 'Station_1')
+```
+
+Let's plot the result to see what happened. 
+
+```{r Spatial Data from Tabular Data map}
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addCircleMarkers(data = exampleSites_sf, color='yellow', fillColor='black', radius = 5,
+                     fillOpacity = 1, opacity=1,weight = 1,stroke=T, group="All Sites",
+                     label = ~StationID,
+                     popup=leafpop::popupTable(exampleSites_sf)) %>%
+    addCircleMarkers(data = justOneSite, color='orange', fillColor='orange', radius = 5,
+                     fillOpacity = 1, opacity=1,weight = 1,stroke=T, group="Just One Site",
+                     label = ~StationID,
+                     popup=leafpop::popupTable(justOneSite)) %>%
+    addLayersControl(baseGroups=c("Topo","Imagery","Hydrography"),
+                       overlayGroups = c('Just One Site', 'All Sites'),
+                       options=layersControlOptions(collapsed=T),
+                       position='topleft')
+```
+
+
+### Removing Spatial Information
+
+Sometimes we need to remove spatial information in order to operate on a dataset (e.g. save just the tabular data as a csv). We can use sf to remove just the spatial information.
+
+```{r Spatial Data from Tabular Data remove spatial info}
+exampleSites_noSpatial <- exampleSites_sf %>% 
+  st_drop_geometry()
+
+exampleSites_noSpatial
+```
+
