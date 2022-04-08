@@ -23,7 +23,8 @@ Alternatively, data "pinned" on the R server are available to all staff (on the 
 
 **Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
 
-Coming Soon!
+```{r child = 'subchapters/connectToODS.Rmd'}
+```
 
 
 ## Querying Data from ODS{#queryDataFromODS}

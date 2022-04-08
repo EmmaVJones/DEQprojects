@@ -8,6 +8,12 @@ browse-available-pins
 access-a-pin
 query-some-of-a-pin
 connectToODS
+credentials-local-vs-remote
+required-packages
+ods-prod-vs-odstest
+dbi-method-for-ods-connection
+pool-method-for-ods-connection
+pool-method-query-data
 queryDataFromODS
 commonWQMqueries
 commonWQAqueries
@@ -30,4 +36,14 @@ shiny-tricks
 markdown-and-user-friendly-output-files
 miscTips
 regular-expression-and-pattern-matching
+regexOverview
+regexInR
+tidyverse
+base-r
+regexBasics
+regexCharacters
+regexQuantifiers
+regexAnchors
+regexExamples
+regexResources
 non-standard-evaluation

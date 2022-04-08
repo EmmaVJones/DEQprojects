@@ -1,0 +1,141 @@
+---
+title: "Connect to ODS"
+author: "Emma Jones"
+date: "4/5/2022"
+output: html_document
+---
+
+```{r Connect to ODS setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DT)
+```
+
+The ODS environment allows read-only access from your local R instance to the overnight copy of data stored in CEDS. The Oracle based CEDS environment is transferred to a SQLServer database each evening, ensuring data entered into CEDS is available for querying from ODS the next morning. 
+
+### Credentials (Local vs Remote)
+
+Your Microsoft (MS) credentials are used for verifying you have access rights to this database. Details on acquiring access to this data source are available in the [Query Internal Data Sources](#queryInternalDataSource) chapter. If you are building a report or application that relies on querying data from ODS at prescribed intervals, your personal MS credentials will not work when your data product is deployed to the R server. Instead, you must perform all data product testing locally with your personal MS credentials. Upon pushing your data product to the R server, you must switch the ODS credentials to the R server's unique credentials for the program to work on the remote server. To obtain the R server's ODS credentials, please contact Emma Jones (emma.jones@deq.virginia.gov) with specifics on exactly which areas of ODS your data product require access, how frequently your product hits ODS, example data retrieved from the environment, and general application purpose, use case, and audience information. 
+
+### Required Packages
+
+To access ODS, you will need to use specific R packages that enable database access in addition to the recommended tidyverse package for general data management. The chunk below specifies which packages are required for the two methods for connecting to ODS overviewed in this report. The "pool method" requires the R packages pool and dbplyr while the "DBI method" requires the odbc and DBI R packages.
+
+Like all tasks completed in R, it is good be be aware that there are multiple methods to perform various operations, but in time users tend to prefer certain methods over others for their regular business practices. 
+
+```{r Connect to ODS libraries, eval=FALSE}
+library(tidyverse)
+
+# "pool method" required packages
+library(pool)
+library(dbplyr)
+
+# "DBI method" required packages
+library(odbc)
+library(DBI)
+```
+
+#### ODS prod vs ODStest
+
+There are two ODS environments for you to be aware of: ODS (prod or production, DEQ-SQLODS-PROD) and ODStest **(DEQ-SQLODS-TEST)**. The ODS environment is the "production" environment that offers data views as they are stored in CEDS. The ODStest environment is a testing environment (sandbox) that is used for testing data architecture and database functions and may not always contain data meant for querying for business applications. **Which should you connect to?** If you are querying data for business applications, reports, etc. you must ensure you are connected to the ODS production environment. If you are learning how to use databases, building test queries, or generally exploring, use the ODStest environment. 
+
+**It is the responsibility of each data analyst to know which data source they are connected to while querying data and the implications of data sources on resultant data.**
+
+### DBI Method for ODS Connection
+
+The most basic way of connecting to a database uses the odbc and DBI R packages. 
+
+```{r Connect to ODS DBI, eval=FALSE}
+library(odbc)
+library(DBI)
+```
+
+We connect to a database by establishing a connection object with a very specific connection string. 
+
+There are a few things to note in this connection string:
+1) The driver method used is the ODBC driver from the odbc R package
+2) The driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0"
+3) The server argument specifies the server name (DEQ-SQLODS-PROD) and port (50000) that you are using for the connection
+4) The database argument specifies which database you wish to connect to (ODS)
+5) The trusted_connection argument must always be "yes"
+
+
+```{r Connect to ODS DBI connection , eval=FALSE}
+con <- dbConnect(odbc::odbc(), 
+                 .connection_string = "driver={ODBC Driver 11 for SQL Server};server={DEQ-SQLODS-PROD,50000};database={ODS};trusted_connection=yes")
+```
+
+The above script establishes a database connection named "con" in your environment. This connection will be passed into other query strings to query the database, requiring an open database connection each time you query the database. 
+
+
+To test the connection, we will query an entire data view that is small from the WQM area of ODS. We use SQL to tell ODS to select everything from the Edas_Benthic_Master_Taxa_View data view. Note that we must provide the querying function the con connection string we established above. 
+
+```{r Connect to ODS DBI test connection, eval=FALSE}
+masterTaxaGenus <- dbGetQuery(con,  "SELECT * FROM wqm.Edas_Benthic_Master_Taxa_View")
+head(masterTaxaGenus)
+```
+
+```{r Connect to ODS DBI test connection masterTaxa, echo=FALSE}
+masterTaxaGenus <- readRDS('../data/masterTaxaGenus.RDS')
+head(masterTaxaGenus)
+```
+
+We can use this DBI method to send SQL statements directly to the database. SQL will not be covered in this section, please see [DataCamp Introduction to SQL course](https://www.datacamp.com/courses/introduction-to-sql) for a basic primer on the SQL language. 
+
+```{r Connect to ODS DBI test connection SQL, eval=FALSE}
+dbGetQuery(con,  "SELECT TOP 10 * FROM wqm.WQM_Stations_View")
+```
+
+```{r onnect to ODS DBI test connection SQL preview, echo=FALSE, message=FALSE, warning=FALSE}
+readRDS('../data/WQM_Stations_View.RDS') 
+```
+
+
+### Pool Method for ODS Connection
+
+Generally speaking, the pool method is preferred for most business practices, especially any dynamic content (e.g. shiny apps). The [pool package](https://db.rstudio.com/r-packages/pool/) creates a connection to a specified database, even if the database connection is temporarily lost or idle for a period of time. The instability of connecting to ODS of VPN makes the pool package especially useful for DEQ business practices. The concepts of open database connections are important when interacting with databases, read more on this topic [here](https://db.rstudio.com/r-packages/pool/). The "pool method" requires the pool and dbplyr R packages to be loaded into the user environment.
+
+```{r Connect to ODS pool, eval=FALSE}
+library(pool)
+library(dbplyr)
+```
+
+To connect to a database, you must establish a pool object. This object stores your connection information and may easily be piped into query requests. You may name your pool object anything you want, but most programmers name it "pool" by convention to ease the transfer of scripts from one project/programmer to the next.
+
+There are a few things to note in this connection string:
+1) The driver method used is the ODBC driver from the odbc R package
+2) The specific Driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0"
+3) The Server argument specifies the server name and port (50000) you are using for the connection
+4) The dbname argument specifies which database you wish to connect to (ODS)
+5) The trusted_connection argument must always be "yes"
+
+```{r Connect to ODS pool object, eval=FALSE}
+pool <- dbPool(
+  drv = odbc::odbc(), # (1)
+  Driver = "ODBC Driver 11 for SQL Server", # (2)
+  Server= "DEQ-SQLODS-PROD,50000", # (3)
+  dbname = "ODS", # (4)
+  trusted_connection = "yes" # (5)
+)
+```
+
+After running the above chunk, you should have a list object named pool in your environment. We will use this object to build a minimal query to test our local connection to the ODS production environment. 
+
+
+### Pool Method: Query Data
+
+Once a pool object is created, you may test it by querying the database. The below example is a good test of querying an entire data view in ODS and bringing that information back into your local environment because the view is relatively small. If you successfully bring back the benthic macroinvertebrate master taxa list, then you have successfully connected to ODS. 
+
+```{r Connect to ODS test connection, eval=FALSE}
+masterTaxaGenus <- pool %>% tbl(in_schema("wqm",  "Edas_Benthic_Master_Taxa_View")) %>%
+  as_tibble()
+head(masterTaxaGenus)
+```
+
+```{r Connect to ODS test connection preview, echo=FALSE}
+head(masterTaxaGenus)
+```
+
+A few notes on querying using the pool method. The data schema are very important for ensuring the query runs successfully. In the above example, we are querying the data view entitled "Edas_Benthic_Master_Taxa_View" that lies inside the "wqm" area of ODS. Depending on your data needs (and information specified in your [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf)), you will be granted access to specific areas on the ODS environment. Water Quality Monitoring information is stored in the "wqm" area, Water Quality Assessment data is stored in the "wqa" area, TMDL data is stored in the "TMDL" area, etc. If you do not have access to the above area in ODS, then the above script will not work for you. 
+
+The pool method allows for more complex queries to be piped into a single call. This is very powerful because it allows you to use simple dplyr verbs (through the dbplyr package) to force the database to perform these operations instead of bringing a lot of data into your environment for local filtering and manipulation operations. More on this concept will be covered in [Querying Data from ODS](#queryDataFromODS) but the importance of this cannot be understated. **It is always more efficient to have the database perform querying operations to minimize the amount of data sent to your local R environment.**  

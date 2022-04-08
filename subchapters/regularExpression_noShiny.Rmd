@@ -1,0 +1,480 @@
+---
+title: "Regular Expression"
+author: "Connor Brogan"
+date: "3/29/2022"
+output: html_document
+---
+
+Let's imagine a scenario where we have a series of water quality data that is filled with manually inputted character fields and notes. Although the notes are consistent in their structure, they aren't easily read by R. For instance, we may have an entire column of field notes that look like "Flow was 98 cfs. Temperature was 20 deg C. Recorded by LL." We need to get the flow, temperature, and field scientist from all 1200 records. Obviously, it would take a lot of time to break this apart manually. So how do we get R to find the data we need? The answer lies in regular expressions.
+
+Regular expression (often short-handed as "Regex") is a method of matching patterns in string (or, in R, character) type data. Regular expression is powerful and mastering it can greatly enhance your applications and tools. You will be able to reliably find dates, flow values, station names, and more from long, poorly formatted data. However, regular expression is built on specific sequence structures that are different from typical R syntax. It is not a formal "language", but is instead a series of key words and quantifiers. Because of this, R will not output any warnings or errors when working with regex. And in this way developing the right regular expression for your application can be extremely vexing. You will either create the perfect pattern to accomplish your goal, or you will not. So, if we get the pattern just right, we can extract "98" as the streamflow from the string "Flow was 98 cfs. Temperature was 20 deg C. Recorded by LL." But if we mess it up, we may end up with "Flow was 98" or "98 cfs. Temperature was 20 deg C. Recorded by LL." and R won't give us any information as to why.
+
+This section has been written to cover basic regular expression structure and key words. It concludes with a few examples of patterns that are commonly needed when parsing water quality data. Additional resources are listed at the end of the chapter.
+
+```{r regex-init,echo=F,message=F,error=F,warning=F}
+library(tidyverse)
+library(DT)
+myDataPath<-"../data/Regex_data.csv"
+```
+
+### Example Data Overview{#regexOverview}
+For this chapter, the following dataset will be used to demonstrate how we can use Regular Expression to extract data from long, complicated, or inconsistent character data. Let's read in the data and see examine what we are working with. A copy of this dataset is available [here](https://github.com/EmmaVJones/DEQprojects/tree/main/dataForSharing/Regex_data.csv):
+
+```{r regex-load,echo=T}
+library(tidyverse)
+library(DT)
+FieldData <- read_csv(myDataPath,col_types = cols())
+datatable(FieldData,rownames = F)
+```
+
+This is a messy dataset. Notice that all three fields are character. The dates were recorded as full sentences. The "FieldNotes" column contains a lot of useful data, but it is all mashed together in one string. The streamflow is recorded as either MGD, cfs, or gpm. Some notes include the ambient air temperature, but others do not. The observations were taken by many different people. Finally, it appears that streamflow was adjusted by a constant scaling factor, but again the factor was recorded within a full sentence in the "FlowAdjustment" column. 
+
+We want to extract the day of the week each sample was taken, the date, the flow of the stream, the water temperature, and the flow scaling factor. To do this, we are going to need to understand regex structure and how to apply it in R. We will first learn a couple of R commands that take regex as an input and then we will dive into writing our own regex statements to manipulate our dataset **FieldData**.
+
+### Common R Commands and How to Use Them {#regexInR}
+We will cover what commands that find matching patterns, that extract or replace matching patterns, and those that return logical vectors for matching patterns. We will demonstrate both Tidyverse and Base R functions.
+
+#### Tidyverse
+There are three main functions available in the stringr library that are extremely useful for parsing string data. Many other functions exist within stringr that can speed up more complicated analyses so it may be worth reviewing the [basic documentation](https://stringr.tidyverse.org/) of stringr.
+
+The function *str_detect* will tell us if our entries contain a pattern or not. It will return a logical vector that we can use to assess which data entries match our pattern. It takes a vector of strings and a pattern to be matched as input. For now, lets use a basic pattern. We can search for all dates that happened on Friday by simply trying to match "Friday".
+```{r regex-str_detect}
+haveFridays <- 
+  FieldData %>%
+    select(Date) %>% 
+    unlist() %>% 
+    str_detect("Friday")
+
+head(haveFridays)
+
+FieldData %>% 
+  filter(haveFridays) %>% 
+  datatable(rownames=F,options=list(lengthMenu = list(c(3,5,10,-1),c("3","5","10","All"))))
+```
+In the previous example we used *str_detect* to create a logical vector that was TRUE for all data within the "Date" column that contained the word "Friday". What if we wanted to find out which entries contained the word "Friday"? In that case, we can use *str_which*.
+```{r regex-str_which}
+haveFridays <- 
+  FieldData %>%
+    select(Date) %>% 
+    unlist() %>% 
+    str_which("Friday")
+
+head(haveFridays)
+
+datatable(FieldData[haveFridays,],options=list(lengthMenu = list(c(3,5,10,-1),c("3","5","10","All"))),rownames=F)
+```
+
+Here, the vector **haveFridays** contains the index of each entry that contains the word "Friday". In some applications, this vector can be extremely useful. For instance, we can find every data point that immediately follows one containing "Friday" by doing:
+```{r regex-str_whichEx}
+haveFridaysData <- FieldData[(haveFridays+1),]
+head(haveFridaysData) %>% 
+  datatable(rownames=F,options=list(lengthMenu = list(c(3,5,10,-1),c("3","5","10","All"))))
+```
+Both *str_detect* and *str_which* perform similar tasks. They both match a pattern and return, in some form, a list of vectors matching the pattern. But, what if we want to extract or replace the matched pattern? In our example dataset, we know there was a computer error and all entries signed "LWO" are meant to read "WLO".
+```{r regex_str_whichEx2}
+errataData <- 
+  FieldData %>% 
+    select(FieldNotes) %>% 
+    unlist() %>% 
+    str_which("LWO")
+datatable(FieldData[errataData,],options = list(dom = 't'),rownames=F)
+```
+We can quickly find this pattern and replace it with the correct one using *str_replace*, which takes a vector of character data, a pattern to replace, and the data to replace it with:
+```{r regex-str_replace}
+FieldData[errataData,] %>% 
+  select(FieldNotes) %>% 
+  unlist() %>% 
+  str_replace("LWO","WLO")
+```
+As we learn to detect patterns using Regex, we will continually return to these three commands.
+
+#### Base R
+There are three main functions available in base R that are extremely useful for parsing string data.
+
+The function *grepl* will tell us if our entries contain a pattern or not. It will return a logical vector that we can use to assess which data entries match our pattern. It takes a vector of strings and a pattern to be matched as input. For now, lets use a basic pattern. We can search for all dates that happened on Friday by simply trying to match "Friday".
+```{r regex-grepl}
+haveFridays <- grepl("Friday",FieldData$Date)
+
+head(haveFridays)
+
+datatable(FieldData[haveFridays,],options=list(lengthMenu = list(c(3,5,10,-1),c("3","5","10","All"))),rownames=F)
+```
+In the previous example we used *grepl* to create a logical vector that was TRUE for all data within the "Date" column that contained the word "Friday". What if we wanted to find out which entries contained the word "Friday"? In that case, we can use *grep*.
+```{r regex-grep}
+haveFridays <- grep("Friday",FieldData$Date)
+
+head(haveFridays)
+
+datatable(FieldData[haveFridays,],options=list(lengthMenu = list(c(3,5,10,-1),c("3","5","10","All"))),rownames=F)
+```
+
+Here, the vector **haveFridays** contains the index of each entry that contains the word "Friday". In some applications, this vector can be extremely useful. For instance, we can find every data point that immediately follows one containing "Friday" by doing:
+```{r regex-grepEx}
+haveFridaysData <- FieldData[(haveFridays+1),]
+datatable(head(haveFridaysData),rownames=F,options=list(lengthMenu = list(c(3,5,10,-1),c("3","5","10","All"))))
+```
+Both *grepl* and *grep* perform similar tasks. They both match a pattern and return, in some form, a list of vectors matching the pattern. But, what if we want to extract or replace the matched pattern? In our example dataset, we know there was a computer error and all entries signed "LWO" are meant to read "WLO".
+```{r regex-grepEx2}
+errataData <- grep("LWO",FieldData$FieldNotes)
+
+datatable(FieldData[errataData,],options = list(dom = 't'),rownames=F)
+```
+We can quickly find this pattern and replace it with the correct one using *gsub*, which takes a vector of character data, a pattern to replace, and the data to replace it with:
+```{r regex-gsub}
+gsub("LWO","WLO",FieldData$FieldNotes[errataData])
+```
+As we learn to detect patterns using Regex, we will continually return to these three commands.
+
+### Basic Regular Expressions{#regexBasics}
+As we saw above in our demonstrations of the core string matching commands, we can use words as the pattern to be matched. We can also use whole phrases. Below, note that grep() finds three entries containing "Friday" but only the one when we search for "It is Friday". And it can't detect the last entry because it is searching for the whole pattern "Friday" and the last two are broken up by punctuation or capitalized. Regular expression is extremely case sensitive!
+```{r regex-basicMatch}
+notes <- c(
+  "It is Friday today, hooray",
+  "It will never be Friday",
+  "Is today Friday or Frie-day?",
+  "I like mine with lettuce and tomato",
+  "F.r.i.d.a.y.",
+  "FRIDAY"
+)
+grep("Friday",notes)
+grep("It is Friday",notes)
+```
+We can search for multiple phrases at the same time using the pipe symbol "|":
+```{r regex-basicOr}
+grep("Friday|FRIDAY",notes)
+grep("It is Friday|never be Friday",notes)
+```
+
+### Character Classes{#regexCharacters}
+When it comes to crafting regex expressions, there are a couple of characters and character classes that are essential to matching complex character data. 
+```{r regex-characterClass,echo=F}
+tutorial <- data.frame(Character=c(
+  ".",
+  "[]",
+  "[^]",
+  "\\\\",
+  "\\\\s",
+  "\\\\S",
+  "\\\\d",
+  "\\\\D",
+  "\\\\w",
+  "\\\\W",
+  "\\\\t",
+  "\\\\r",
+  "\\\\n",
+  "[:blank:]",
+  "[:cntrl:]",
+  "[:digit:]",
+  "[:lower:]",
+  "[:upper:]",
+  "[:punct:]",
+  "[:space:]",
+  "[:alnum:]",
+  "[:alpha:]",
+  "[:graph:]",
+  "[:print:]",
+  "[:xdigit:]"
+),
+Definition=c(
+  "Any character",
+  "Range: matching any character within the []",
+  "Range: matching any character not within the []",
+  "Escape character to allow pattern matching for regex or R defined character",
+  "Anything which is considered white space",
+  "Anything which is NOT considered white space",
+  "A digit i.e. 0-9",
+  "Anything which is not a digit",
+  "Anything that is considered a word character",
+  "Anything that is not considered a word character",
+  "Tab",
+  "Carriage return",
+  "Newline",
+  "Blank character including space and tab",
+  "Control characters as in ASCII",
+  "A digit i.e. 0-9",
+  "Lower-case letters",
+  "Upper-case letters",
+  "Punctuation characters: ! \" # $ % & \' ( ) * + , - . / : ; < = > ? @ [ \\ ] ^ _ \` { | } ~.",
+  "Space characters like tab, newline, vetical tab, form feed, carriage return, space",
+  "Alphanumeric characters including [:alpha:] and [:digit:]",
+  "Alphabetic characters including both [:upper:] and [:lower:]",
+  "Graphical characters:[:alnum:] and [:punct:]",
+  "Printable characters, includes [:alnum:], [:punct:], and [:space:]",
+  "Hexadecimal digits including 0-9, A-F, a-f"
+             
+           ),
+Example=c(
+  "gsub('...day','','Monday is today') will return ' is'",
+  "gsub('[1-8]','','789, or 7 ate 9?') will return '9, or  ate 9?'",
+  "gsub('[^a-z]','','ABC, easy as 123') will return 'easyas'",
+  "gsub('\\\\.','','2014.01.01') will return '20140101'",
+  "gsub('\\\\s','','F R I D A Y') will return 'FRIDAY'",
+  "gsub('\\\\S','','F R I D A Y') will return '     '",
+  "gsub('\\\\d','','ABC, easy as 123') will return 'ABC, easy as '",
+  "gsub('\\\\D','','ABC, easy as 123') will return '123'",
+  "gsub('\\\\w','','ABC, easy as 123') will return ',   '",
+  "gsub('\\\\W','','ABC, easy as 123') will return 'ABCeasyas123'",
+  "N/A",
+  "N/A",
+  "N/A",
+  "gsub('[[:blank:]]','','ABC, easy as 123') will return 'ABC,easyas123'",
+  "N/A",
+  "gsub('[[:digit:]]','','ABC, easy as 123') will return 'ABC, easy as '",
+  "gsub('[[:lower:]]','','ABC, easy as 123') will return 'ABC,   123'",
+  "gsub('[[:upper:]]','','ABC, easy as 123') will return 'ABC, easy as '",
+  "gsub('[[:punct:]]','','No one uses semicolons; trust me, they are useless!') will return 'No one uses semicolons trust me they are useless'",
+  "gsub('[[:space:]]','','ABC, easy as 123') will return 'ABC,easyas123'",
+  "gsub('[[:alnum:]]','','ABC, easy as 123') will return ',   '",
+  "gsub('[[:alpha:]]','','ABC, easy as 123') will return ',   123'",
+  "gsub('[[:graph:]]','','ABC, easy as 123') will return '   '",
+  "gsub('[[:print:]]','','ABC, easy as 123') will return ''",
+  "gsub('[[:xdigit:]]','','ABC, easy as 123') will return ', sy s '"
+           ))
+datatable(tutorial, options = list(dom = 't',lengthMenu = list(c(-1),c("All"))),
+          rownames=F,caption="Regular Expression Character Classes",escape=F)
+```
+
+We can use character classes to quickly extract basic data from long strings. For simple data extraction, there are often a number of solutions to get at the data we want. Returning to our example, we can easily obtain the flow scaling factor from the *FlowAdjustment* column of **FieldData** by using character classes:
+```{r regex-FlowAdjustment}
+#Here, we remove everything that is NOT a digit or a literal "." 
+gsub("[^\\.0-9]","",FieldData$FlowAdjustment[1:3])
+
+#Here, we remove everything that is an alphabetic character or a blank space
+gsub("[[:alpha:]]|[[:space:]]","",FieldData$FlowAdjustment[1:3])
+```
+With our example data, we can use character classes to get the date if we are careful about what string we extract. 
+```{r regex-DateCapture}
+#Here, we remove everything that is not the digits 0-9 as well as the 'dash' symbol
+gsub("[^0-9\\-]","",FieldData$Date[1:3])
+
+#Here, we remove everything that is an alphabetic character or a blank space
+gsub("[[:alpha:]]|[[:space:]]|,","",FieldData$Date[1:3])
+```
+So, we can easily use character classes to find the date and flow adjustment within our dataset. For simple data extraction, character classes provide an easy way to find data within long strings.
+
+```{r regex-CharacterClassEx}
+#We can add the date and flow adjustment as a new columns to FieldData
+FieldData$ActualDate <- as.Date(gsub("[^0-9\\-]","",FieldData$Date))
+#Here, we remove everything that is NOT a digit or a literal "."
+FieldData$AdjustmentRatio <- as.numeric(gsub("[^\\.0-9]","",FieldData$FlowAdjustment))
+
+datatable(FieldData,rownames=F,options=list(lengthMenu = list(c(5,10,-1),c("5","10","All"))))
+```
+
+### Quantifiers {#regexQuantifiers}
+As we saw above, character classes can be used in regex to easily extract data that stands out from the rest of the string. We can use them to find the date within a sentence or we can get the single number from a statement. However, they are not useful by themselves when there is mixed data within a single string.For instance, if we extract all numbers from field notes, we can a conglomerate that is not easy to understand.
+```{r regex-quantifierEx}
+#We can't find the stream temperature just by extracting all digits:
+FieldData$FieldNotes[1:3]
+gsub("\\D","",FieldData$FieldNotes[1:3])
+```
+To fix this problem, regex has a structure of quantifiers that allows us to search for particular patterns after some number of characters or previous matches. Regex always matches from left to right and takes the last possible match (or, in regex terms, it is *greedy*), so these quantifiers can help us find the second number in a sentence, for instance. We can use quantifiers on a character or a group of characters, as indicated by a set of parentheses. You will notice that in the table below, several of the quantifiers return the same value. Quantifiers are often used in tandem with *anchors*, which can be used to refine where in a string a pattern is expect. See [Anchors](#regexAnchors) for more information.
+```{r regex-quantifierData}
+dataToMatch<-c('Q=4250 cfs','Q=210 cfs','Q=10 cfs','Q=45980 cfs','Q=0 cfs')
+```
+
+
+```{r regex-quantifierTable,echo=F}
+
+quantifier<-data.frame(stringsAsFactors = F,
+           Character=c(
+             '*',
+             '+',
+             '?',
+             '{x}',
+             '{x,y}',
+             '{x,}'
+           ),
+           Definition=c(
+             "Match the preceding chracter/group zero or more times",
+             "Match the preceding chracter/group at least one time",
+             "Match the preceding chracter/group zero or one time (or is optional)",
+             "Match the preceding chracter/group x number of times",
+             "Match the preceding chracter/group between x and y number of times",
+             "Match the preceding chracter/group at least x number of times"
+           ),
+           Example=c(
+             "grepl('Q=\\\\d*0 cfs',dataToMatch) = </br> TRUE TRUE TRUE TRUE TRUE",
+             "grepl('Q=\\\\d+0 cfs',dataToMatch) = </br> TRUE TRUE TRUE TRUE FALSE",
+             "grepl('Q=\\\\d?0 cfs',dataToMatch) = </br> FALSE FALSE TRUE FALSE TRUE",
+             "grepl('Q=\\\\d{1}0 cfs',dataToMatch) = </br> FALSE FALSE TRUE FALSE FALSE",
+             "grepl('Q=\\\\d{2,3}0 cfs',dataToMatch) = </br> TRUE TRUE FALSE FALSE FALSE",
+             "grepl('Q=\\\\d{2,}0 cfs',dataToMatch) = </br> TRUE TRUE FALSE TRUE FALSE"
+           ),
+           Meaning=c(
+             "Match 'Q=' followed by any number of digits (including none), a zero, and then ' cfs'",
+             "Match 'Q=' followed by at least 1 digit, a zero, and then ' cfs'",
+             "Match 'Q=' and is followed by either '0 cfs' or any digit and then '0 cfs'",
+             "Match 'Q=' followed by exactly 1 digit, a zero, and then ' cfs'",
+             "Match 'Q=' followed by 2 to 3 digits, a zero, and then ' cfs'",
+             "Match 'Q=' followed by 2 or more, a zero, and then ' cfs'"
+           )
+)
+
+datatable(quantifier, options = list(dom = 't'),rownames=F,caption="Regular Expression Quantifiers",escape = F)
+```
+
+Let's see if we can use quantifiers to address our example problem. We used character classes [Character Classes](#regexCharacters) to find the date and the flow adjustment ratio. We may be able to use quantifiers to find the stream flow, unit, water temperature, and field scientist. We will need to rely on groups of characters using parentheses. These groups will help us define a pattern and can also be called by gsub to return only the matched characters:
+
+```{r regex-quantifierEx2}
+#If we replace any number of characters that repeat any number of times and are followed
+#by 'Recorded by ' and replace all periods with '', then we get the field scientist
+FieldData$FieldScientist<- gsub(".*Recorded by |\\.","",FieldData$FieldNotes)
+head(FieldData$FieldScientist)
+```
+We can't find temperature or flow using this strategy because air temperature and the different flow units makes this challenging. We would instead need to write a long statement with a bunch of ors. This will work, but it is not ideal. The following statement looks for 'Stream flow', 'Streamflow', and 'flow' by using the '?' quantifier and also looks for 'is', 'was', or 'at'. It also matches the streamflow units, followed by any number of any character. gsub replaces these with zero, leaving only the streamflow
+```{r regex-quantifierEx3}
+gsub("((Stream)? ?flow) (is|was|at) | (cfs|MGD|gpm).*","",FieldData$FieldNotes[1:10])
+```
+Similar to the example above, we can use groups to find the stream temperature but it will take a lot of 'or' statements and you will need to be very familiar with the exact format of every string of data (e.g. in the above example, we knew in advance there were several units and several ways to write stream flow). We can get around this using anchors, in combination with numeric quantifiers.
+
+### Anchors{#regexAnchors}
+Anchors are use to specify the location of a sequence of characters within a string. They are used to match patterns that occur at the beginning or end of a string or word. Used in combination with quantifiers and character classes, anchors can help match any kind of pattern within a string.
+```{r regex-anchorData}
+dataToMatch <- c("streamflow = 20 cfs in february","No streamflow recorded in january","No streamflow recorded in april by Eujane","flow = 26 cfs in jan")
+```
+
+```{r regex-anchorTable,echo=F}
+quantifier<-data.frame(stringsAsFactors = F,
+           Character=c(
+             '^',
+             '$',
+             '\\\\<',
+             '\\\\>',
+             '\\\\b',
+             "\\\\B"
+           ),
+           Definition=c(
+             "The beginning of a string",
+             "The end of a string",
+             "The beginning of a word",
+             "The end of a word",
+             "The beginning or end of a word",
+             "Not in the beginning or end of a word"
+           ),
+           Example=c(
+             "grepl('^strea',dataToMatch) = </br> TRUE FALSE FALSE FALSE",
+             "grepl('uary$',dataToMatch) = </br> TRUE TRUE FALSE FALSE",
+             "grepl('\\\\< jan',dataToMatch) = </br> FALSE TRUE FALSE TRUE",
+             "grepl('jan\\\\>',dataToMatch) = </br> FALSE FALSE FALSE TRUE",
+             "grepl('\\\\bjan',dataToMatch) = </br> FALSE TRUE FALSE TRUE",
+             "grepl('\\\\Bjan',dataToMatch) = </br> FALSE FALSE TRUE FALSE"
+           ),
+           Meaning=c(
+             "Only match strings that begin with 'strea'",
+             "Only match strings that end in 'uary'",
+             "Only match strings that have words that begin in 'jan'",
+             "Only match strings that have words that end in 'jan'",
+             "Only match strings that have words that begin or end in 'jan'",
+             "Only match strings that have words contain 'jan' but do not begin or end with 'jan'"
+           )
+)
+datatable(quantifier, options = list(dom = 't'),rownames=F,caption="Regular Expression Anchors",escape=F)
+```
+Now, we can set about finding the stream flow, water temperature, and the day of the week the sample was taken from our example data using anchors, character classes, quantifiers, and groups. Note that we can return a group by using *gsub* and enter "\\\\1" as the replacement vector! This is useful because we can build the group into a pattern that will match the whole string and then replace it with just the group. Effectively, this will allow us to easily capture groups if we match the whole string!
+```{r regex-FinalExercise}
+#WEEKDAY:
+#Here, we replace 'Date Assessed ', the comma, and everything after the comma with the 
+#group consisting of any character, any number of times. Because we are familiar with the
+#data string, we know this will capture the weekday! Note that we use "\\1" to return the group
+#in the parentheses. Our pattern "Date Assessed (.*),.*" matches the ENTIRE string so we are
+#using gsub to replace the whole string with just the group in the parentheses!
+FieldData$Weekday <- gsub("Date Assessed (.*),.*","\\1",FieldData$Date)
+#We could alternatively replace everything that is not in the area we expect the weekday to be
+FieldData$Weekday <- gsub("(Date Assessed )|(,.*)","",FieldData$Date)
+#Or we could just search for each individual day of the week and return it!
+#Here we list each weekday in the following form Monday|Tuesday|...|Sunday which allows us
+#to look for any day of the week. But we will need this to be in a group and to 
+#remove any character any number of times before and after the day of the week
+WeekdaySearch<-paste(weekdays((Sys.Date()+0:6)),collapse="|")
+FieldData$Weekday <- gsub(paste0(".*(",WeekdaySearch,").*"),"\\1",FieldData$Date)
+
+#FLOW
+# This statement is a little complicated, so let's break it down into it's pieces.
+# The gsub command will look for the pattern and replace it with the first group (as indicated
+# by the "\\1"!) If our pattern matches the whole string, we can replace it all with our group!
+#The pattern consists of:
+#".* " = look for any character any number of times until a literal space
+#"(\\d*\\.*\\d* \\w*)\\." = look any number of digits, followed by zero or more periods,
+#followed by any number of digits, a space, adn then any number of word characters that are
+#followed by a period. This will match our streamflow with unit!
+
+#".*(Temperature.*\\d*\\.*\\d*)?" = look for any number of any character follow by zero or one
+#instances of 'Temperature' followed by some characters and another digit, decimal, digit
+#combination.
+#".*Temperature.*\\d+(\\.)?\\d* deg C.* = Look for the temperature followed by some number of any
+#character followed by a digit, a potential decimal, another 0 or more digits, and deg C, followed
+#by any character any number of times
+FieldData$Flow <- gsub(".* (\\d*\\.*\\d* \\w*)\\..*(Temperature.*\\d*\\.*\\d*)?.*Temperature.*\\d+(\\.)?\\d* deg C.*","\\1",FieldData$FieldNotes)
+
+#Stream Temperature:
+#The gsub command below will find the pattern and replace it with the first group (as indicated by
+#the "\\1"!) The pattern begins with any character for any number of times followed by a literal
+#space. The group (to be returned by "\\1") is any digit one or more times, potentially followed
+#by a period and any number of digits. After the group, the pattern will match any character any
+#number of times.This pattern exactly matches the entire Field notes column and replaces it with
+#group 1, returned by gsub
+FieldData$WaterTemperature <- as.numeric(gsub(".* (\\d+\\.*\\d*).*","\\1",FieldData$FieldNotes))
+
+FieldData_clean <- FieldData[,c(4,7,6,8,9,5)]
+
+datatable(FieldData_clean,rownames=F,caption="Field Data Modifed with Regular Expression")
+```
+
+### Common or Useful Patterns {#regexExamples}
+Below is a common set of regrex commands to use for day to day tasks:  
+
+The following command escapes all special regex characters from a string. This can be built into a function and used to validate user-input strings in a Shiny app!
+```{r regex-CommonPatterns1}
+inputString<-"Now we have learned regex\\Regular Expression. What's Next? Application$"
+
+gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1",inputString)
+#this command can be useful as a function to check Shiny input fields for illegal characters:
+escapeCharacters<-function(inputString){
+  outputString<-gsub("([.|()\\^{}+$*?]|\\[|\\])", "\\\\\\1",inputString)
+}
+```
+
+To get the day, month, or year from a standard date string, we can use a simple gsub command!
+```{r regex-CommonPatterns2}
+inputString<-"04/05/2063"
+gsub("\\d+/(\\d+)/\\d+","\\1",inputString)#Day = Replace the whole pattern with the month
+gsub("/.*","",inputString)#Month = Replace everything after the first "/"
+gsub("^.*/","",inputString)#Year = Replace everything up until the last "/"
+```
+
+To get a file type from a given directory or to check the file type against an expected value:
+```{r regex-CommonPatterns3}
+inputString<-"C:/Users/JTKirk/Desktop/SpO_CK.csv"
+#Is the input file path of the correct file type? Check everything after last "."
+gsub(".*(\\..*)$","\\1",inputString)
+grepl(".csv$",inputString)
+```
+
+We can use the "." character class to check for empty strings:
+```{r regex-CommonPatterns4}
+inputString<-""
+#Is the input string empty? Search to see if string contains any character
+grepl(".",inputString)
+```
+
+We can use gsub to find whole numbers and decimal numbers from a large numeric data string:
+```{r regex-CommonPatterns5}
+inputString<-"23.952 25 26.859 98 -101 58.582"
+#Get whole numbers or decimal numbers by checking for digits surrounding a literal "."
+gsub("(-?\\d*\\.\\d* ?)","",inputString)
+#Decimal numbers are trickier, and its best to find them by breaking the string 
+#into its component numbers:
+AllNumbers<-strsplit(inputString," ")
+AllNumbers<-unlist(AllNumbers)
+#After splitting the string, we can find those with/without a decimal point
+AllNumbers[grepl("\\.",AllNumbers)]#Find all numbers containing a literal "."
+wholeNumbers<-AllNumbers[!grepl("\\.",AllNumbers)]
+```
+
+
+### Additional Resources {#regexResources}
+R help menu, e.g. ?regex  
+https://ryanstutorials.net/regular-expressions-tutorial/regular-expressions-cheat-sheet.php  
+https://www.tutorialspoint.com/vb.net/vb.net_regular_expressions.htm  
+https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285  

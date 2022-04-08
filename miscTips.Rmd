@@ -3,4 +3,9 @@
 
 ## Regular expression and pattern matching 
 
+**Section Contact: Connor Brogan (connor.brogan@deq.virginia.gov)**
+
+```{r child = 'subchapters/regularExpression_noShiny.Rmd'}
+```
+
 ## Non standard evaluation

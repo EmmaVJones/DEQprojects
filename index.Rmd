@@ -20,7 +20,8 @@ The purpose of this book is to describe common tasks undertaken by DEQ staff and
 This project is an example of a [bookdown](https://bookdown.org/yihui/bookdown/) report built using R and [RStudio's R Markdown](http://rmarkdown.rstudio.com/). Many authors have contributed to this effort:
 
 * Emma Jones (emma.jones@deq.virginia.gov)
-* more one day soon
+* Connor Brogan (connor.brogan@deq.virginia.gov)
+* Rex Robichaux (rex.robichaux@deq.virginia.gov)
 
 Feel free to explore different chapters to learn about specific tasks and how to complete them efficiently and transparently in R. 
 
