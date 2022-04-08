@@ -21,6 +21,14 @@ commonTMDLqueries
 spatialAnalysis
 spatialDataFromTabularData
 removing-spatial-information
+consumingGISRESTservices
+gis-rest-service-data
+primary-deq-rest-endpoints
+how-do-you-know-what-fieldscriteria-to-query-on
+okaylets-build-a-simple-query-and-see-it-in-r
+querying-multiple-records
+this-works-on-lines-and-polygons-as-well
+building-more-advanced-queries
 usingSpatialDatasets
 interactiveMapping
 watershed-delineation
@@ -29,7 +37,6 @@ multiple-station-delineation
 qa
 landcover-analysis
 spatial-joins
-converting-tabular-data-to-spatial-data
 shinyAppHelp
 shiny-file-organization
 shiny-tricks

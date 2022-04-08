@@ -18,6 +18,15 @@ To familiarize yourself with common geospatial procedures in R, the following ch
 ```
 
 
+## Consuming GIS REST Services in R{#consumingGISRESTservices}
+
+**Section Contact:Rex Robichaux (rex.robichaux@deq.virginia.gov)**
+
+
+```{r child = 'subchapters/Consuming_GIS_REST_Services_In_R.Rmd'}
+```
+
+
 
 ## Using Spatial Datasets{#usingSpatialDatasets}
 
@@ -47,6 +56,3 @@ Coming Soon
 
 Coming Soon
 
-## Converting tabular data to spatial data
-
-Coming Soon
