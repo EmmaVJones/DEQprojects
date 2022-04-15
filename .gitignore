@@ -41,4 +41,5 @@ rsconnect/
 .Renviron
 *.yml
 data/
+images/
 rsconnect/

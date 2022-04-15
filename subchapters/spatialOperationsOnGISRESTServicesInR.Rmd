@@ -1,0 +1,80 @@
+---
+title: "Spatial Operations on GIS REST Services in R"
+author: "Emma Jones"
+date: "4/15/2022"
+output: html_document
+---
+
+```{r spatial operations REST setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(inlmisc)
+```
+
+### GIS Rest Service Data
+
+DEQ's GIS REST endpoints enable easy access to geospatial data for querying and analysis. For a primer on what these services offer and the basics of querying against these services, please see the [Consuming GIS REST Services in R](#consumingGISRESTservices) section. 
+
+### Level Up Your Querying Game
+
+The final example of [Consuming GIS REST Services in R](#consumingGISRESTservices) highlights how to use more complicated queries to limit data from within a single spatial layer. What about using information from one layer to limit the information provided on a second layer? 
+
+![](../images/explodingHead.jpg)
+Yeah, that's where we are going. 
+
+But first, why would we want to do this? Besides using the GIS REST services to retrieve the most up to date version of spatial data, we also like to use these services to limit the amount of redundant data that we maintain on our local machines. Instead of, say, bringing back an entire polygon layer and a point layer, spatially intersecting them to find commonalities, and then doing something with said intersected data, we can go straight to the "doing something with intersected data" step by forcing the GIS REST service to perform our spatial operations. This reduces the amount of data we need to bring back to our machine initially, and reduces the number of associated files that we create during analysis steps. Win win.
+
+### Set Up Your Environment
+
+Load in the necessary packages.
+
+```{r spatial operations REST libraries, eval=FALSE}
+library(sf)
+library(leaflet)
+library(inlmisc)
+library(geojsonsf)
+library(dplyr)
+library(urltools)
+library(rgdal)
+library(httr)
+```
+
+### Query One Layer
+
+We will begin by querying the [Internal (Staff Only) REST Services](https://gis.deq.virginia.gov/arcgis/rest/services/staff) by parsing a query of the TMDL records for a specific TMDL project in the Willis River Watershed identified as POL0119. After querying the data we will plot it using and interactive map built with inlmisc::CreateWebMap().
+
+```{r spatial operations REST pull tmdl, eval=FALSE }
+url <- parse_url("https://gis.deq.virginia.gov/arcgis/rest/services")
+url$path <- paste(url$path, "staff/DEQInternalDataViewer/MapServer/72/query", sep = "/")
+url$query <- list(where = "TMDL_EQ_ID = 'POL0119'",
+                  outFields = "*",
+                  returnGeometry = "true",
+                  f = "geojson")
+request <- build_url(url)
+
+tmdl <- st_read(request)
+
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = tmdl, 
+              color = 'black',
+              fillColor = 'red', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~WSHD_ID )
+```
+
+```{r spatial operations REST plot tmdl, echo=FALSE, message=FALSE, warning=FALSE}
+tmdl <- readRDS('../data/willisRiverTMDL.RDS')
+
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = tmdl, 
+              color = 'black',
+              fillColor = 'green', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~WSHD_ID )
+```
+
+
