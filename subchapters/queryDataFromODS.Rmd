@@ -15,10 +15,6 @@ There are a few general concepts to be aware of when querying data from ODS. The
 
 In an ideal world, one would practice querying data against a test environment and only query the production environment for official data retrievals. This is especially true when building automated reports or applications that could repeatedly tax the database with frequent large queries during the development process. **However,** due to frequency of data updates to the ODStest environment and potential schema differences, we do not encourage users to rely on data in this environment.
 
-### Data Schema
-
-ODS is divided into multiple program areas. These areas are "turned on" for certain users depending on their data needs. To request access to certain areas of ODS, you need to submit a [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf) to OIS seeking access to specific areas of ODS. Once access to one or more areas of ODS are granted, you may explore the available areas using code ( e.g. using the [DBI package](https://dbi.r-dbi.org/) ) or interactively with a GUI ( e.g. using the built in GUI functionality in the RStudio IDE ).
-
 ### Connecting and Disconnecting from a Database
 
 It is imperative to understand that each time a user connects to a database it is that user's responsibility to disconnect from the database once they have finished their database operations. Forgotten open database connections (or "leaked connections") unnecessarily tax a database and are poor practice as programmers. Below are example connection and disconnection statements based on how a user may connect to a database.
@@ -54,7 +50,11 @@ onStop(function() {
 
 ```
 
-### Data Exporation: DBI
+### Data Schema
+
+ODS is divided into multiple program areas. These areas are "turned on" for certain users depending on their data needs. To request access to certain areas of ODS, you need to submit a [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf) to OIS seeking access to specific areas of ODS. Once access to one or more areas of ODS are granted, you may explore the available areas using code ( e.g. using the [DBI package](https://dbi.r-dbi.org/) ) or interactively with a GUI ( e.g. using the built in GUI functionality in the RStudio IDE ).
+
+#### Data Exporation: DBI
 
 After connecting to ODS using the config information (see [Connect to ODS](#connectToODS)), the DBI::dbListTables() allows users to see what data views are available in certain areas of ODS. Depending on your data needs, you may have an extensive list of available tables. For presentation purposes, the dbListTables() results were piped into a head() call with an n argument of 20 to only show the top 20 results.
 
