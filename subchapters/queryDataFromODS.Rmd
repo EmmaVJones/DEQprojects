@@ -1,5 +1,5 @@
 ---
-title: "Query Data From ODS"
+title: "Querying Data From ODS"
 author: "Emma Jones"
 date: "3/17/2022"
 output: html_document
@@ -7,6 +7,154 @@ output: html_document
 
 ```{r queryDataFromODS setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DT)
 ```
 
-Coming Soon!
+There are a few general concepts to be aware of when querying data from ODS. These include connecting and disconnecting from a database, understanding the underlying data schema, how data "Views" interact with one another, and data update frequencies. This module deals exclusively with data from the ODS production environment. Please see the [Connect to ODS](#connectToODS) section for information about the test vs production environments.
+
+In an ideal world, one would practice querying data against a test environment and only query the production environment for official data retrievals. This is especially true when building automated reports or applications that could repeatedly tax the database with frequent large queries during the development process. **However,** due to frequency of data updates to the ODStest environment and potential schema differences, we do not encourage users to rely on data in this environment.
+
+### Data Schema
+
+ODS is divided into multiple program areas. These areas are "turned on" for certain users depending on their data needs. To request access to certain areas of ODS, you need to submit a [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf) to OIS seeking access to specific areas of ODS. Once access to one or more areas of ODS are granted, you may explore the available areas using code ( e.g. using the [DBI package](https://dbi.r-dbi.org/) ) or interactively with a GUI ( e.g. using the built in GUI functionality in the RStudio IDE ).
+
+### Connecting and Disconnecting from a Database
+
+It is imperative to understand that each time a user connects to a database it is that user's responsibility to disconnect from the database once they have finished their database operations. Forgotten open database connections (or "leaked connections") unnecessarily tax a database and are poor practice as programmers. Below are example connection and disconnection statements based on how a user may connect to a database.
+
+```{r queryDataFromODS dbConnect, eval=FALSE}
+# Connect using the DBI library
+con <- dbConnect(odbc::odbc(), 
+                 .connection_string = "driver={ODBC Driver 11 for SQL Server};server={DEQ-SQLODS-PROD,50000};database={ODS};trusted_connection=yes")
+# Disconnect using the DBI library
+dbDisconnect(con)
+```
+
+The [Connect to ODS](#connectToODS) article emphasizes the benefits of using the pool package to manage database connections. Besides being useful for piping and dplyr/dbplyr functionality, pool handles the closing of unused connections without requiring user input. **This is very important.** For more information on pooled connections, see the [R pool package](https://shiny.rstudio.com/articles/pool-basics.html) and read more generally about [pooled database connections](https://www.cockroachlabs.com/blog/what-is-connection-pooling/).
+
+#### Standalone Reports/Applications that Query ODS
+
+When building any shiny application or report that queries data from ODS, it is best to use the pool package instead of opening and closing individual database connections with each query. It is also important to include a the following script to immediately close any pooled connections immediately when a user closes an application/report. Place the connection/disconnection scripts inside the global.R file of a multifile shiny app.
+
+```{r queryDataFromODS poolConnect, eval=FALSE}
+library(pool)
+# open pool connection, best stored in global.R file
+pool <- dbPool(
+ drv = odbc::odbc(),
+ Driver = "ODBC Driver 11 for SQL Server",#"SQL Server Native Client 11.0",
+ Server= "DEQ-SQLODS-PROD,50000",
+ dbname = "ODS",
+ trusted_connection = "yes"
+)
+# close pool connection, best stored in global.R file
+onStop(function() {
+  poolClose(pool)
+})
+
+```
+
+### Data Exporation: DBI
+
+After connecting to ODS using the config information (see [Connect to ODS](#connectToODS)), the DBI::dbListTables() allows users to see what data views are available in certain areas of ODS. Depending on your data needs, you may have an extensive list of available tables. For presentation purposes, the dbListTables() results were piped into a head() call with an n argument of 20 to only show the top 20 results.
+
+```{r queryDataFromODS dbListTables, eval=FALSE}
+library(DBI)
+
+con <- dbConnect(odbc::odbc(), 
+                 .connection_string = "driver={ODBC Driver 11 for SQL Server};server={DEQ-SQLODS-PROD,50000};database={ODS};trusted_connection=yes")
+
+dbListTables(con) %>% 
+  head(20)
+```
+
+```{r queryDataFromODS dbListTablesEVJ, echo=FALSE}
+readRDS('../data/dbListTablesCon.RDS') %>% 
+  head(20)
+```
+
+This method is good for identifying all data views available to a user with their current permissions, but it is not efficient for understanding the overall database structure, e.g. where the views referenced above exist in the ODS schema as a whole.
+
+#### Data Exporation: RStudio Connections Pane
+
+The built in Connections pane is a better way to understand how the pieces of the database fit together and quickly view the top 1000 rows of a selected data view.
+
+To access this feature of RStudio, click the Connections tab in the Environment pane in your IDE.
+
+![](images/ConnectionPane-01.PNG)
+
+If you have already connected to the ODS environment using the DBI package, you will automatically see this as an available option. If not, see [Connect to ODS](#connectToODS) for more information on making this connection for the first time.
+
+Click on the ODS database connection to show the connection information.
+
+![](images/ConnectionPane2.PNG){width="636"}
+
+Use the Connect drop down to choose how you want to connect to the database. For this example we will choose 'R Console' but other options are helpful for different use cases.
+
+![](images/ConnectionPane3.PNG)
+
+The available environments are displayed once the connection is made. This happens almost instantaneously.
+
+![](images/ConnectionPane4.PNG)
+
+Click on the drop down arrow next to ODS to show the database structure and what areas you have access to. Your connection may not look identical to the example.
+
+![](images/ConnectionPane5.PNG)
+
+Click on any of the areas to preview what data views are available in each area.
+
+![](images/ConnectionPane6.PNG)
+
+You can click the drop down arrow next to each data view for details on the variables within the data view as well as each data format.
+
+![](images/ConnectionPane7.PNG)
+
+Or you can click the name of the data view to open a preview of the data view (up to first 1,000 rows) in a tabular form in the Viewer Pane. Below we are looking at the first 1,000 rows of the Edas_Benthic_Master_Taxa_View.
+
+![](images/ConnectionPane8.PNG)
+
+It is important to tell R in your data query not only which data view you are querying but also the area of ODS the data view lives in. Using the pool and dbplyr packages this is very straightforward. Note the in_schema() nested function inside the tbl() function in the example below.
+
+```{r queryDataFromODS in_schema, eval=FALSE}
+library(tidyverse)
+library(pool)
+library(dbplyr)
+
+## Connect to ODS production
+pool <- dbPool(
+  drv = odbc::odbc(),
+  Driver = "ODBC Driver 11 for SQL Server",#"SQL Server Native Client 11.0",
+  Server= "DEQ-SQLODS-PROD,50000",
+  dbname = "ODS",
+  trusted_connection = "yes"
+)
+
+# Query the entire Edas_Benthic_Master_Taxa_View data view from  the wqm area of ODS
+masterTaxaGenus <- pool %>% tbl(in_schema("wqm",  "Edas_Benthic_Master_Taxa_View")) %>%
+  as_tibble()
+
+# preview the top 6 rows of the data pulled back from ODS
+head(masterTaxaGenus)
+```
+
+```{r queryDataFromODS in_schemaEVJ, echo=FALSE}
+masterTaxaGenus <- readRDS('../data/masterTaxaGenus.RDS')
+head(masterTaxaGenus)
+```
+
+As emphasized before, it is prudent to close all database connections established using DBI (the connection method the RStudio Connections pane utilizes). To do this using the GUI, click the "Disconnect From A Connection" button highlighted in red in the picture below.
+
+![](images/ConnectionPane9.PNG)
+
+### Data Views Interaction
+
+Another component of any database schema involves how data can be efficiently combined from the various areas of the database. Generally speaking, the way we use data locally in spreadsheets is not how a database stores said data. It is the responsibility of the data query-er to link the datasets they need to make it usable. A full tour of each area of ODS is beyond the scope of these articles, but short overviews of specific ODS areas are discussed in subsequent articles. These areas include:
+
+-   [Common WQM queries](#commonWQMqueries)
+-   [Common Benthic queries](#commonBenthicqueries)
+-   [Common WQA queries](#commonWQAqueries)
+-   [Common TMDL queries](#commonTMDLqueries)
+
+### Data Update Frequency
+
+ODS production is update nightly reflecting any data entered into CEDS the evening before. If you need data immediately after it is entered into CEDS, then CEDS is the only location users can view the data. ODStest is updated infrequently and should not be used for official data queries.

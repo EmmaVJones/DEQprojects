@@ -35,9 +35,9 @@ library(odbc)
 library(DBI)
 ```
 
-#### ODS prod vs ODStest
+#### ODSprod vs ODStest
 
-There are two ODS environments for you to be aware of: ODS (prod or production, DEQ-SQLODS-PROD) and ODStest **(DEQ-SQLODS-TEST)**. The ODS environment is the "production" environment that offers data views as they are stored in CEDS. The ODStest environment is a testing environment (sandbox) that is used for testing data architecture and database functions and may not always contain data meant for querying for business applications. **Which should you connect to?** If you are querying data for business applications, reports, etc. you must ensure you are connected to the ODS production environment. If you are learning how to use databases, building test queries, or generally exploring, use the ODStest environment. 
+There are two ODS environments for you to be aware of: ODS (production or prod, DEQ-SQLODS-PROD) and ODStest **(DEQ-SQLODS-TEST)**. The ODS environment is the "production" environment that offers data views as they are stored in CEDS. The ODStest environment is a testing environment (sandbox) that is used for testing data architecture and database functions and may not always contain data meant for querying for business applications. **Which should you connect to?** If you are querying data for business applications, reports, etc. you must ensure you are connected to the ODS production environment. If you are learning how to use databases, building test queries, or generally exploring, use the ODStest environment. 
 
 **It is the responsibility of each data analyst to know which data source they are connected to while querying data and the implications of data sources on resultant data.**
 
@@ -53,11 +53,11 @@ library(DBI)
 We connect to a database by establishing a connection object with a very specific connection string. 
 
 There are a few things to note in this connection string:
-1) The driver method used is the ODBC driver from the odbc R package
-2) The driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0"
-3) The server argument specifies the server name (DEQ-SQLODS-PROD) and port (50000) that you are using for the connection
-4) The database argument specifies which database you wish to connect to (ODS)
-5) The trusted_connection argument must always be "yes"
+1. The driver method used is the ODBC driver from the odbc R package
+2. The driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0"
+3. The server argument specifies the server name (DEQ-SQLODS-PROD) and port (50000) that you are using for the connection
+4. The database argument specifies which database you wish to connect to (ODS)
+5. The trusted_connection argument must always be "yes"
 
 
 ```{r Connect to ODS DBI connection , eval=FALSE}
@@ -103,11 +103,11 @@ library(dbplyr)
 To connect to a database, you must establish a pool object. This object stores your connection information and may easily be piped into query requests. You may name your pool object anything you want, but most programmers name it "pool" by convention to ease the transfer of scripts from one project/programmer to the next.
 
 There are a few things to note in this connection string:
-1) The driver method used is the ODBC driver from the odbc R package
-2) The specific Driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0"
-3) The Server argument specifies the server name and port (50000) you are using for the connection
-4) The dbname argument specifies which database you wish to connect to (ODS)
-5) The trusted_connection argument must always be "yes"
+1. The driver method used is the ODBC driver from the odbc R package
+2. The specific Driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0"
+3. The Server argument specifies the server name and port (50000) you are using for the connection
+4. The dbname argument specifies which database you wish to connect to (ODS)
+5. The trusted_connection argument must always be "yes"
 
 ```{r Connect to ODS pool object, eval=FALSE}
 pool <- dbPool(

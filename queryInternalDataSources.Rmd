@@ -39,6 +39,10 @@ Alternatively, data "pinned" on the R server are available to all staff (on the 
 
 Coming Soon!
 
+## Common Benthic queries{#commonBenthicqueries}
+
+Coming Soon!
+
 ## Common WQA queries{#commonWQAqueries}
 
 Coming Soon!
