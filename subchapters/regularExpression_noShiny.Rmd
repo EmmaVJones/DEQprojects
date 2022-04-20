@@ -1,10 +1,3 @@
----
-title: "Regular Expression"
-author: "Connor Brogan"
-date: "3/29/2022"
-output: html_document
----
-
 Let's imagine a scenario where we have a series of water quality data that is filled with manually inputted character fields and notes. Although the notes are consistent in their structure, they aren't easily read by R. For instance, we may have an entire column of field notes that look like "Flow was 98 cfs. Temperature was 20 deg C. Recorded by LL." We need to get the flow, temperature, and field scientist from all 1200 records. Obviously, it would take a lot of time to break this apart manually. So how do we get R to find the data we need? The answer lies in regular expressions.
 
 Regular expression (often short-handed as "Regex") is a method of matching patterns in string (or, in R, character) type data. Regular expression is powerful and mastering it can greatly enhance your applications and tools. You will be able to reliably find dates, flow values, station names, and more from long, poorly formatted data. However, regular expression is built on specific sequence structures that are different from typical R syntax. It is not a formal "language", but is instead a series of key words and quantifiers. Because of this, R will not output any warnings or errors when working with regex. And in this way developing the right regular expression for your application can be extremely vexing. You will either create the perfect pattern to accomplish your goal, or you will not. So, if we get the pattern just right, we can extract "98" as the streamflow from the string "Flow was 98 cfs. Temperature was 20 deg C. Recorded by LL." But if we mess it up, we may end up with "Flow was 98" or "98 cfs. Temperature was 20 deg C. Recorded by LL." and R won't give us any information as to why.

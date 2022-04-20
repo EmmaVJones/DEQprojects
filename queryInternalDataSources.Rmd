@@ -16,14 +16,14 @@ Alternatively, data "pinned" on the R server are available to all staff (on the 
 
 **Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
 
-```{r child = 'subchapters/connectToConnectPins.Rmd', cache=TRUE}
+```{r child = 'subchapters/connectToConnectPins.Rmd'}
 ```
 
 ## Connect to ODS{#connectToODS}
 
 **Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
 
-```{r child = 'subchapters/connectToODS.Rmd', cache=TRUE}
+```{r child = 'subchapters/connectToODS.Rmd'}
 ```
 
 
@@ -31,7 +31,7 @@ Alternatively, data "pinned" on the R server are available to all staff (on the 
 
 **Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
 
-```{r child = 'subchapters/queryDataFromODS.Rmd', cache=TRUE}
+```{r child = 'subchapters/queryDataFromODS.Rmd'}
 ```
 
 

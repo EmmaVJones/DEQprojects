@@ -14,7 +14,7 @@ To familiarize yourself with common geospatial procedures in R, the following ch
 **Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
 
 
-```{r child = 'subchapters/spatialDataFromTabularData.Rmd', cache=TRUE}
+```{r child = 'subchapters/spatialDataFromTabularData.Rmd'}
 ```
 
 
@@ -23,14 +23,14 @@ To familiarize yourself with common geospatial procedures in R, the following ch
 **Section Contact:Rex Robichaux (rex.robichaux@deq.virginia.gov)**
 
 
-```{r child = 'subchapters/Consuming_GIS_REST_Services_In_R.Rmd', cache=TRUE}
+```{r child = 'subchapters/Consuming_GIS_REST_Services_In_R.Rmd'}
 ```
 
 ## Spatial Operations on GIS REST Services in R{#spatialOperationsGISRESTservices}
 
 **Section Contact:Rex Robichaux (rex.robichaux@deq.virginia.gov)**
 
-```{r child = 'subchapters/spatialOperationsOnGISRESTServicesInR.Rmd', cache=TRUE}
+```{r child = 'subchapters/spatialOperationsOnGISRESTServicesInR.Rmd'}
 ```
 
 

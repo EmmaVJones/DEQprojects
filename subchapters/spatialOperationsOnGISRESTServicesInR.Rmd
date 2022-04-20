@@ -11,6 +11,7 @@ library(tidyverse)
 library(sf)
 library(leaflet)
 library(inlmisc)
+library(DT)
 ```
 
 ### GIS Rest Service Data
@@ -77,4 +78,165 @@ CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
               label = ~WSHD_ID )
 ```
 
+Once we have our chosen watershed, we want to identify monitoring stations within the watershed to investigate further. This could be done one of two ways. The first way, which is much less efficient, is to compare the TMDL watershed against all possible monitoring stations available via the REST service. This would require querying all monitoring stations, bringing that information into your local memory, and spatially intersecting the TMDL watershed against the many thousands of monitoring stations. That is not a great idea for this use case.
+
+The preferred method is a two step process. Instead of querying all of the possible monitoring stations from the REST service, we could simply bring back stations that fall close by the TMDL watershed and then spatially intersect those against the watershed to find out which stations are actually within said watershed. That is a much better method as it only brings necessary data into your memory and is a much faster operation to perform on the REST service.
+
+To identify the stations that fall close by the TMDL watershed, we can use a piece of information embedded in that watershed known as a bounding box. These are the coordinates of an area that encompasses our watershed. Let's extract this information from the watershed and look at the results.
+
+
+```{r spatial operations REST extract bbox }
+bBox <- st_bbox(tmdl) 
+bBox
+```
+
+The bBox object contains the latitude and longitude values of the outermost extent of our TMDL watershed. To actually make this useful, let's convert it to an sfc object so we can plot it on a map with our TMDL watershed. For a good resource on simple feature objects, see this [article by Jesse Sadler](https://www.jessesadler.com/post/simple-feature-objects/).
+
+```{r spatial operations REST plot bbox}
+bBoxPolygon <- bBox %>%
+  st_as_sfc()
+
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = tmdl, 
+              color = 'black',
+              fillColor = 'green', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~WSHD_ID ) %>% 
+    addPolygons(data=bBoxPolygon, weight=2, fill=FALSE, color="blue") 
+
+```
+### Query Layer Two Based On Information From Layer One
+
+We can tell the GIS REST service to only retrieve monitoring stations within this bounding box (i.e. query a layer based on information from another layer) by adding this bounding box information into our query of the WQM Stations layer. This forces the REST service to perform the more computationally expensive step of only returning stations within our area. We are also going to add the XY coordinates to the object to make the mapping steps easier using st_coordinates(). 
+
+```{r spatial operations REST query with bounding box, eval = FALSE}
+# baseURL for  the WQM Stations layer
+baseURL <- 'https://gis.deq.virginia.gov/arcgis/rest/services/staff/DEQInternalDataViewer/MapServer/104/query?'
+# convert the bounding box from above to a character string to work in our query
+bbox <- toString(bBox)
+# encode for use within URL
+bbox <- urltools::url_encode(bbox)
+# EPSG code for coordinate reference system used by the TMDL polygon sf object
+epsg <- st_crs(tmdl)$epsg
+
+# set parameters for query
+query <- urltools::param_set(baseURL,key="geometry", value=bbox) %>%
+  param_set(key="inSR", value=epsg) %>%
+  param_set(key="resultRecordCount", value=500) %>%
+  param_set(key="f", value="geojson") %>%
+  param_set(key="outFields", value="*")
+
+# query the REST service
+wqmstations_inbox <- geojson_sf(query) %>%
+                                  dplyr::mutate(Longitude = sf::st_coordinates(.)[,1],
+                                                Latitude = sf::st_coordinates(.)[,2]) %>% 
+  dplyr::select(STATION_ID, Latitude, Longitude, everything())
+# print out the data using DT::datatable()
+datatable( wqmstations_inbox,  rownames = F,
+          options = list(dom = 'lftip', pageLength = 5, scrollX = TRUE))
+```
+
+```{r spatial operations REST query with bounding box data, echo=FALSE, message=FALSE, warning=FALSE}
+wqmstations_inbox <- readRDS('../data/wqmstations_inbox.RDS') %>%
+                                  dplyr::mutate(Longitude = sf::st_coordinates(.)[,1],
+                                                Latitude = sf::st_coordinates(.)[,2]) %>% 
+  dplyr::select(STATION_ID, Latitude, Longitude, everything())
+datatable(wqmstations_inbox,  rownames = F,
+          options = list(dom = 'lftip', pageLength = 5, scrollX = TRUE))
+```
+
+Let's plot these stations to make sure our query returned what we asked.
+
+```{r spatial operations REST plot points with bounding box data}
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = tmdl, 
+              color = 'black',
+              fillColor = 'green', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~WSHD_ID ) %>% 
+  addPolygons(data=bBoxPolygon, weight=2, fill=FALSE, color="blue") %>% 
+  addCircleMarkers(data = wqmstations_inbox, lng = ~Longitude, lat = ~Latitude, 
+             label = ~as.character(STATION_ID)) 
+  
+```
+
+That is still a lot of stations! This is a good example of why it is a best practice to have the database do as much data limiting for you as possible. 
+
+### Spatially Intersect Layers
+
+The final step of this workflow is to spatially intersect the monitoring stations within the watershed (i.e. find the points inside the polygon). We will do this with the st_intersection() function from the sf library. Once we intersect these layers, we will add the final point object to our map, colored in red, to verify the intersection only returned monitoring stations within the polygon. Like before, we will add the XY coordinates of these point to the object using st_coordinates() to enable easier plotting.
+
+```{r spatial operations REST intersection layers point, eval = FALSE}
+insideWatershed <- st_intersection(wqmstations_inbox, tmdl) %>%
+  dplyr::mutate(Longitude = sf::st_coordinates(.)[,1],
+                Latitude = sf::st_coordinates(.)[,2])
+
+datatable(insideWatershed)
+```
+
+```{r spatial operations REST intersection EVJ, echo=F, message=FALSE, warning=FALSE}
+# had to run this in R 4.1.2 to get the it to work
+# EVJ method
+# insidewatershed <- st_intersection(wqmstations_inbox,tmdl) %>%
+#   dplyr::mutate(Longitude = sf::st_coordinates(.)[,1],
+#                 Latitude = sf::st_coordinates(.)[,2])
+
+insideWatershed <- readRDS('../data/insideWatershed.RDS')
+```
+
+```{r spatial operations REST intersection almost map}
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = tmdl, 
+              color = 'black',
+              fillColor = 'green', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~WSHD_ID ) %>% 
+  addPolygons(data=bBoxPolygon, weight=2, fill=FALSE, color="blue") %>% 
+  addCircleMarkers(data = wqmstations_inbox, lng = ~Longitude, lat = ~Latitude, 
+             label = ~as.character(STATION_ID)) %>% 
+  addCircleMarkers(data = insideWatershed, lng = ~Longitude, lat = ~Latitude, 
+                   color = 'red',
+                   label = ~as.character(STATION_ID) )
+```
+
+Mission accomplished. If we look closely at our data we can see there are 149 rows of information in the point file, but only `r  length(unique(insideWatershed$STATION_ID))` unique monitoring stations to investigate for the rest of our analysis. The map indicates this with the "redder" sites, indicating there is overplotting of points. We can clean this up in subsequent data manipulation steps to make a publication quality map.
+
+
+```{r spatial operations REST intersection final map, eval = F}
+insideWatershedUniqueSites <- insideWatershed %>% 
+  dplyr::select(STATION_ID, WQM_STA_DESC, everything()) %>% #rearrange columns
+  distinct(STATION_ID, .keep_all = T) # keep only rows with unique STATION_ID information
+
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = tmdl, 
+              color = 'black',
+              fillColor = 'green', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~WSHD_ID ) %>% 
+  addCircleMarkers(data = insideWatershedUniqueSites, lng = ~Longitude, lat = ~Latitude, 
+                   color = 'red',
+                   label = ~as.character(STATION_ID) )
+```
+
+
+```{r spatial operations REST intersection final map EVJ, echo = F}
+# 3.6.2 memory issues
+insideWatershedUniqueSites <- readRDS('../data/insideWatershedUniqueSites.RDS')%>% 
+  dplyr::select(STATION_ID, WQM_STA_DESC, everything()) 
+
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = tmdl, 
+              color = 'black',
+              fillColor = 'green', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~WSHD_ID ) %>% 
+  addCircleMarkers(data = insideWatershedUniqueSites, lng = ~Longitude, lat = ~Latitude, 
+                   color = 'red',
+                   label = ~as.character(STATION_ID) )
+```
 

@@ -7,6 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
 library(DT)
 ```
 
@@ -16,7 +18,7 @@ To access this data, you must first link your local R environment to the R Conne
 
 Additionally, you must access pinned data using the **pins library version 0.4.3**. More recent versions of the pins package will not successfully connect to the version of pins on the R server.
 
-```{r pins library, message=FALSE, warning=FALSE}
+```{r pins library, message=FALSE, warning=FALSE, eval=FALSE}
 #install.packages("https://cran.r-project.org/src/contrib/Archive/pins/pins_0.4.3.tar.gz", repos=NULL, type="source")
 #install.packages("https://cran.r-project.org/src/contrib/filelock_1.0.2.tar.gz", repos=NULL, type="source")
 library(tidyverse)
