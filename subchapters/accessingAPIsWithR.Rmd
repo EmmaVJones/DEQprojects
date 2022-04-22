@@ -1,0 +1,32 @@
+---
+title: "Accessing APIs from R"
+author: "Emma Jones"
+date: "4/22/2022"
+output: html_document
+---
+
+```{r accessingAPIsWithR setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DT)
+```
+
+### What is an API
+
+Whether or not you realize it, you have been using application programming interfaces, or APIs, for years. APIs are a set of rules for building and integrating software 
+such that services can communicate programmatically. Simply put, APIs allow computers to communicate and share information. Much of the internet as we know it would not exist were it not for underlying APIs sharing data among apps and programs. APIs are where users go to pull data from various entities. That said, some APIs are well documented and easily explain how users might access open data. However, many entities that make data available via an API lack documentation, but valuable data can still be acquired with a bit of thought put into your code.
+
+#### CMC API Use Case
+
+This example will overview the process of using R to "scrape" or acquire data from (at the time of writing) a less documented API. The [Chesapeake Monitoring Cooperative (CMC)](https://www.chesapeakemonitoringcoop.org/) coordinates with citizen monitoring groups to share data resources collected from the Chesapeake Bay watershed. Thanks to a grant, DEQ and the CMC are expanding data resources to incorporate non-Bay citizen data into the database such that DEQ may point citizen groups throughout Virginia to a single data entry portal. This expansion will allow DEQ to pull all citizen monitoring data conducted for biannual Integrated Reports from one location in one data format. By automating the process of scraping the CMC API, DEQ staff will benefit from significant time savings acquiring and organizing data, as well as tagging data a different citizen monitoring data levels or tiers. 
+
+
+```{r accessingAPIsWithR}
+
+```
+
+
+
+```{r accessingAPIsWithR}
+
+```
