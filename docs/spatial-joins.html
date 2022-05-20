@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.6 Spatial joins | DEQ R Methods Encyclopedia</title>
+  <title>3.8 Spatial joins | DEQ R Methods Encyclopedia</title>
   <meta name="description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.6 Spatial joins | DEQ R Methods Encyclopedia" />
+  <meta property="og:title" content="3.8 Spatial joins | DEQ R Methods Encyclopedia" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.6 Spatial joins | DEQ R Methods Encyclopedia" />
+  <meta name="twitter:title" content="3.8 Spatial joins | DEQ R Methods Encyclopedia" />
   
   <meta name="twitter:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="DEQ R Development Team" />
 
 
-<meta name="date" content="2022-04-19" />
+<meta name="date" content="2022-05-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -152,7 +152,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Background</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="want-to-contribute.html"><a href="want-to-contribute.html"><i class="fa fa-check"></i><b>1.1</b> Want to Contribute?</a></li>
+<li class="chapter" data-level="1.1" data-path="whyR.html"><a href="whyR.html"><i class="fa fa-check"></i><b>1.1</b> Why R?</a></li>
+<li class="chapter" data-level="1.2" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html"><i class="fa fa-check"></i><b>1.2</b> Getting Started With R</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#downloading-r-and-rstudio"><i class="fa fa-check"></i><b>1.2.1</b> Downloading R and RStudio</a></li>
+<li class="chapter" data-level="1.2.2" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#configuring-rstudio"><i class="fa fa-check"></i><b>1.2.2</b> Configuring RStudio</a></li>
+<li class="chapter" data-level="1.2.3" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#downloading-packages"><i class="fa fa-check"></i><b>1.2.3</b> Downloading Packages</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="want-to-contributewanttocontribute.html"><a href="want-to-contributewanttocontribute.html"><i class="fa fa-check"></i><b>1.3</b> Want to Contribute?{#wantToContribute?}</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="queryInternalDataSources.html"><a href="queryInternalDataSources.html"><i class="fa fa-check"></i><b>2</b> Query Internal Data Sources</a>
 <ul>
@@ -172,10 +179,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2.4" data-path="connectToODS.html"><a href="connectToODS.html#pool-method-for-ods-connection"><i class="fa fa-check"></i><b>2.2.4</b> Pool Method for ODS Connection</a></li>
 <li class="chapter" data-level="2.2.5" data-path="connectToODS.html"><a href="connectToODS.html#pool-method-query-data"><i class="fa fa-check"></i><b>2.2.5</b> Pool Method: Query Data</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html"><i class="fa fa-check"></i><b>2.3</b> Querying Data from ODS</a></li>
+<li class="chapter" data-level="2.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html"><i class="fa fa-check"></i><b>2.3</b> Querying Data from ODS</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#connecting-and-disconnecting-from-a-database"><i class="fa fa-check"></i><b>2.3.1</b> Connecting and Disconnecting from a Database</a></li>
+<li class="chapter" data-level="2.3.2" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#data-schema"><i class="fa fa-check"></i><b>2.3.2</b> Data Schema</a></li>
+<li class="chapter" data-level="2.3.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#data-views-interaction"><i class="fa fa-check"></i><b>2.3.3</b> Data Views Interaction</a></li>
+<li class="chapter" data-level="2.3.4" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#data-update-frequency"><i class="fa fa-check"></i><b>2.3.4</b> Data Update Frequency</a></li>
+</ul></li>
 <li class="chapter" data-level="2.4" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html"><i class="fa fa-check"></i><b>2.4</b> Common WQM queries</a></li>
-<li class="chapter" data-level="2.5" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common WQA queries</a></li>
-<li class="chapter" data-level="2.6" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common TMDL queries</a></li>
+<li class="chapter" data-level="2.5" data-path="commonBenthicqueries.html"><a href="commonBenthicqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common Benthic queries</a></li>
+<li class="chapter" data-level="2.6" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common WQA queries</a></li>
+<li class="chapter" data-level="2.7" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.7</b> Common TMDL queries</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>3</b> Spatial Analysis</a>
 <ul>
@@ -183,16 +197,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="3.1.1" data-path="spatialDataFromTabularData.html"><a href="spatialDataFromTabularData.html#removing-spatial-information"><i class="fa fa-check"></i><b>3.1.1</b> Removing Spatial Information</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="usingSpatialDatasets.html"><a href="usingSpatialDatasets.html"><i class="fa fa-check"></i><b>3.2</b> Using Spatial Datasets</a></li>
-<li class="chapter" data-level="3.3" data-path="interactiveMapping.html"><a href="interactiveMapping.html"><i class="fa fa-check"></i><b>3.3</b> Interactive Mapping</a></li>
-<li class="chapter" data-level="3.4" data-path="watershed-delineation.html"><a href="watershed-delineation.html"><i class="fa fa-check"></i><b>3.4</b> Watershed Delineation</a>
+<li class="chapter" data-level="3.2" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html"><i class="fa fa-check"></i><b>3.2</b> Consuming GIS REST Services in R</a>
 <ul>
-<li class="chapter" data-level="3.4.1" data-path="watershed-delineation.html"><a href="watershed-delineation.html#single-station-delineation"><i class="fa fa-check"></i><b>3.4.1</b> Single Station Delineation</a></li>
-<li class="chapter" data-level="3.4.2" data-path="watershed-delineation.html"><a href="watershed-delineation.html#multiple-station-delineation"><i class="fa fa-check"></i><b>3.4.2</b> Multiple Station Delineation</a></li>
-<li class="chapter" data-level="3.4.3" data-path="watershed-delineation.html"><a href="watershed-delineation.html#qa"><i class="fa fa-check"></i><b>3.4.3</b> QA</a></li>
+<li class="chapter" data-level="3.2.1" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#gis-rest-service-data"><i class="fa fa-check"></i><b>3.2.1</b> GIS Rest Service Data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#primary-deq-rest-endpoints"><i class="fa fa-check"></i><b>3.2.2</b> Primary DEQ REST Endpoints:</a></li>
+<li class="chapter" data-level="3.2.3" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#how-do-you-know-what-fieldscriteria-to-query-on"><i class="fa fa-check"></i><b>3.2.3</b> How do you know what fields/criteria to query on?</a></li>
+<li class="chapter" data-level="3.2.4" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#okaylets-build-a-simple-query-and-see-it-in-r"><i class="fa fa-check"></i><b>3.2.4</b> Okay…let’s build a simple query and see it in R…</a></li>
+<li class="chapter" data-level="3.2.5" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#querying-multiple-records"><i class="fa fa-check"></i><b>3.2.5</b> Querying multiple records:</a></li>
+<li class="chapter" data-level="3.2.6" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#this-works-on-lines-and-polygons-as-well"><i class="fa fa-check"></i><b>3.2.6</b> This works on lines and polygons as well!:</a></li>
+<li class="chapter" data-level="3.2.7" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#building-more-advanced-queries"><i class="fa fa-check"></i><b>3.2.7</b> Building more advanced queries</a></li>
 </ul></li>
-<li class="chapter" data-level="3.5" data-path="landcover-analysis.html"><a href="landcover-analysis.html"><i class="fa fa-check"></i><b>3.5</b> Landcover analysis</a></li>
-<li class="chapter" data-level="3.6" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.6</b> Spatial joins</a></li>
+<li class="chapter" data-level="3.3" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html"><i class="fa fa-check"></i><b>3.3</b> Spatial Operations on GIS REST Services in R</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#gis-rest-service-data-1"><i class="fa fa-check"></i><b>3.3.1</b> GIS Rest Service Data</a></li>
+<li class="chapter" data-level="3.3.2" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#level-up-your-querying-game"><i class="fa fa-check"></i><b>3.3.2</b> Level Up Your Querying Game</a></li>
+<li class="chapter" data-level="3.3.3" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#set-up-your-environment"><i class="fa fa-check"></i><b>3.3.3</b> Set Up Your Environment</a></li>
+<li class="chapter" data-level="3.3.4" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#query-one-layer"><i class="fa fa-check"></i><b>3.3.4</b> Query One Layer</a></li>
+<li class="chapter" data-level="3.3.5" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#spatially-intersect-layers"><i class="fa fa-check"></i><b>3.3.5</b> Spatially Intersect Layers</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="usingSpatialDatasets.html"><a href="usingSpatialDatasets.html"><i class="fa fa-check"></i><b>3.4</b> Using Spatial Datasets</a></li>
+<li class="chapter" data-level="3.5" data-path="interactiveMapping.html"><a href="interactiveMapping.html"><i class="fa fa-check"></i><b>3.5</b> Interactive Mapping</a></li>
+<li class="chapter" data-level="3.6" data-path="watershed-delineation.html"><a href="watershed-delineation.html"><i class="fa fa-check"></i><b>3.6</b> Watershed Delineation</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="watershed-delineation.html"><a href="watershed-delineation.html#single-station-delineation"><i class="fa fa-check"></i><b>3.6.1</b> Single Station Delineation</a></li>
+<li class="chapter" data-level="3.6.2" data-path="watershed-delineation.html"><a href="watershed-delineation.html#multiple-station-delineation"><i class="fa fa-check"></i><b>3.6.2</b> Multiple Station Delineation</a></li>
+<li class="chapter" data-level="3.6.3" data-path="watershed-delineation.html"><a href="watershed-delineation.html#qa"><i class="fa fa-check"></i><b>3.6.3</b> QA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="landcover-analysis.html"><a href="landcover-analysis.html"><i class="fa fa-check"></i><b>3.7</b> Landcover analysis</a></li>
+<li class="chapter" data-level="3.8" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.8</b> Spatial joins</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html"><i class="fa fa-check"></i><b>4</b> Shiny App Pro Tips</a>
 <ul>
@@ -235,8 +267,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="spatial-joins" class="section level2" number="3.6">
-<h2><span class="header-section-number">3.6</span> Spatial joins</h2>
+<div id="spatial-joins" class="section level2" number="3.8">
+<h2><span class="header-section-number">3.8</span> Spatial joins</h2>
 <p>Coming Soon</p>
 
 </div>

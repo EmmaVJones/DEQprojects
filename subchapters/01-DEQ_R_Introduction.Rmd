@@ -1,0 +1,84 @@
+---
+title: "Getting Started With R"
+author: "Joe Famularo"
+date: "5/20/2022"
+output: html_document
+---
+
+```{r gettingStartedWithR setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Welcome! We're glad you're interested in using R in your role at DEQ. Below there are a series of instructions that will help guide you through the process for downloading and configuring R and RStudio. Feel free to reach out to Joe with any questions ([joseph.famularo\@deq.virginia.gov](mailto:joseph.famularo@deq.virginia.gov)).
+
+### Downloading R and RStudio
+
+1.  Download [Base R](https://mirrors.nics.utk.edu/cran/). This is the software that contains the R programming language.
+
+2.  Once you have Base R installed, download [RStudio](https://download1.rstudio.org/desktop/windows/RStudio-2022.02.2-485.exe). Executing the installation for RStudio will require elevation (see step 3). RStudio is the standard integrated development environment (IDE) that is used for writing R code, but you can use it to write in different languages (e.g., python, SQL). RStudio also allows you to connect to databases (e.g., ODS), visualize your data and working environment, and publish R products (e.g., excel files, plots, markdown documents, shiny applications, etc.).
+
+3.  After downloading the RStudio executable, submit a VCCC [ticket](https://vccc.vita.virginia.gov/vita?id=vita_create_ticket_v2_full&sys_id=68607de3dbd79700796e76740f9619d2). This will get the ball rolling on resolving the elevation requirement for the installation.
+
+### Configuring RStudio
+
+After installing R and RStudio, it's a best practice to configure your settings.
+
+1.  Begin by verifying the version of RStudio that you are using.
+
+    1.  Open RStudio.
+
+    2.  Navigate to Tools \> Global Options \> General \> Change...
+
+    3.  Select [64-bit] option located in Documents sub-directory.
+
+        ![](../images/Global_Opts.png){width="436"}
+
+    4.  Click OK until you are out of the Global Options menu.
+
+    5.  Restart R.
+
+2.  Set the CRAN repository. CRAN is the repository that stores R packages and documentation. There are CRAN mirrors around the world. We will be selecting the one located at Oak Ridge National Lab.
+
+    1.  Open RStudio.
+
+    2.  Navigate to Tools \> Global Options \> Packages \> Change...
+
+    3.  Select USA (TN) [https] - National Institute for Computational Sciences, Oak Ridge, TN.
+
+    4.  Select Apply.
+
+    5.  Click OK.
+
+3.  Set your IDE appearance. This gives you the option to personalize RStudio, which can be helpful if you're spending hours writing or reviewing code:
+
+    1.  Navigate to Tools \> Global Options \> Appearance \> Editor theme.
+
+
+### Downloading Packages
+
+Like most operations in R, there are multiple approaches to downloading packages.
+
+1.  Call the function `install.packages()`in your console.
+
+2.  Packages can be installed using the "Packages" tab.
+
+    1.  Click on the Packages tab.
+
+    2.  Select Install.
+
+    3.  Type package name(s).
+
+    4.  Click Install.
+
+We recommend downloading the following packages to get started.
+
+-   [`Tidyverse`](https://www.tidyverse.org/packages/)
+
+-   [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html)
+
+-   [`sp`](https://cran.r-project.org/web/packages/sp/sp.pdf)
+
+-   [`sf`](https://r-spatial.github.io/sf/)
+
+-   [`dataRetrevial`](https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html)

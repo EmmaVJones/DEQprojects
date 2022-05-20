@@ -15,18 +15,29 @@ split_by: "section"
 
 # Background
 
-The purpose of this book is to describe common tasks undertaken by DEQ staff and clearly outline similar methodologies in R in order to promote learning opportunities for new R users.
+The purpose of this book is to describe common tasks undertaken by DEQ staff and clearly outline similar methodologies in R in order to promote learning opportunities for various skill levels of R users.
 
 This project is an example of a [bookdown](https://bookdown.org/yihui/bookdown/) report built using R and [RStudio's R Markdown](http://rmarkdown.rstudio.com/). Many authors have contributed to this effort:
 
 * Emma Jones (emma.jones@deq.virginia.gov)
 * Connor Brogan (connor.brogan@deq.virginia.gov)
 * Rex Robichaux (rex.robichaux@deq.virginia.gov)
+* Joe Famularo (joseph.famularo@deq.virginia.gov)
 
 Feel free to explore different chapters to learn about specific tasks and how to complete them efficiently and transparently in R. 
 
+## Why R?{#whyR}
 
-## Want to Contribute?
+
+
+## Getting Started With R{#gettingStartedWithR}
+
+**Section Contact: Joe Famularo (joseph.famularo@deq.virginia.gov)**
+
+```{r child = 'subchapters/01-DEQ_R_Introduction.Rmd'}
+```
+
+## Want to Contribute?{#wantToContribute}
 
 We are always looking for collaborators. All [reprex](https://reprex.tidyverse.org/articles/articles/learn-reprex.html) (reproducible examples) must be published in R markdown using the bookdown package and bookdown output style. **Contributions are not limited to R as R markdown natively utilizes many languages including python and SQL.**
 
