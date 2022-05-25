@@ -9,24 +9,248 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(DT)
+library(rmarkdown)
+
+# chapter built in R4.2.1 but book built in 3.6.2
 ```
 
 ### What is an API
 
-Whether or not you realize it, you have been using application programming interfaces, or APIs, for years. APIs are a set of rules for building and integrating software 
-such that services can communicate programmatically. Simply put, APIs allow computers to communicate and share information. Much of the internet as we know it would not exist were it not for underlying APIs sharing data among apps and programs. APIs are where users go to pull data from various entities. That said, some APIs are well documented and easily explain how users might access open data. However, many entities that make data available via an API lack documentation, but valuable data can still be acquired with a bit of thought put into your code.
+Whether or not you realize it, you have been using application programming interfaces, or APIs, for years. APIs are a set of rules for building and integrating software so computer services and servers can communicate and share information efficiently. APIs are where users go to pull data from various entities. That said, some APIs are well documented and easily explain how users might access open data (e.g. the [USGS StreamStats Service Documentation](https://streamstats.usgs.gov/docs/streamstatsservices/#/)). However, many entities that make data available via an API don't have the resources to maintain robust documentation, but valuable data can still be acquired with a bit of thought and data exploration (and politely emailing the web service maintainer if all else fails!).
 
-#### CMC API Use Case
+### CMC API Use Case{#CMCuseCase}
 
 This example will overview the process of using R to "scrape" or acquire data from (at the time of writing) a less documented API. The [Chesapeake Monitoring Cooperative (CMC)](https://www.chesapeakemonitoringcoop.org/) coordinates with citizen monitoring groups to share data resources collected from the Chesapeake Bay watershed. Thanks to a grant, DEQ and the CMC are expanding data resources to incorporate non-Bay citizen data into the database such that DEQ may point citizen groups throughout Virginia to a single data entry portal. This expansion will allow DEQ to pull all citizen monitoring data conducted for biannual Integrated Reports from one location in one data format. By automating the process of scraping the CMC API, DEQ staff will benefit from significant time savings acquiring and organizing data, as well as tagging data a different citizen monitoring data levels or tiers. 
 
+### Required Packages
 
-```{r accessingAPIsWithR}
+In order to scrape APIs, you will need the following R packages installed and loaded into your environment.
 
+```{r accessingAPIsWithR libraries, eval=FALSE}
+library(tidyverse)
+library(rmarkdown) # just for pretty tables in this document
+library(httr)
+library(jsonlite)
+```
+
+### Explore the endpoint in a browser
+
+Like all good data analysis tasks, we must first understand what data are available and how they are formated before operating on the data. The CMC API is available off the odata endpoint. We can view the data available by pasting this URL into a browser window: [https://cmc.vims.edu/odata/](https://cmc.vims.edu/odata/) .
+
+
+![](images/odataEndpoint.PNG)
+
+This tells us about the structure of the database and the names of the different datasets available from the API. It is helpful to explore a few datasets to understand what data are contained where and how to connect datasets. To demonstrate how to explore a dataset, we will first show the browser method and then how to bring back the data into R.
+
+Let's investigate the first dataset called "Groups." To do so in a browser, we would simply augment our original URL to include "Groups" endpoint, e.g. [https://cmc.vims.edu/odata/Groups](https://cmc.vims.edu/odata/Groups) .
+
+![](images/jsonGroupTable.PNG)
+
+This returns a json dataset that is somewhat easy to understand, but let's pull it back into our R environment to make data exploration even easier.
+
+
+### Query API with R
+
+To use R to perform the same query, we need to feed the same URL from above into httr::GET(). If you were to print the results of the CMCgroupsQuery object you will see metadata on when the operation was executed, the status (200 if it is successful), data returned (json format), and data size. This isn't super helpful for actually working with the data, so let's convert this response to an R object. The nested functions `fromJSON(rawToChar(CMCgroupsQuery$content))$value` unpack the json data returned from the API endpoint into a data format you may be more familiar with.  You can explore this step on your own and dig into [more articles](https://www.r-bloggers.com/2015/11/accessing-apis-from-r-and-a-little-r-programming/) that explain the ins and outs of APIs and webscraping with R. 
+
+```{r accessingAPIsWithR CMCgroupsQuery, eval=FALSE}
+CMCgroupsQuery <- GET("https://cmc.vims.edu/odata/Groups")
+CMCgroups <- fromJSON(rawToChar(CMCgroupsQuery$content))$value
+CMCgroups %>% 
+    datatable(rownames = F,
+          options = list(dom = 'lftip', pageLength = 5, scrollX = TRUE))
+```
+
+```{r accessingAPIsWithR CMCgroupsQueryreal, echo=F}
+CMCgroups <- readRDS('../data/CMCgroups.RDS')
+CMCgroups %>% 
+    datatable(rownames = F,
+          options = list(dom = 'lftip', pageLength = 5, scrollX = TRUE))
+```
+
+That's much better. We can now see this dataset contains information about the individual citizen groups that provide data to the CMC database. The Id field will be important when we want to query data from groups from the Samples dataset (see above).
+
+But first, let's build our first real query to the database. As with all databases, it is best practice to ask the database itself to perform the data simplification instead of bringing back unnecessary data. Let's identify all groups that are based in Virginia. To do so, we will add a filter statement to our URL and limit the data pulled back to just rows with State = VA. You can test this in a browser with the following URL: [https://cmc.vims.edu/odata/Groups?$filter=State eq 'Va'](https://cmc.vims.edu/odata/Groups?$filter=State eq 'Va') . Now let's try that same call with R. 
+
+You will immediately notice a lot of wonky characters in this URL. When you send spaces or '' to the browser, these will be converted to the appropriate character string for you. Note "" will return an error, so use ''. 
+
+
+```{r accessingAPIsWithR groupsQuery, eval=FALSE}
+VAgroupsQuery <- GET("https://cmc.vims.edu/odata/Groups?$filter=State%20eq%20%27Va%27")
+VAgroups <- fromJSON(rawToChar(VAgroupsQuery$content))$value
+paged_table(VAgroups)
+```
+
+```{r accessingAPIsWithR groupsQueryreal, echo=F}
+VAgroups <- readRDS('../data/VAgroups.RDS')
+paged_table(VAgroups)
+```
+
+Let's practice querying one more time on a different endpoint: Stations. This dataset contains all of the stations within the CMC database. For our task, we don't need any stations outside of Virginia, so let's only bring back stations within Virginia in this next query. The query will look like so: [https://cmc.vims.edu/odata/Stations?$filter=State eq 'Virginia'](https://cmc.vims.edu/odata/Stations?$filter=State eq 'Virginia') . 
+
+```{r accessingAPIsWithR VAstationsQuery, eval=FALSE}
+VAstationsQuery <- GET("https://cmc.vims.edu/odata/Stations?$filter=State%20eq%20%27Virginia%27")
+VAstations <- fromJSON(rawToChar(VAstationsQuery$content))$value
+paged_table(VAstations)
+```
+
+```{r accessingAPIsWithR VAstationsQuery real, echo=FALSE}
+VAstations <- readRDS('../data/VAstations.RDS')
+paged_table(VAstations)
+```
+
+How did we know that in this dataset we needed to type out 'Virginia' instead of 'Va' like the above example? We first explored the Stations dataset in our browser to see how that dataset was structured, noticed the `State` field, and identified that each state name was spelled out completely. 
+
+![](images/jsonStationQuery.PNG)
+
+### Example: Query CMC API for Assessment Uses
+
+The [problem outlined above](#CMCuseCase) will be completed using R in the following steps. We will use the previously created VAgroups object to identify which groups provided data in Virginia. Then we will query each of those GroupId's to query sample data within the assessment window of interest. Lastly, we will double check that all stations returned are in Virginia and pass necessary QA flags. 
+
+First, let's make sure we can query data from the Sample endpoint. We can perform a very basic query by pulling back all the sample events collected by a certain group (e.g. 64) in the CMC database like so. Note the expand statement. This links the Samples dataset to the Parameter, Qualifier, Problem, and Event datasets in the database like a join would. By adding this expand step, we can avoid pulling each individual dataset into our environment and joining it to the relevant sample information. It is always best to ask the database to perform operations to minimize the amount of data returned into your environment. Note the filter statement is performed on the GroupId field from the joined in Event dataset. This field is represented in the dataset as Event.GroupId, but we need to communicate the `.` as a `/` in our URL. 
+
+If you copy/paste the URL below into a browser, you will see the json dataset below returned.
+
+"https://cmc.vims.edu/odata/Samples?$expand=Parameter,Qualifier,Problem,Event($expand=Station,Group)&$filter=Event/GroupId eq 64"
+
+[json]('..images/jsonGroupIdQuery')
+
+```{r accessingAPIsWithR sample event by group, eval=F}
+sampleEventQuery <- GET("https://cmc.vims.edu/odata/Samples?$expand=Parameter,Qualifier,Problem,Event($expand=Station,Group)&$filter=Event/GroupId%20eq%2064")
+sampleEvent <- fromJSON(rawToChar(sampleEventQuery$content))$value
+paged_table(sampleEvent)
+```
+
+```{r accessingAPIsWithR sample event by group real, echo=F}
+sampleEvent <- readRDS('../data/sampleEvent.RDS')
+paged_table(sampleEvent)
+```
+
+Now that we can query sample data by for one GroupId, let's only return data within a given temporal window. From this point on, we will parse URL's into more manageable pieces to make queries more understandable. See the [Consuming GIS REST Services in R](#consumingGISRESTservices) section for more information on parsing URL statements. Note that any date needs to be communicated in json datetime format. We are querying all samples collected by GroupId 64 from January 1, 2022 to March 15, 2022.
+
+```{r accessingAPIsWithR sampleDateWindow, eval=F}
+# base URL for endpoint
+sampleParmeterQualifierEventGroupFilter <- "https://cmc.vims.edu/odata/Samples?$expand=Parameter,Qualifier,Event($expand=Station,Group)&$filter=Event/GroupId%20eq%20"
+
+# time window
+jsonFormatDateWindow <- c("2022-01-01T00:00:00Z","2022-03-15T23:59:59Z")
+
+# One group
+groupId <- 64
+
+# just a helper
+and <- "%20and%20"
+
+# Date filter statement
+inDateWindowFilter <- paste0("Event/DateTime%20ge%20",jsonFormatDateWindow[1],and,
+                           "Event/DateTime%20lt%20",jsonFormatDateWindow[2])
+
+stationByDateFilter <- fromJSON(
+  rawToChar(
+    GET(
+      paste0(sampleParmeterQualifierEventGroupFilter,
+             groupId,
+             and,
+             inDateWindowFilter)
+    )$content))$value
+
+paged_table(stationByDateFilter)
+```
+
+```{r accessingAPIsWithR sampleDateWindowreal, echo=F}
+stationByDateFilter <- readRDS('../data/stationByDateFilter.RDS')
+paged_table(stationByDateFilter)
+```
+
+Now let's scale this solution to iterate through the GroupId's in Virginia (VAgroups) to compile a dataset of sample data within the 2022 Integrated Report data window (January 1, 2015 to December 31, 2020). We know that there are `r length(unique(VAgroups$Id))` unique GroupId's for Virginia, that's a lot of data to pull back at once. For this minimal example, we will only iterate through the first two groups, but the real assessment process would include all potential Virginia groups. We will demonstrate this using a for [loop](https://intro2r.com/loops.html) for clarity, but we offer that loops are slow and not best practices for iterating through analyses in a functional programming language like R. The better solution would be to build the operation into a function, but that is beyond the scope of this article. 
+
+```{r accessingAPIsWithR sampleDataLoop, eval=FALSE}
+### Establish all your important building blocks outside your loop
+
+# assessment period in a R format (for QA later)
+assessmentPeriod <- as.POSIXct(c("2015-01-01 00:00:00 UTC","2020-12-31 23:59:59 UTC"),tz='UTC')
+
+# assessment period in json format (for URL)
+jsonFormatAssessmentPeriod <- c("2015-01-01T00:00:00Z","2020-12-31T23:59:59Z")# base URL for endpoint
+
+# base URL for endpoint
+sampleParmeterQualifierEventGroupFilter <- "https://cmc.vims.edu/odata/Samples?$expand=Parameter,Qualifier,Event($expand=Station,Group)&$filter=Event/GroupId%20eq%20"
+
+# just a helper
+and <- "%20and%20"
+
+# Date filter statement
+inDateWindowFilter <- paste0("Event/DateTime%20ge%20",jsonFormatAssessmentPeriod[1],and,
+                           "Event/DateTime%20lt%20",jsonFormatAssessmentPeriod[2])
+
+## And provide a place to store output information
+dataOut <- tibble()
+
+## Now for the loop
+for (i in unique(VAgroups$Id)[1:2]){
+  stationByDateFilter <- fromJSON(
+    rawToChar(
+      GET(
+        paste0(sampleParmeterQualifierEventGroupFilter,
+               i,
+               and,
+               inDateWindowFilter)
+      )$content))$value
+  dataOut <- bind_rows(dataOut, stationByDateFilter)
+} 
+
+# What was returned?
+glimpse(dataOut)
 ```
 
 
-
-```{r accessingAPIsWithR}
-
+```{r accessingAPIsWithR sampleDataLoopreal, echo=FALSE}
+dataOut <- readRDS('../data/dataOutCMCdatabase.RDS')
+glimpse(dataOut)
 ```
+
+Not bad! Within a minute or so (depending on your network speed) we have returned `r nrow(dataOut)` records for citizen data in Virginia. If you are an astute observer, you will notice that the Parameter, Qualifier, and Event columns are in fact list-columns used to efficiently store data. A full explanation of list-columns is beyond the scope of this article, but this snippet of code will unpack the data in a way we can use it for other purposes. 
+
+```{r accessingAPIsWithR unnest, eval=F}
+unnested_dataOut <- dataOut %>% 
+  tidyr::unnest(Parameter, names_sep = ".", keep_empty = TRUE) %>% 
+  tidyr::unnest(Qualifier, names_sep = ".", keep_empty = TRUE) %>% 
+  tidyr::unnest(Event, names_sep = ".", keep_empty = TRUE)
+
+names(unnested_dataOut)
+```
+
+```{r accessingAPIsWithR unnestreal, echo=F}
+#unnest doesn't work the same in R3.6.2 (what book is published in) vs 4.1.2 (what report written in)
+# has to do with tidyr::unnest version
+## reading in compiled data to overcome this issue
+unnested_dataOut <- readRDS('../data/unnested_dataOut.RDS')
+names(unnested_dataOut)
+```
+
+Let's do a little QA quickly to make sure that 
+
+1) our data is in fact from Virginia stations (VAstations object from above)
+
+```{r accessingAPIsWithR QAstations}
+unnested_dataOut$Event.StationId[!unnested_dataOut$Event.StationId %in% VAstations$Id]
+```
+
+2) our data is within the appropriate date window (assessmentPeriod object from above)
+
+```{r accessingAPIsWithR QAdateWindow}
+
+unnested_dataOut %>% 
+  # fix Event.DateTime (character) field to actual date time for QA
+  mutate(`Event.DateTime2` = as.POSIXct( str_replace_all(Event.DateTime,c('T'= ' ', 'Z' = '')),  format = "%Y-%m-%d %H:%M:%S") ) %>% 
+  summarise(min(Event.DateTime2),
+            max(Event.DateTime2))
+```
+
+Interesting results! this is why it is always prudent to check and clean your data! First a note on the QA methods, the examples show both a base R and tidy method for QAing your results. One method is not more correct than the other. They each have utility depending on your use case and your personal syntax preferences.
+
+So we found that there was one station pulled back that wasn't in fact in Virginia. This tells us that querying on GroupId may not be the best method to get back only the data we want. The lesson learned is that some groups sample across state boundaries and we should use the VAstations object as a better starting point for this specific task. The second QA check demonstrated that we pulled back data from just the date range we wanted, great! This is something to check again when we change our Query to use unique StationId's as a starting point. 
+
+### Parting Challenge
+
+Can you adjust the method above to answer the original question? Can you replace the loop with a function to complete the task?

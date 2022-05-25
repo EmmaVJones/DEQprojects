@@ -4,7 +4,7 @@ gettingStartedWithR
 downloading-r-and-rstudio
 configuring-rstudio
 downloading-packages
-want-to-contributewanttocontribute
+wantToContribute
 queryInternalDataSources
 connectToConnectPins
 api-keys
@@ -73,3 +73,11 @@ regexAnchors
 regexExamples
 regexResources
 non-standard-evaluation
+accessAPIfromR
+what-is-an-api
+CMCuseCase
+required-packages-1
+explore-the-endpoint-in-a-browser
+query-api-with-r
+example-query-cmc-api-for-assessment-uses
+parting-challenge

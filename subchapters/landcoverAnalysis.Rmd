@@ -1,0 +1,20 @@
+---
+title: "Landcover Analysis with R"
+author: "Emma Jones"
+date: "5/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### What is landcover analysis?
+
+Landcover data is spatial data derived from satelite or aerial imagery that qualifies a landscape into certain classes, e.g. forests, agriculture, wetland, open water, impervious surfaces, high/medium/low density development, etc. This data is usually presented as [rasters](https://datacarpentry.org/organization-geospatial/01-intro-raster-data/#:~:text=Raster%20data%20is%20any%20pixelated,we%20represent%20any%20digital%20image.) were one cell equates to a value, which in turn equates to a landcover type (e.g. forest, agriculture, wetland, etc.). Analysing landcover data is useful to understand what landuses are present on a landscape, the proximity of certain landuses to areas of interest, and how landuse changes through time. 
+
+### How does DEQ use landcover analysis?
+
+Various programs at DEQ use landcover data when making decisions from evaluating pollutant source contributions and reductions in the TMDL program to helping direct the State Lands Watershed Implementation Plan (WIP) in the Watershed Planning program. The Freshwater Probabilistic Monitoring program analyses nearly 100 landcover metrics and provides population estimates to describe how these landcover metrics compare to biological, chemical, and physical water quality measures. There are many ways to interact with landcover data that all depend on your use case. This article will overview methods the Freshwater Probabilistic Monitoring program uses to analyze landcover data and derive metrics from other spatial data sources in sampled watersheds.
+
+###
