@@ -24,7 +24,7 @@
 <meta name="author" content="DEQ R Development Team" />
 
 
-<meta name="date" content="2022-05-25" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,13 +52,17 @@
 
 
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.49.4/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.49.4/plotly-latest.min.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
 <script src="libs/datatables-binding-0.13/datatables.js"></script>
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet-1.3.1/leaflet.js"></script>
 <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
@@ -154,7 +158,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Background</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="whyR.html"><a href="whyR.html"><i class="fa fa-check"></i><b>1.1</b> Why R?</a></li>
+<li class="chapter" data-level="1.1" data-path="whyR.html"><a href="whyR.html"><i class="fa fa-check"></i><b>1.1</b> Why R?</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="whyR.html"><a href="whyR.html#accessible-open-source-software"><i class="fa fa-check"></i><b>1.1.1</b> Accessible, Open Source Software</a></li>
+<li class="chapter" data-level="1.1.2" data-path="whyR.html"><a href="whyR.html#how-to-get-started-with-or-continue-learning-r"><i class="fa fa-check"></i><b>1.1.2</b> How to Get Started With (or Continue Learning) R?</a></li>
+<li class="chapter" data-level="1.1.3" data-path="whyR.html"><a href="whyR.html#automation-and-reproducibility"><i class="fa fa-check"></i><b>1.1.3</b> Automation and Reproducibility</a></li>
+<li class="chapter" data-level="1.1.4" data-path="whyR.html"><a href="whyR.html#r-products"><i class="fa fa-check"></i><b>1.1.4</b> R Products</a></li>
+<li class="chapter" data-level="1.1.5" data-path="whyR.html"><a href="whyR.html#summary"><i class="fa fa-check"></i><b>1.1.5</b> Summary</a></li>
+</ul></li>
 <li class="chapter" data-level="1.2" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html"><i class="fa fa-check"></i><b>1.2</b> Getting Started With R</a>
 <ul>
 <li class="chapter" data-level="1.2.1" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#downloading-r-and-rstudio"><i class="fa fa-check"></i><b>1.2.1</b> Downloading R and RStudio</a></li>
@@ -291,15 +302,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">2.2.2</span> Required Packages</h3>
 <p>To access ODS, you will need to use specific R packages that enable database access in addition to the recommended tidyverse package for general data management. The chunk below specifies which packages are required for the two methods for connecting to ODS overviewed in this report. The “pool method” requires the R packages pool and dbplyr while the “DBI method” requires the odbc and DBI R packages.</p>
 <p>Like all tasks completed in R, it is good be be aware that there are multiple methods to perform various operations, but in time users tend to prefer certain methods over others for their regular business practices.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="connectToODS.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb7-2"><a href="connectToODS.html#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="connectToODS.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;pool method&quot; required packages</span></span>
-<span id="cb7-4"><a href="connectToODS.html#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pool)</span>
-<span id="cb7-5"><a href="connectToODS.html#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
-<span id="cb7-6"><a href="connectToODS.html#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="connectToODS.html#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;DBI method&quot; required packages</span></span>
-<span id="cb7-8"><a href="connectToODS.html#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(odbc)</span>
-<span id="cb7-9"><a href="connectToODS.html#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="connectToODS.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb17-2"><a href="connectToODS.html#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="connectToODS.html#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;pool method&quot; required packages</span></span>
+<span id="cb17-4"><a href="connectToODS.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pool)</span>
+<span id="cb17-5"><a href="connectToODS.html#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
+<span id="cb17-6"><a href="connectToODS.html#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="connectToODS.html#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># &quot;DBI method&quot; required packages</span></span>
+<span id="cb17-8"><a href="connectToODS.html#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(odbc)</span>
+<span id="cb17-9"><a href="connectToODS.html#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span></code></pre></div>
 <div id="odsprod-vs-odstest" class="section level4" number="2.2.2.1">
 <h4><span class="header-section-number">2.2.2.1</span> ODSprod vs ODStest</h4>
 <p>There are two ODS environments for you to be aware of: ODS (production or prod, DEQ-SQLODS-PROD) and ODStest <strong>(DEQ-SQLODS-TEST)</strong>. The ODS environment is the “production” environment that offers data views as they are stored in CEDS. The ODStest environment is a testing environment (sandbox) that is used for testing data architecture and database functions and may not always contain data meant for querying for business applications. <strong>Which should you connect to?</strong> If you are querying data for business applications, reports, etc. you must ensure you are connected to the ODS production environment. If you are learning how to use databases, building test queries, or generally exploring, use the ODStest environment.</p>
@@ -309,8 +320,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dbi-method-for-ods-connection" class="section level3" number="2.2.3">
 <h3><span class="header-section-number">2.2.3</span> DBI Method for ODS Connection</h3>
 <p>The most basic way of connecting to a database uses the odbc and DBI R packages.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="connectToODS.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(odbc)</span>
-<span id="cb8-2"><a href="connectToODS.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="connectToODS.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(odbc)</span>
+<span id="cb18-2"><a href="connectToODS.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DBI)</span></code></pre></div>
 <p>We connect to a database by establishing a connection object with a very specific connection string.</p>
 <p>There are a few things to note in this connection string:
 1. The driver method used is the ODBC driver from the odbc R package
@@ -318,12 +329,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 3. The server argument specifies the server name (DEQ-SQLODS-PROD) and port (50000) that you are using for the connection
 4. The database argument specifies which database you wish to connect to (ODS)
 5. The trusted_connection argument must always be “yes”</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="connectToODS.html#cb9-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(odbc<span class="sc">::</span><span class="fu">odbc</span>(), </span>
-<span id="cb9-2"><a href="connectToODS.html#cb9-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">.connection_string =</span> <span class="st">&quot;driver={ODBC Driver 11 for SQL Server};server={DEQ-SQLODS-PROD,50000};database={ODS};trusted_connection=yes&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="connectToODS.html#cb19-1" aria-hidden="true" tabindex="-1"></a>con <span class="ot">&lt;-</span> <span class="fu">dbConnect</span>(odbc<span class="sc">::</span><span class="fu">odbc</span>(), </span>
+<span id="cb19-2"><a href="connectToODS.html#cb19-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">.connection_string =</span> <span class="st">&quot;driver={ODBC Driver 11 for SQL Server};server={DEQ-SQLODS-PROD,50000};database={ODS};trusted_connection=yes&quot;</span>)</span></code></pre></div>
 <p>The above script establishes a database connection named “con” in your environment. This connection will be passed into other query strings to query the database, requiring an open database connection each time you query the database.</p>
 <p>To test the connection, we will query an entire data view that is small from the WQM area of ODS. We use SQL to tell ODS to select everything from the Edas_Benthic_Master_Taxa_View data view. Note that we must provide the querying function the con connection string we established above.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="connectToODS.html#cb10-1" aria-hidden="true" tabindex="-1"></a>masterTaxaGenus <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con,  <span class="st">&quot;SELECT * FROM wqm.Edas_Benthic_Master_Taxa_View&quot;</span>)</span>
-<span id="cb10-2"><a href="connectToODS.html#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(masterTaxaGenus)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="connectToODS.html#cb20-1" aria-hidden="true" tabindex="-1"></a>masterTaxaGenus <span class="ot">&lt;-</span> <span class="fu">dbGetQuery</span>(con,  <span class="st">&quot;SELECT * FROM wqm.Edas_Benthic_Master_Taxa_View&quot;</span>)</span>
+<span id="cb20-2"><a href="connectToODS.html#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(masterTaxaGenus)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 19
 ##   Phylum Class Subclass Order Suborder Superfamily Family Subfamily Tribe Genus
 ##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;
@@ -337,7 +348,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## #   FinalID &lt;chr&gt;, TolVal &lt;dbl&gt;, FFG &lt;chr&gt;, Habit &lt;chr&gt;, FamFFG &lt;chr&gt;,
 ## #   FamTolVal &lt;dbl&gt;, FamHabit &lt;chr&gt;</code></pre>
 <p>We can use this DBI method to send SQL statements directly to the database. SQL will not be covered in this section, please see <a href="https://www.datacamp.com/courses/introduction-to-sql">DataCamp Introduction to SQL course</a> for a basic primer on the SQL language.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="connectToODS.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con,  <span class="st">&quot;SELECT TOP 10 * FROM wqm.WQM_Stations_View&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="connectToODS.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dbGetQuery</span>(con,  <span class="st">&quot;SELECT TOP 10 * FROM wqm.WQM_Stations_View&quot;</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 103
 ##    Sta_Id Sta_Desc Sta_Cbp_Name Sta_Fic_County Sta_Fic_State Sta_Rec_Code
 ##    &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;         &lt;chr&gt;       
@@ -390,8 +401,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="pool-method-for-ods-connection" class="section level3" number="2.2.4">
 <h3><span class="header-section-number">2.2.4</span> Pool Method for ODS Connection</h3>
 <p>Generally speaking, the pool method is preferred for most business practices, especially any dynamic content (e.g. shiny apps). The <a href="https://db.rstudio.com/r-packages/pool/">pool package</a> creates a connection to a specified database, even if the database connection is temporarily lost or idle for a period of time. The instability of connecting to ODS of VPN makes the pool package especially useful for DEQ business practices. The concepts of open database connections are important when interacting with databases, read more on this topic <a href="https://db.rstudio.com/r-packages/pool/">here</a>. The “pool method” requires the pool and dbplyr R packages to be loaded into the user environment.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="connectToODS.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pool)</span>
-<span id="cb14-2"><a href="connectToODS.html#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="connectToODS.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pool)</span>
+<span id="cb24-2"><a href="connectToODS.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span></code></pre></div>
 <p>To connect to a database, you must establish a pool object. This object stores your connection information and may easily be piped into query requests. You may name your pool object anything you want, but most programmers name it “pool” by convention to ease the transfer of scripts from one project/programmer to the next.</p>
 <p>There are a few things to note in this connection string:
 1. The driver method used is the ODBC driver from the odbc R package
@@ -399,21 +410,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 3. The Server argument specifies the server name and port (50000) you are using for the connection
 4. The dbname argument specifies which database you wish to connect to (ODS)
 5. The trusted_connection argument must always be “yes”</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="connectToODS.html#cb15-1" aria-hidden="true" tabindex="-1"></a>pool <span class="ot">&lt;-</span> <span class="fu">dbPool</span>(</span>
-<span id="cb15-2"><a href="connectToODS.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">drv =</span> odbc<span class="sc">::</span><span class="fu">odbc</span>(), <span class="co"># (1)</span></span>
-<span id="cb15-3"><a href="connectToODS.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Driver =</span> <span class="st">&quot;ODBC Driver 11 for SQL Server&quot;</span>, <span class="co"># (2)</span></span>
-<span id="cb15-4"><a href="connectToODS.html#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Server=</span> <span class="st">&quot;DEQ-SQLODS-PROD,50000&quot;</span>, <span class="co"># (3)</span></span>
-<span id="cb15-5"><a href="connectToODS.html#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbname =</span> <span class="st">&quot;ODS&quot;</span>, <span class="co"># (4)</span></span>
-<span id="cb15-6"><a href="connectToODS.html#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">trusted_connection =</span> <span class="st">&quot;yes&quot;</span> <span class="co"># (5)</span></span>
-<span id="cb15-7"><a href="connectToODS.html#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="connectToODS.html#cb25-1" aria-hidden="true" tabindex="-1"></a>pool <span class="ot">&lt;-</span> <span class="fu">dbPool</span>(</span>
+<span id="cb25-2"><a href="connectToODS.html#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">drv =</span> odbc<span class="sc">::</span><span class="fu">odbc</span>(), <span class="co"># (1)</span></span>
+<span id="cb25-3"><a href="connectToODS.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Driver =</span> <span class="st">&quot;ODBC Driver 11 for SQL Server&quot;</span>, <span class="co"># (2)</span></span>
+<span id="cb25-4"><a href="connectToODS.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Server=</span> <span class="st">&quot;DEQ-SQLODS-PROD,50000&quot;</span>, <span class="co"># (3)</span></span>
+<span id="cb25-5"><a href="connectToODS.html#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbname =</span> <span class="st">&quot;ODS&quot;</span>, <span class="co"># (4)</span></span>
+<span id="cb25-6"><a href="connectToODS.html#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">trusted_connection =</span> <span class="st">&quot;yes&quot;</span> <span class="co"># (5)</span></span>
+<span id="cb25-7"><a href="connectToODS.html#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p>After running the above chunk, you should have a list object named pool in your environment. We will use this object to build a minimal query to test our local connection to the ODS production environment.</p>
 </div>
 <div id="pool-method-query-data" class="section level3" number="2.2.5">
 <h3><span class="header-section-number">2.2.5</span> Pool Method: Query Data</h3>
 <p>Once a pool object is created, you may test it by querying the database. The below example is a good test of querying an entire data view in ODS and bringing that information back into your local environment because the view is relatively small. If you successfully bring back the benthic macroinvertebrate master taxa list, then you have successfully connected to ODS.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="connectToODS.html#cb16-1" aria-hidden="true" tabindex="-1"></a>masterTaxaGenus <span class="ot">&lt;-</span> pool <span class="sc">%&gt;%</span> <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>,  <span class="st">&quot;Edas_Benthic_Master_Taxa_View&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="connectToODS.html#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
-<span id="cb16-3"><a href="connectToODS.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(masterTaxaGenus)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="connectToODS.html#cb26-1" aria-hidden="true" tabindex="-1"></a>masterTaxaGenus <span class="ot">&lt;-</span> pool <span class="sc">%&gt;%</span> <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>,  <span class="st">&quot;Edas_Benthic_Master_Taxa_View&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="connectToODS.html#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb26-3"><a href="connectToODS.html#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(masterTaxaGenus)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 19
 ##   Phylum Class Subclass Order Suborder Superfamily Family Subfamily Tribe Genus
 ##   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;

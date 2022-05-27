@@ -28,7 +28,10 @@ Feel free to explore different chapters to learn about specific tasks and how to
 
 ## Why R?{#whyR}
 
+**Section Contact: ([joseph.famularo\@deq.virginia.gov](mailto:joseph.famularo@deq.virginia.gov))**
 
+```{r child = 'subchapters/01-whyR.Rmd'}
+```
 
 ## Getting Started With R{#gettingStartedWithR}
 

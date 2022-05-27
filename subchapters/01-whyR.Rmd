@@ -1,0 +1,170 @@
+```{r whyRsetup, include=FALSE}
+knitr::opts_chunk$set(message=FALSE)
+library(tidyverse)
+iris<-iris%>%select(Species, Sepal.Length, Sepal.Width, Petal.Length, Petal.Width)
+```
+
+
+Why should you consider using R and why do we use R here at DEQ? We'll address these questions in this chapter and we'll make the case by illustrating the following:
+
+1.  R is accessible.
+2.  R allows users to automate processes: saving time, building consistency, and reducing human-error.
+3.  R gives users the ability to create outstanding data-driven products.
+
+### Accessible, Open Source Software
+
+R is an open source programming language, which fundamentally means that users contribute to the development of the software. RStudio is also free and is the integrated development environment (IDE) of choice for most users. These factors make R highly accessible, collaborative, and dynamic. Anyone can download R and RStudio onto their computer and get started.
+
+#### Packages
+
+R benefits from the development of packages by its users. These packages enhance R by providing additional functions to the original software (i.e., base R). The availability of these packages gives users options when approaching questions and often makes arriving at a solution easier. Here are some examples to demonstrate the range of packages available to users.
+
+-   `RColorBrewer` - This package is used to simplify the creation of color palettes that are applied to figures.
+
+-   `lubridate` - A package that provides functions for handling various date-time formats.
+
+-   `beepr` - Allows the user to add audible notifications at the end of their scripts.
+
+-   `mailR` - Allows the user to send an email from R.
+
+-   `rayshader` - A package that can be used to create 3D figures.
+
+-   `leaflet` - A javascript library that allows R to create interactive maps.
+
+As of 5/23/2022, there are 18,586 packages hosted on the Comprehensive R Archive Network (CRAN). If there's something you're interested in doing with data, even if it's oddly specific, it's very likely that there is package that can help you.
+
+#### Online Support{#OnlineSupport}
+
+R users contribute to the community in ways other than package development. There is a wealth of content online that has been created to help users learn new R skills and solve R related questions. [Stack overflow](https://stackoverflow.com/){target="_blank"} is a public forum where users ask and answer coding questions about multiple coding languages. The R community is active here, which makes it a great resource when you're stuck. Odds are someone else has run into the problem you're having, or at least something similar.
+
+There are a number of other resources online developed by the R user community. In my experience, the best way to find answers is to google a question using thoughtful keywords, work through the google results, and then rephrase the search as necessary.
+
+The abundance of online resources and R contributors makes R very accessible. It's entirely possible to learn R through google because of these resources. The accessibility, availability of materials, and other contributions by the community are some of the important reasons why organizations and individuals choose to use R.
+
+### How to Get Started With (or Continue Learning) R?
+
+Simply typing ["free beginner R tutorial" into Google](https://www.google.com/search?q=free+beginner+R+tutorial){target="_blank"} produces an overwhelming number of results in the form of online courses, blogs, university lecture notes, and so much more. DEQ periodically offers an "Introduction to R Programming Course" (email [Kevin Vaughan](mailto:kevin.vaughan@deq.virginia.gov){target="_blank"} for information on the next course offering). We also host [course materials](https://rconnect.deq.virginia.gov/__landing__/#Rhelp) from previous course offerings on the R server if you want to dive in right now.  There are a number of additional free online resources we can recommend when you are just getting started. 
+
+* [Datacamp Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r){target="_blank"}
+* [Datacarpentry Intro to R](https://datacarpentry.org/R-ecology-lesson/01-intro-to-r.html){target="_blank"}
+* [Udemy R Basics - R Programming Language Introduction](https://www.udemy.com/course/r-basics/){target="_blank"}
+* [R for Data Science](https://r4ds.had.co.nz/){target="_blank"}
+* [RStudio Primers](https://rstudio.cloud/learn/primers){target="_blank"}
+
+Once you are comfortable with the basics, the best thing you can do is to try to get involved in your own project involving R. Maybe that is reprogramming an Excel spreadsheet process with R. Maybe it is taking one step out of a much larger process and trying to complete that with R. Maybe it is just trying to make a pretty plot in R. The point is, if you don't use it you lose it. Repeatedly practicing your skills is the key to further development and asking the question "could I do this in R?" is the gateway to strengthening your abilities. You can always consult chapters of this book for ideas on how other DEQ staff are using R in their roles for inspiration on how to incorporate it into your workflow. 
+
+#### But what if I get stuck?
+
+Great! That means you are trying. First, always first, [see above]({#OnlineSupport}) and reframe your question to Google (remember to always include "R" in your search term to specify solutions in this language). Then, ask a friend or colleague for help by building a [reproducible example](https://community.rstudio.com/t/faq-whats-a-reproducible-example-reprex-and-how-do-i-create-one/5219){target="_blank"} or [reprex](https://www.youtube.com/watch?v=MmTPhGQWPUo){target="_blank"}. Simply working through the process of trying to explain your problem often leads to finding your error. If it doesn't, then you have a tidy example to provide a friend when asking for assistance. As a last solution, you can post on a blog like Stack Overflow. This is not recommended unless you have exhausted your own research, exhausted your friends' patience, and exhausted your search terms in Google. Chances are, someone else has already solved this or a very similar problem to yours, so the R community doesn't like multiple posts about the same questions. Always remember to never reveal sensitive information or data in any online spaces. 
+
+### Automation and Reproducibility
+
+Making a business case for R is straightforward: the software is free, it can reduce human-error, and it can lead to significant time savings by allowing users to automate repetitive processes. R also provides a platform for making these processes easily reproducible. Taking the time to translate processes into R code can preserve institutional knowledge, facilitate QA/QC, and it promotes transparency.
+
+As an example of process automation, imagine that you have a weekly database query that is used to track the results of sampling at a specific site. You may currently query the data, export these data to excel, create a figure in excel, and then copy and paste the figure into a Word document. This process requires a time commitment every week and introduces the potential for error as you select data to be included in the figure. After the initial investment of time to write the code, this routine can be automated using R Markdown (more on that later) and executed as needed.
+
+An R-based approach would limit human error in this scenario because there would be no manual selection of data. The simple example below illustrates this principle. Imagine you have a data set with NA values that you'd like to remove. The first line of code specifies the individual rows where there are NA values that you'd like to remove from the dataset. This is analogous to excluding cells from a selection in excel. The second line of code uses the function `drop_na()` to remove rows with NA values from the `iris` dataset. Using the second approach minimizes the potential for errors because there is no manual selection of rows, which is especially important as the dataset grows and new NA values may be introduced.
+
+```{r, eval=FALSE}
+iris[-c(1,5,6,18,20),] #Excel analogue
+
+iris %>% drop_na() #Using a function to make code dynamic in R
+```
+
+### R Products
+
+The term products is used here to describe figures, tables, markdown documents, and shiny applications. These are among the most common products that users create with R, and their utility is outlined below.
+
+#### Graphics Libraries
+
+There are a number of packages that allow users to create compelling data visualizations. Two of the more commonly used packages are `ggplot2` and `plotly` .`Ggplot2` offers over 40 different geometries (e.g., bar, line, point, histogram, text, etc.) that can be mapped to a figure. There are numerous aesthetic configurations such as color, fill, weight, transparency. There are even extension packages that [expand](https://exts.ggplot2.tidyverse.org/gallery/){target="_blank"} `ggplot2`. `Plotly` is another highly configurable package used for creating figures, and it allows the user to make interactive data visualizations. Below are examples of figures using `ggplot2`, a `ggplot2` extension package (`ggridges`), and `plotly`. These examples only hint at the degree to which users can configure their visualizations. Take a look at the [R Graph Gallery](https://r-graph-gallery.com/){target="_blank"} or [Plotly's graphing library](https://plotly.com/r/){target="_blank"} to get a better sense of what is possible.
+
+```{r, fig.cap="Faceted plot showing sepal width as a funciton of sepal length for each species in the iris dataset.", eval = F}
+library(ggplot2)
+Plot<-ggplot(data=iris)+
+  geom_point(aes(x=Sepal.Length, y=Sepal.Width, color=Species))+
+  scale_color_manual(values=c('#00CC96','#EF553B', '#636EFA'))+
+  labs(x="Sepal Length (cm)", y="Sepal Width (cm)")+
+  theme_bw()
+
+Plot+facet_grid(rows=vars(Species))+theme(strip.text = element_blank())
+```
+
+![images/WhyRirisScatterPlot.PNG]
+
+```{r, fig.cap="Figure that displays the distributions of sepal length for each species and was created using ggplot2 and the ggridges package.", eval=FALSE}
+library(ggplot2)
+library(ggridges)
+ggplot(data=iris, aes(x=Sepal.Length,y=Species, fill=Species))+
+  labs(x="Sepal Length (cm)", y="Species")+geom_density_ridges(alpha=0.7)+
+  scale_fill_manual(values=c('#00CC96','#EF553B', '#636EFA'), guide='none')+
+  theme_classic()
+```
+
+![images/WhyRirisPlot.PNG]
+
+```{r, message=FALSE, fig.cap="Plotly figure of the sepal width ~ sepal length relationship used to ilustrate the interactive functionality of the plotly package."}
+library(plotly)
+plot_ly(data=iris, x=~Sepal.Length, y=~Sepal.Width, color=~Species)%>%
+  layout(xaxis = list(title = 'Sepal Length (cm)'), 
+         yaxis = list(title = 'Sepal Width (cm)'))
+```
+
+Note how the `plotly` figure is interactive. You can zoom, hover, select, and pan within the figure and you can also toggle layers on and off. Interactive figures are frequently used in the creation of other R products such as shiny applications and markdown documents, which are discussed below.
+
+The degree of control that these packages give in the configuration of data visualizations is yet another reason why users choose R.
+
+##### Tables in R
+
+Like figures, there are a number of [packages](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/){target="_blank"} that provide different approaches to creating tables. These packages have functional overlaps, but you'll find that each package has it's own general aesthetic, strengths, and weaknesses. Below there are examples from `DT`, `reactable`, and `kableExtra`. This small exhibit of tables hints at the range of possibilities, from a classic report table to the interactive tables seen online. For more examples, take a look at the [RStudio table gallery](https://community.rstudio.com/c/table-gallery/64){target="_blank"}.
+
+```{r, fig.cap="Table created using the DT package."}
+library(DT)
+sample_n(iris, 10)%>%
+arrange(Species)%>%
+datatable(rownames = FALSE)
+```
+
+```{r, fig.cap="Table created using the reactable package.", eval =FALSE}
+library(reactable)
+library(reactablefmtr)
+data<-sample_n(iris, 10)
+reactable(
+  data,
+  defaultSorted = 'Sepal.Length',
+  defaultSortOrder = 'desc',
+  columns = list(
+    Sepal.Length = colDef(
+    style = color_scales(data)),
+    Petal.Width= colDef(cell = data_bars(data, text_position = "above", align_bars = 'right', round_edges = TRUE))))
+```
+
+![](images/WhyRrectable.PNG)
+
+```{r, fig.cap="Table created using the kableExtra package.", eval =FALSE}
+library(kableExtra)
+sample_n(iris, 10)%>%
+  arrange(Species)%>%
+  kbl()%>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+![](images/WhyRkable.PNG)
+
+#### Markdown Documents
+
+R offers users the ability to integrate their code within documents (Word, PDF, HTML) and presentations (Powerpoint, PDF, HTML) using R Markdown. The `bookdown` package allows users to compile markdown files into a book format, with specific chapters (like this encyclopedia!).
+
+The ability to integrate code into your report or presentation is a major advantage of R Markdown over traditional tools. You've seen examples of this code integration earlier in the chapter. You've also seen the code associated with those figures and tables (which can be hidden in the output if desired). After writing the code and supporting text in a markdown document, all that you need to do to produce the document or presentation is compile the code, which is as simple as clicking a button. One of the greatest benefits of using R Markdown is that every time you create your report, your figures and tables will update to include any new data from the input dataset(s).This approach also limits the need for manually reformatting documents when you add or remove figures and tables.
+
+Check out the RStudio [R Markdown gallery](https://rmarkdown.rstudio.com/gallery.html){target="_blank"} for examples of these documents.
+
+#### Shiny Applications
+
+Shiny is a framework that allows R users to develop custom interactive web applications. This platform has made the creation of applications accessible, without the need to know HTML, CSS, Java, etc. The defining feature of Shiny is reactivity, which allows the developer to create user interface (UI) input elements that communicate with figures and tables in the application. These figures and tables have the ability to react based on the user inputs. As an example, the developer could add a date range input, which then subsets the data included in a time-series figure that is displayed in the UI. The use cases for shiny applications are seemingly endless, and this is illustrated by the RStudio [Shiny application gallery](https://shiny.rstudio.com/gallery/){target="_blank"}.
+
+DEQ hosts a shiny server and has developed a number of applications and markdown documents that support water quality and biological monitoring, water quality assessment, and permitting. These tools have streamlined and standardized processes, saving staff time and improving our ability to communicate results.
+
+### Summary
+
+R is a free, and open source tool that has been made accessible by the R community through the creation of packages, engagement in problem-solving forums, and sharing of learning materials. R gives users the opportunity to work efficiently on tasks ranging from data analysis to report writing and application development. These R products are easily configurable and provide a broad range of options for customization. Leveraging these tools can lead to time savings, greater consistency, reduction of errors, knowledge transfer, and transparency - among other benefits. Hopefully we've convinced you that using R may be worth your time. If so, please proceed to the next chapter, where we'll show you how to get started!
