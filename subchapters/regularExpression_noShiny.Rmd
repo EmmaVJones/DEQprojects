@@ -11,7 +11,7 @@ myDataPath<-"../data/Regex_data.csv"
 ```
 
 ### Example Data Overview{#regexOverview}
-For this chapter, the following dataset will be used to demonstrate how we can use Regular Expression to extract data from long, complicated, or inconsistent character data. Let's read in the data and see examine what we are working with. A copy of this dataset is available [here](https://github.com/EmmaVJones/DEQprojects/tree/main/dataForSharing/Regex_data.csv):
+For this chapter, the following dataset will be used to demonstrate how we can use Regular Expression to extract data from long, complicated, or inconsistent character data. Let's read in the data and see examine what we are working with. A copy of this dataset is available [here](https://github.com/EmmaVJones/DEQprojects/tree/main/dataForSharing/Regex_data.csv){target="_blank"}:
 
 ```{r regex-load,echo=T}
 library(tidyverse)
@@ -28,7 +28,7 @@ We want to extract the day of the week each sample was taken, the date, the flow
 We will cover what commands that find matching patterns, that extract or replace matching patterns, and those that return logical vectors for matching patterns. We will demonstrate both Tidyverse and Base R functions.
 
 #### Tidyverse
-There are three main functions available in the stringr library that are extremely useful for parsing string data. Many other functions exist within stringr that can speed up more complicated analyses so it may be worth reviewing the [basic documentation](https://stringr.tidyverse.org/) of stringr.
+There are three main functions available in the stringr library that are extremely useful for parsing string data. Many other functions exist within stringr that can speed up more complicated analyses so it may be worth reviewing the [basic documentation](https://stringr.tidyverse.org/){target="_blank"} of stringr.
 
 The function *str_detect* will tell us if our entries contain a pattern or not. It will return a logical vector that we can use to assess which data entries match our pattern. It takes a vector of strings and a pattern to be matched as input. For now, lets use a basic pattern. We can search for all dates that happened on Friday by simply trying to match "Friday".
 ```{r regex-str_detect}

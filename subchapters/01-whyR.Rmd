@@ -41,22 +41,6 @@ There are a number of other resources online developed by the R user community. 
 
 The abundance of online resources and R contributors makes R very accessible. It's entirely possible to learn R through google because of these resources. The accessibility, availability of materials, and other contributions by the community are some of the important reasons why organizations and individuals choose to use R.
 
-### How to Get Started With (or Continue Learning) R?
-
-Simply typing ["free beginner R tutorial" into Google](https://www.google.com/search?q=free+beginner+R+tutorial){target="_blank"} produces an overwhelming number of results in the form of online courses, blogs, university lecture notes, and so much more. DEQ periodically offers an "Introduction to R Programming Course" (email [Kevin Vaughan](mailto:kevin.vaughan@deq.virginia.gov){target="_blank"} for information on the next course offering). We also host [course materials](https://rconnect.deq.virginia.gov/__landing__/#Rhelp) from previous course offerings on the R server if you want to dive in right now.  There are a number of additional free online resources we can recommend when you are just getting started. 
-
-* [Datacamp Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r){target="_blank"}
-* [Datacarpentry Intro to R](https://datacarpentry.org/R-ecology-lesson/01-intro-to-r.html){target="_blank"}
-* [Udemy R Basics - R Programming Language Introduction](https://www.udemy.com/course/r-basics/){target="_blank"}
-* [R for Data Science](https://r4ds.had.co.nz/){target="_blank"}
-* [RStudio Primers](https://rstudio.cloud/learn/primers){target="_blank"}
-
-Once you are comfortable with the basics, the best thing you can do is to try to get involved in your own project involving R. Maybe that is reprogramming an Excel spreadsheet process with R. Maybe it is taking one step out of a much larger process and trying to complete that with R. Maybe it is just trying to make a pretty plot in R. The point is, if you don't use it you lose it. Repeatedly practicing your skills is the key to further development and asking the question "could I do this in R?" is the gateway to strengthening your abilities. You can always consult chapters of this book for ideas on how other DEQ staff are using R in their roles for inspiration on how to incorporate it into your workflow. 
-
-#### But what if I get stuck?
-
-Great! That means you are trying. First, always first, [see above]({#OnlineSupport}) and reframe your question to Google (remember to always include "R" in your search term to specify solutions in this language). Then, ask a friend or colleague for help by building a [reproducible example](https://community.rstudio.com/t/faq-whats-a-reproducible-example-reprex-and-how-do-i-create-one/5219){target="_blank"} or [reprex](https://www.youtube.com/watch?v=MmTPhGQWPUo){target="_blank"}. Simply working through the process of trying to explain your problem often leads to finding your error. If it doesn't, then you have a tidy example to provide a friend when asking for assistance. As a last solution, you can post on a blog like Stack Overflow. This is not recommended unless you have exhausted your own research, exhausted your friends' patience, and exhausted your search terms in Google. Chances are, someone else has already solved this or a very similar problem to yours, so the R community doesn't like multiple posts about the same questions. Always remember to never reveal sensitive information or data in any online spaces. 
-
 ### Automation and Reproducibility
 
 Making a business case for R is straightforward: the software is free, it can reduce human-error, and it can lead to significant time savings by allowing users to automate repetitive processes. R also provides a platform for making these processes easily reproducible. Taking the time to translate processes into R code can preserve institutional knowledge, facilitate QA/QC, and it promotes transparency.
@@ -90,7 +74,7 @@ Plot<-ggplot(data=iris)+
 Plot+facet_grid(rows=vars(Species))+theme(strip.text = element_blank())
 ```
 
-![images/WhyRirisScatterPlot.PNG]
+![](images/WhyRirisScatterPlot.PNG)
 
 ```{r, fig.cap="Figure that displays the distributions of sepal length for each species and was created using ggplot2 and the ggridges package.", eval=FALSE}
 library(ggplot2)
@@ -101,7 +85,7 @@ ggplot(data=iris, aes(x=Sepal.Length,y=Species, fill=Species))+
   theme_classic()
 ```
 
-![images/WhyRirisPlot.PNG]
+![](images/WhyRirisPlot.PNG)
 
 ```{r, message=FALSE, fig.cap="Plotly figure of the sepal width ~ sepal length relationship used to ilustrate the interactive functionality of the plotly package."}
 library(plotly)
@@ -168,3 +152,4 @@ DEQ hosts a shiny server and has developed a number of applications and markdown
 ### Summary
 
 R is a free, and open source tool that has been made accessible by the R community through the creation of packages, engagement in problem-solving forums, and sharing of learning materials. R gives users the opportunity to work efficiently on tasks ranging from data analysis to report writing and application development. These R products are easily configurable and provide a broad range of options for customization. Leveraging these tools can lead to time savings, greater consistency, reduction of errors, knowledge transfer, and transparency - among other benefits. Hopefully we've convinced you that using R may be worth your time. If so, please proceed to the next chapter, where we'll show you how to get started!
+

@@ -17,14 +17,14 @@ library(inlmisc)
 
 DEQ Makes a wide variety of it's geospatial data available in the form of published REST services (Esri Map Services). First- a little background information on GIS Services in general:
 
-[Esri ArcGIS REST API documentation](https://developers.arcgis.com/rest/services-reference/enterprise/get-started-with-the-services-directory.htm)
+[Esri ArcGIS REST API documentation](https://developers.arcgis.com/rest/services-reference/enterprise/get-started-with-the-services-directory.htm){target="_blank"}
 
 One advantage of learning to use Esri REST services over these other formats is that a user may filter their data prior to storing it locally, limiting download size and required data cleaning/filtering. Users may also go on to implement use of these APIs within programs and scripts and know that they are using the most current data available. Another advantage of utilizing Esri REST platforms is that they are available to non Esri clients allowing users to avoid costly subscription fees surrounding ArcGIS and other Esri software.
 
 ### Primary DEQ REST Endpoints: 
-[Internal (Staff Only) Services:](https://gis.deq.virginia.gov/arcgis/rest/services/staff) https:<!-- -->//gis.deq.virginia.gov/arcgis/rest/services/staff
+[Internal (Staff Only) Services:](https://gis.deq.virginia.gov/arcgis/rest/services/staff){target="_blank"} https:<!-- -->//gis.deq.virginia.gov/arcgis/rest/services/staff
 
-[External (Public Facing) Services:](https://gis.deq.virginia.gov/arcgis/rest/services/public) https:<!-- -->//gis.deq.virginia.gov/arcgis/rest/services/public
+[External (Public Facing) Services:](https://gis.deq.virginia.gov/arcgis/rest/services/public){target="_blank"} https:<!-- -->//gis.deq.virginia.gov/arcgis/rest/services/public
 
 It's important to note that all GIS Services have an API access point to perform queries, which can greatly assist in scripting/query development. 
 
@@ -38,11 +38,11 @@ Upon selecting the Query operation, ArcGIS Server will allow you to dynamically 
 
 ### How do you know what fields/criteria to query on?
 
-There are a couple of easy ways to determine criteria upon which to build your queries around. The first, and most immediate way is to simply examine the layer information at the REST endpoint which will show all field names and aliases. Below is an example of the fields present in the [TMDL Watersheds layer](https://gis.deq.virginia.gov/arcgis/rest/services/staff/DEQInternalDataViewer/MapServer/72): 
+There are a couple of easy ways to determine criteria upon which to build your queries around. The first, and most immediate way is to simply examine the layer information at the REST endpoint which will show all field names and aliases. Below is an example of the fields present in the [TMDL Watersheds layer](https://gis.deq.virginia.gov/arcgis/rest/services/staff/DEQInternalDataViewer/MapServer/72){target="_blank"}: 
 
 ![REST layer fields for TMDL Watersheds](./images/TMDLFields.png)
 
-The second way to really view the underlying data, is to leverage our web GIS apps to poke into the attribute and spatial data itself. Below are some examples of using the [GIS Staff App](https://gis.deq.virginia.gov/GISStaffApplication/) to view and filter on specific attributes. 
+The second way to really view the underlying data, is to leverage our web GIS apps to poke into the attribute and spatial data itself. Below are some examples of using the [GIS Staff App](https://gis.deq.virginia.gov/GISStaffApplication/){target="_blank"} to view and filter on specific attributes. 
 
 We will start by opening the attribute table for the TMDL Watersheds layer in the DEQ Data Layers list:
 
@@ -62,7 +62,7 @@ To view the unique values found in any field, simply select "Unique" in the "set
 
 ### Okay...let's build a simple query and see it in R...
 
-For this first example, we will query the DEQ REST service underlying the [GIS Staff App](https://gis.deq.virginia.gov/GISStaffApplication/). The REST url for this service is: https:<!-- -->//gis.deq.virginia.gov/arcgis/rest/services/staff/DEQInternalDataViewer/MapServer
+For this first example, we will query the DEQ REST service underlying the [GIS Staff App](https://gis.deq.virginia.gov/GISStaffApplication/){target="_blank"}. The REST url for this service is: https:<!-- -->//gis.deq.virginia.gov/arcgis/rest/services/staff/DEQInternalDataViewer/MapServer
 
 We'll start by querying the WQM Stations layer (layer/ID = 104). We can see there is a wide range of fields that we can query this data layer on. For this first example, we will simply query for a single Station, with a Station ID (or WQM_STA_ID) of 2-FLA028.98.
  

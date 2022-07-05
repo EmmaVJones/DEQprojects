@@ -16,11 +16,11 @@ library(rmarkdown)
 
 ### What is an API
 
-Whether or not you realize it, you have been using application programming interfaces, or APIs, for years. APIs are a set of rules for building and integrating software so computer services and servers can communicate and share information efficiently. APIs are where users go to pull data from various entities. That said, some APIs are well documented and easily explain how users might access open data (e.g. the [USGS StreamStats Service Documentation](https://streamstats.usgs.gov/docs/streamstatsservices/#/)). However, many entities that make data available via an API don't have the resources to maintain robust documentation, but valuable data can still be acquired with a bit of thought and data exploration (and politely emailing the web service maintainer if all else fails!).
+Whether or not you realize it, you have been using application programming interfaces, or APIs, for years. APIs are a set of rules for building and integrating software so computer services and servers can communicate and share information efficiently. APIs are where users go to pull data from various entities. That said, some APIs are well documented and easily explain how users might access open data (e.g. the [USGS StreamStats Service Documentation](https://streamstats.usgs.gov/docs/streamstatsservices/#/){target="_blank"}). However, many entities that make data available via an API don't have the resources to maintain robust documentation, but valuable data can still be acquired with a bit of thought and data exploration (and politely emailing the web service maintainer if all else fails!).
 
 ### CMC API Use Case{#CMCuseCase}
 
-This example will overview the process of using R to "scrape" or acquire data from (at the time of writing) a less documented API. The [Chesapeake Monitoring Cooperative (CMC)](https://www.chesapeakemonitoringcoop.org/) coordinates with citizen monitoring groups to share data resources collected from the Chesapeake Bay watershed. Thanks to a grant, DEQ and the CMC are expanding data resources to incorporate non-Bay citizen data into the database such that DEQ may point citizen groups throughout Virginia to a single data entry portal. This expansion will allow DEQ to pull all citizen monitoring data conducted for biannual Integrated Reports from one location in one data format. By automating the process of scraping the CMC API, DEQ staff will benefit from significant time savings acquiring and organizing data, as well as tagging data a different citizen monitoring data levels or tiers. 
+This example will overview the process of using R to "scrape" or acquire data from (at the time of writing) a less documented API. The [Chesapeake Monitoring Cooperative (CMC)](https://www.chesapeakemonitoringcoop.org/){target="_blank"} coordinates with citizen monitoring groups to share data resources collected from the Chesapeake Bay watershed. Thanks to a grant, DEQ and the CMC are expanding data resources to incorporate non-Bay citizen data into the database such that DEQ may point citizen groups throughout Virginia to a single data entry portal. This expansion will allow DEQ to pull all citizen monitoring data conducted for biannual Integrated Reports from one location in one data format. By automating the process of scraping the CMC API, DEQ staff will benefit from significant time savings acquiring and organizing data, as well as tagging data a different citizen monitoring data levels or tiers. 
 
 ### Required Packages
 
@@ -35,14 +35,14 @@ library(jsonlite)
 
 ### Explore the endpoint in a browser
 
-Like all good data analysis tasks, we must first understand what data are available and how they are formated before operating on the data. The CMC API is available off the odata endpoint. We can view the data available by pasting this URL into a browser window: [https://cmc.vims.edu/odata/](https://cmc.vims.edu/odata/) .
+Like all good data analysis tasks, we must first understand what data are available and how they are formated before operating on the data. The CMC API is available off the odata endpoint. We can view the data available by pasting this URL into a browser window: [https://cmc.vims.edu/odata/](https://cmc.vims.edu/odata/){target="_blank"} .
 
 
 ![](images/odataEndpoint.PNG)
 
 This tells us about the structure of the database and the names of the different datasets available from the API. It is helpful to explore a few datasets to understand what data are contained where and how to connect datasets. To demonstrate how to explore a dataset, we will first show the browser method and then how to bring back the data into R.
 
-Let's investigate the first dataset called "Groups." To do so in a browser, we would simply augment our original URL to include "Groups" endpoint, e.g. [https://cmc.vims.edu/odata/Groups](https://cmc.vims.edu/odata/Groups) .
+Let's investigate the first dataset called "Groups." To do so in a browser, we would simply augment our original URL to include "Groups" endpoint, e.g. [https://cmc.vims.edu/odata/Groups](https://cmc.vims.edu/odata/Groups){target="_blank"} .
 
 ![](images/jsonGroupTable.PNG)
 
@@ -51,7 +51,7 @@ This returns a json dataset that is somewhat easy to understand, but let's pull 
 
 ### Query API with R
 
-To use R to perform the same query, we need to feed the same URL from above into httr::GET(). If you were to print the results of the CMCgroupsQuery object you will see metadata on when the operation was executed, the status (200 if it is successful), data returned (json format), and data size. This isn't super helpful for actually working with the data, so let's convert this response to an R object. The nested functions `fromJSON(rawToChar(CMCgroupsQuery$content))$value` unpack the json data returned from the API endpoint into a data format you may be more familiar with.  You can explore this step on your own and dig into [more articles](https://www.r-bloggers.com/2015/11/accessing-apis-from-r-and-a-little-r-programming/) that explain the ins and outs of APIs and webscraping with R. 
+To use R to perform the same query, we need to feed the same URL from above into httr::GET(). If you were to print the results of the CMCgroupsQuery object you will see metadata on when the operation was executed, the status (200 if it is successful), data returned (json format), and data size. This isn't super helpful for actually working with the data, so let's convert this response to an R object. The nested functions `fromJSON(rawToChar(CMCgroupsQuery$content))$value` unpack the json data returned from the API endpoint into a data format you may be more familiar with.  You can explore this step on your own and dig into [more articles](https://www.r-bloggers.com/2015/11/accessing-apis-from-r-and-a-little-r-programming/){target="_blank"} that explain the ins and outs of APIs and webscraping with R. 
 
 ```{r accessingAPIsWithR CMCgroupsQuery, eval=FALSE}
 CMCgroupsQuery <- GET("https://cmc.vims.edu/odata/Groups")
@@ -162,7 +162,7 @@ stationByDateFilter <- readRDS('../data/stationByDateFilter.RDS')
 paged_table(stationByDateFilter)
 ```
 
-Now let's scale this solution to iterate through the GroupId's in Virginia (VAgroups) to compile a dataset of sample data within the 2022 Integrated Report data window (January 1, 2015 to December 31, 2020). We know that there are `r length(unique(VAgroups$Id))` unique GroupId's for Virginia, that's a lot of data to pull back at once. For this minimal example, we will only iterate through the first two groups, but the real assessment process would include all potential Virginia groups. We will demonstrate this using a for [loop](https://intro2r.com/loops.html) for clarity, but we offer that loops are slow and not best practices for iterating through analyses in a functional programming language like R. The better solution would be to build the operation into a function, but that is beyond the scope of this article. 
+Now let's scale this solution to iterate through the GroupId's in Virginia (VAgroups) to compile a dataset of sample data within the 2022 Integrated Report data window (January 1, 2015 to December 31, 2020). We know that there are `r length(unique(VAgroups$Id))` unique GroupId's for Virginia, that's a lot of data to pull back at once. For this minimal example, we will only iterate through the first two groups, but the real assessment process would include all potential Virginia groups. We will demonstrate this using a for [loop](https://intro2r.com/loops.html){target="_blank"} for clarity, but we offer that loops are slow and not best practices for iterating through analyses in a functional programming language like R. The better solution would be to build the operation into a function, but that is beyond the scope of this article. 
 
 ```{r accessingAPIsWithR sampleDataLoop, eval=FALSE}
 ### Establish all your important building blocks outside your loop

@@ -5,7 +5,7 @@
 
 R is a powerful tool for spatial analysis. Among the many benefits to using R as a GIS are the reproducibility of codified methods, which make sharing procedures and updating results after underlying data updates easy and efficient. 
 
-There are many resources for learning how to use R for geospatial operations. A favorite is the [Geocomputation with R](https://geocompr.robinlovelace.net/) online book (free) by [Robin Lovelace](https://www.robinlovelace.net/).
+There are many resources for learning how to use R for geospatial operations. A favorite is the [Geocomputation with R](https://geocompr.robinlovelace.net/){target="_blank"} online book (free) by [Robin Lovelace](https://www.robinlovelace.net/){target="_blank"}.
 
 To familiarize yourself with common geospatial procedures in R, the following chapter has been developed by DEQ staff to help colleagues with typical geospatial tasks. This is by no means a comprehensive introduction to geospatial techniques in R. Please see other resources for more background information on underlying geospatial principles and methods in R. 
 
@@ -47,9 +47,9 @@ with leaflet. Coming soon!
 
 **Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
 
-This module overviews the basics of delineating watersheds directly in your local R environment by scraping [USGS's StreamStats](https://www.usgs.gov/mission-areas/water-resources/science/streamstats-streamflow-statistics-and-spatial-analysis-tools) API. General web scraping techniques are beyond the scope of this module, but the basics can be gleaned by unpacking the referenced functions.
+This module overviews the basics of delineating watersheds directly in your local R environment by scraping [USGS's StreamStats](https://www.usgs.gov/mission-areas/water-resources/science/streamstats-streamflow-statistics-and-spatial-analysis-tools){target="_blank"} API. General web scraping techniques are beyond the scope of this module, but the basics can be gleaned by unpacking the referenced functions.
 
-All watersheds delineated using this technique use USGS's StreamStats delineation techniques from a 1:24k NHD. You may manually explore the tool [here](https://streamstats.usgs.gov/ss/).
+All watersheds delineated using this technique use USGS's StreamStats delineation techniques from a 1:24k NHD. You may manually explore the tool [here](https://streamstats.usgs.gov/ss/){target="_blank"}.
 
 
 ```{r child = 'subchapters/watershedDelineation.Rmd'}

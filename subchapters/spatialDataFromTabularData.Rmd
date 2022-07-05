@@ -20,7 +20,7 @@ library(leaflet) # for interactive mapping
 library(inlmisc) # for interactive mapping on top of leaflet
 ```
 
-Create an example tabular dataset of stations that we want to make into a spatial dataset. Note: we are using the tibble::tribble() function to define a tibble row by row, which makes for easy visualization of test datasets. This is just one of many ways to create a [tibble](https://tibble.tidyverse.org/).
+Create an example tabular dataset of stations that we want to make into a spatial dataset. Note: we are using the tibble::tribble() function to define a tibble row by row, which makes for easy visualization of test datasets. This is just one of many ways to create a [tibble](https://tibble.tidyverse.org/){target="_blank"}.
 
 ```{r Spatial Data from Tabular Data example data}
 exampleSites <-  tribble(
@@ -32,7 +32,7 @@ exampleSites <-  tribble(
 exampleSites
 ```
 
-Using the [sf package](https://r-spatial.github.io/sf/), we can use the Latitude and Longitude fields to convert this object into a spatial object. Note we are using [EPSG 4326](https://epsg.io/4326) for our [coordinate reference system](https://geocompr.robinlovelace.net/spatial-class.html#crs-intro). We chose that CRS 
+Using the [sf package](https://r-spatial.github.io/sf/){target="_blank"}, we can use the Latitude and Longitude fields to convert this object into a spatial object. Note we are using [EPSG 4326](https://epsg.io/4326){target="_blank"} for our [coordinate reference system](https://geocompr.robinlovelace.net/spatial-class.html#crs-intro){target="_blank"}. We chose that CRS 
 
 ```{r Spatial Data from Tabular Data st as sf}
 exampleSites_sf <- exampleSites %>% 

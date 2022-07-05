@@ -73,12 +73,31 @@ Like most operations in R, there are multiple approaches to downloading packages
 
 We recommend downloading the following packages to get started.
 
--   [`Tidyverse`](https://www.tidyverse.org/packages/)
+-   [`Tidyverse`](https://www.tidyverse.org/packages/){target="_blank"}
 
--   [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html)
+-   [`tmap`](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html){target="_blank"}
 
--   [`sp`](https://cran.r-project.org/web/packages/sp/sp.pdf)
+-   [`sp`](https://cran.r-project.org/web/packages/sp/sp.pdf){target="_blank"}
 
--   [`sf`](https://r-spatial.github.io/sf/)
+-   [`sf`](https://r-spatial.github.io/sf/){target="_blank"}
 
--   [`dataRetrevial`](https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html)
+-   [`dataRetrevial`](https://cran.r-project.org/web/packages/dataRetrieval/vignettes/dataRetrieval.html){target="_blank"}
+
+
+### How to Learn (or Continue Learning) R?
+
+Simply typing ["free beginner R tutorial" into Google](https://www.google.com/search?q=free+beginner+R+tutorial){target="_blank"} produces an overwhelming number of results in the form of online courses, blogs, university lecture notes, and so much more. DEQ periodically offers an "Introduction to R Programming Course" (email [Kevin Vaughan](mailto:kevin.vaughan@deq.virginia.gov){target="_blank"} for information on the next course offering). We also host [course materials](https://rconnect.deq.virginia.gov/__landing__/#Rhelp) from previous course offerings on the R server if you want to dive in right now.  There are a number of additional free online resources we can recommend when you are just getting started. 
+
+* [Datacamp Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r){target="_blank"}
+* [Datacarpentry Intro to R](https://datacarpentry.org/R-ecology-lesson/01-intro-to-r.html){target="_blank"}
+* [Udemy R Basics - R Programming Language Introduction](https://www.udemy.com/course/r-basics/){target="_blank"}
+* [R for Data Science](https://r4ds.had.co.nz/){target="_blank"}
+* [RStudio Primers](https://rstudio.cloud/learn/primers){target="_blank"}
+
+Once you are comfortable with the basics, the best thing you can do is to try to get involved in your own project involving R. Maybe that is reprogramming an Excel spreadsheet process with R. Maybe it is taking one step out of a much larger process and trying to complete that with R. Maybe it is just trying to make a pretty plot in R. The point is, if you don't use it you lose it. Repeatedly practicing your skills is the key to further development and asking the question "could I do this in R?" is the gateway to strengthening your abilities. You can always consult chapters of this book for ideas on how other DEQ staff are using R in their roles for inspiration on how to incorporate it into your workflow. 
+
+#### But what if I get stuck?
+
+Great! That means you are trying. First, always first, [see the Online Support section](#OnlineSupport) and reframe your question to Google (remember to always include "R" in your search term to specify solutions in this language). Then, ask a friend or colleague for help by building a [reproducible example](https://community.rstudio.com/t/faq-whats-a-reproducible-example-reprex-and-how-do-i-create-one/5219){target="_blank"} or [reprex](https://www.youtube.com/watch?v=MmTPhGQWPUo){target="_blank"}. Simply working through the process of trying to explain your problem often leads to finding your error. If it doesn't, then you have a tidy example to provide a friend when asking for assistance. As a last solution, you can post on a blog like Stack Overflow. This is not recommended unless you have exhausted your own research, exhausted your friends' patience, and exhausted your search terms in Google. Chances are, someone else has already solved this or a very similar problem to yours, so the R community doesn't like multiple posts about the same questions. Always remember to never reveal sensitive information or data in any online spaces. 
+
+

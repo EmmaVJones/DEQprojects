@@ -12,7 +12,7 @@ library(tidyverse)
 library(DT)
 ```
 
-[Pinned data](https://www.r-bloggers.com/2019/09/pins-pin-discover-and-share-resources-2/) are powerful internal data sources that are developed by R programmers that expedite analyses by offering "pre-analyzed" data for others to use. The data products are often the end result of multiple analytical steps that one would need to repeat each time certain datasets are needed for analyses. Because these common datasets could prove useful for many end users, these datasets are "pinned" to the R server to expedite (and standardize) the acquisition of common data needs. Examples of pinned data are VSCI/VCPMI scores, station level geospatial data, station level Water Quality Standards (WQS) information, and many more. 
+[Pinned data](https://www.r-bloggers.com/2019/09/pins-pin-discover-and-share-resources-2/){target="_blank"} are powerful internal data sources that are developed by R programmers that expedite analyses by offering "pre-analyzed" data for others to use. The data products are often the end result of multiple analytical steps that one would need to repeat each time certain datasets are needed for analyses. Because these common datasets could prove useful for many end users, these datasets are "pinned" to the R server to expedite (and standardize) the acquisition of common data needs. Examples of pinned data are VSCI/VCPMI scores, station level geospatial data, station level Water Quality Standards (WQS) information, and many more. 
 
 To access this data, you must first link your local R environment to the R Connect server. **YOU MUST BE ON THE DEQ NETWORK OR VPN IN ORDER TO ACCESS ANY INTERNAL DATA RESOURCES**
 
@@ -30,7 +30,7 @@ Each time you wish to access pinned data, you must connect to the R server like 
 
 ### API Keys
 
-To connect to the R server, you must use the appropriate API key. **NEVER HARD CODE ACCESS CODES INTO YOUR SCRIPTS** This means you should **NEVER** place the actual API key into your code **ANYWHERE**. You must source this information from a secret DEQconfig.yml file (obtained from Emma Jones and stored locally on your computer) in order to access data from the R server in your local R environment. [Read more about config files](https://cran.r-project.org/web/packages/config/vignettes/introduction.html). 
+To connect to the R server, you must use the appropriate API key. **NEVER HARD CODE ACCESS CODES INTO YOUR SCRIPTS** This means you should **NEVER** place the actual API key into your code **ANYWHERE**. You must source this information from a secret DEQconfig.yml file (obtained from Emma Jones and stored locally on your computer) in order to access data from the R server in your local R environment. [Read more about config files](https://cran.r-project.org/web/packages/config/vignettes/introduction.html){target="_blank"}. 
 
 ### Connect to the R server
 

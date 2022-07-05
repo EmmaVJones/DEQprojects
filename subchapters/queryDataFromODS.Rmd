@@ -27,7 +27,7 @@ con <- dbConnect(odbc::odbc(),
 dbDisconnect(con)
 ```
 
-The [Connect to ODS](#connectToODS) article emphasizes the benefits of using the pool package to manage database connections. Besides being useful for piping and dplyr/dbplyr functionality, pool handles the closing of unused connections without requiring user input. **This is very important.** For more information on pooled connections, see the [R pool package](https://shiny.rstudio.com/articles/pool-basics.html) and read more generally about [pooled database connections](https://www.cockroachlabs.com/blog/what-is-connection-pooling/).
+The [Connect to ODS](#connectToODS) article emphasizes the benefits of using the pool package to manage database connections. Besides being useful for piping and dplyr/dbplyr functionality, pool handles the closing of unused connections without requiring user input. **This is very important.** For more information on pooled connections, see the [R pool package](https://shiny.rstudio.com/articles/pool-basics.html){target="_blank"} and read more generally about [pooled database connections](https://www.cockroachlabs.com/blog/what-is-connection-pooling/){target="_blank"}.
 
 #### Standalone Reports/Applications that Query ODS
 
@@ -52,7 +52,7 @@ onStop(function() {
 
 ### Data Schema
 
-ODS is divided into multiple program areas. These areas are "turned on" for certain users depending on their data needs. To request access to certain areas of ODS, you need to submit a [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf) to OIS seeking access to specific areas of ODS. Once access to one or more areas of ODS are granted, you may explore the available areas using code ( e.g. using the [DBI package](https://dbi.r-dbi.org/) ) or interactively with a GUI ( e.g. using the built in GUI functionality in the RStudio IDE ).
+ODS is divided into multiple program areas. These areas are "turned on" for certain users depending on their data needs. To request access to certain areas of ODS, you need to submit a [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf){target="_blank"} to OIS seeking access to specific areas of ODS. Once access to one or more areas of ODS are granted, you may explore the available areas using code ( e.g. using the [DBI package](https://dbi.r-dbi.org/){target="_blank"} ) or interactively with a GUI ( e.g. using the built in GUI functionality in the RStudio IDE ).
 
 #### Data Exporation: DBI
 

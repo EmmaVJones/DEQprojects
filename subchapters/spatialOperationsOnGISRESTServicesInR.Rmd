@@ -44,7 +44,7 @@ library(httr)
 
 ### Query One Layer
 
-We will begin by querying the [Internal (Staff Only) REST Services](https://gis.deq.virginia.gov/arcgis/rest/services/staff) by parsing a query of the TMDL records for a specific TMDL project in the Willis River Watershed identified as POL0119. After querying the data we will plot it using and interactive map built with inlmisc::CreateWebMap().
+We will begin by querying the [Internal (Staff Only) REST Services](https://gis.deq.virginia.gov/arcgis/rest/services/staff){target="_blank"} by parsing a query of the TMDL records for a specific TMDL project in the Willis River Watershed identified as POL0119. After querying the data we will plot it using and interactive map built with inlmisc::CreateWebMap().
 
 ```{r spatial operations REST pull tmdl, eval=FALSE }
 url <- parse_url("https://gis.deq.virginia.gov/arcgis/rest/services")
@@ -90,7 +90,7 @@ bBox <- st_bbox(tmdl)
 bBox
 ```
 
-The bBox object contains the latitude and longitude values of the outermost extent of our TMDL watershed. To actually make this useful, let's convert it to an sfc object so we can plot it on a map with our TMDL watershed. For a good resource on simple feature objects, see this [article by Jesse Sadler](https://www.jessesadler.com/post/simple-feature-objects/).
+The bBox object contains the latitude and longitude values of the outermost extent of our TMDL watershed. To actually make this useful, let's convert it to an sfc object so we can plot it on a map with our TMDL watershed. For a good resource on simple feature objects, see this [article by Jesse Sadler](https://www.jessesadler.com/post/simple-feature-objects/){target="_blank"}.
 
 ```{r spatial operations REST plot bbox}
 bBoxPolygon <- bBox %>%

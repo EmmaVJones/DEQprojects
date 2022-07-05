@@ -80,7 +80,7 @@ masterTaxaGenus <- readRDS('../data/masterTaxaGenus.RDS')
 head(masterTaxaGenus)
 ```
 
-We can use this DBI method to send SQL statements directly to the database. SQL will not be covered in this section, please see [DataCamp Introduction to SQL course](https://www.datacamp.com/courses/introduction-to-sql) for a basic primer on the SQL language. 
+We can use this DBI method to send SQL statements directly to the database. SQL will not be covered in this section, please see [DataCamp Introduction to SQL course](https://www.datacamp.com/courses/introduction-to-sql){target="_blank"} for a basic primer on the SQL language. 
 
 ```{r Connect to ODS DBI test connection SQL, eval=FALSE}
 dbGetQuery(con,  "SELECT TOP 10 * FROM wqm.WQM_Stations_View")
@@ -93,7 +93,7 @@ readRDS('../data/WQM_Stations_View.RDS')
 
 ### Pool Method for ODS Connection
 
-Generally speaking, the pool method is preferred for most business practices, especially any dynamic content (e.g. shiny apps). The [pool package](https://db.rstudio.com/r-packages/pool/) creates a connection to a specified database, even if the database connection is temporarily lost or idle for a period of time. The instability of connecting to ODS of VPN makes the pool package especially useful for DEQ business practices. The concepts of open database connections are important when interacting with databases, read more on this topic [here](https://db.rstudio.com/r-packages/pool/). The "pool method" requires the pool and dbplyr R packages to be loaded into the user environment.
+Generally speaking, the pool method is preferred for most business practices, especially any dynamic content (e.g. shiny apps). The [pool package](https://db.rstudio.com/r-packages/pool/){target="_blank"} creates a connection to a specified database, even if the database connection is temporarily lost or idle for a period of time. The instability of connecting to ODS of VPN makes the pool package especially useful for DEQ business practices. The concepts of open database connections are important when interacting with databases, read more on this topic [here](https://db.rstudio.com/r-packages/pool/){target="_blank"}. The "pool method" requires the pool and dbplyr R packages to be loaded into the user environment.
 
 ```{r Connect to ODS pool, eval=FALSE}
 library(pool)
@@ -104,7 +104,7 @@ To connect to a database, you must establish a pool object. This object stores y
 
 There are a few things to note in this connection string:
 1. The driver method used is the ODBC driver from the odbc R package
-2. The specific Driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0"
+2. The specific Driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0" (see below for more information on drivers)
 3. The Server argument specifies the server name and port (50000) you are using for the connection
 4. The dbname argument specifies which database you wish to connect to (ODS)
 5. The trusted_connection argument must always be "yes"
@@ -115,12 +115,23 @@ pool <- dbPool(
   Driver = "ODBC Driver 11 for SQL Server", # (2)
   Server= "DEQ-SQLODS-PROD,50000", # (3)
   dbname = "ODS", # (4)
+  #database = "ODS", # (4 alternative if dbname does not work on your system)
   trusted_connection = "yes" # (5)
 )
 ```
 
 After running the above chunk, you should have a list object named pool in your environment. We will use this object to build a minimal query to test our local connection to the ODS production environment. 
 
+#### More Information on Drivers
+
+You may or may not have database drivers already installed on your machine. To check, open the ODBC Data Source Administrator (64-bit) software. Under the "Drivers" tab, you should see all available drivers installed locally. If you do not have an ODBC driver already installed, you will need to install it. Please contact VCCC for assistance installing drivers.
+
+![](images/ODBCavailableDrivers.PNG)
+
+
+#### Pool: dbname vs database
+
+Certain system configurations will not connect using the dbname argument inside the dbPool() function. If you have ensured you have access to the ODS environment you are trying to connect to, all the appropriate packages are installed and in your environment, and you still receive error messages citing SQL errors, try changing the "dbname" argument to "database" in your pool connection string like the 4 alternate solution above.
 
 ### Pool Method: Query Data
 
@@ -136,6 +147,6 @@ head(masterTaxaGenus)
 head(masterTaxaGenus)
 ```
 
-A few notes on querying using the pool method. The data schema are very important for ensuring the query runs successfully. In the above example, we are querying the data view entitled "Edas_Benthic_Master_Taxa_View" that lies inside the "wqm" area of ODS. Depending on your data needs (and information specified in your [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf)), you will be granted access to specific areas on the ODS environment. Water Quality Monitoring information is stored in the "wqm" area, Water Quality Assessment data is stored in the "wqa" area, TMDL data is stored in the "TMDL" area, etc. If you do not have access to the above area in ODS, then the above script will not work for you. 
+A few notes on querying using the pool method. The data schema are very important for ensuring the query runs successfully. In the above example, we are querying the data view entitled "Edas_Benthic_Master_Taxa_View" that lies inside the "wqm" area of ODS. Depending on your data needs (and information specified in your [Special Network Access Form](https://deqnet.deq.virginia.gov/programs/admin/ois/forms/documents/Special_Network_Access_Request_Form.pdf){target="_blank"}), you will be granted access to specific areas on the ODS environment. Water Quality Monitoring information is stored in the "wqm" area, Water Quality Assessment data is stored in the "wqa" area, TMDL data is stored in the "TMDL" area, etc. If you do not have access to the above area in ODS, then the above script will not work for you. 
 
 The pool method allows for more complex queries to be piped into a single call. This is very powerful because it allows you to use simple dplyr verbs (through the dbplyr package) to force the database to perform these operations instead of bringing a lot of data into your environment for local filtering and manipulation operations. More on this concept will be covered in [Querying Data from ODS](#queryDataFromODS) but the importance of this cannot be understated. **It is always more efficient to have the database perform querying operations to minimize the amount of data sent to your local R environment.**  

@@ -24,13 +24,13 @@ library(leaflet) # for interactive mapping
 library(inlmisc) # for interactive mapping on top of leaflet
 ```
 
-You will also need to use a custom function built for scraping the StreamStats API. This function is contained in the sourced script [StreamStatsAutoDelineation.R](https://github.com/EmmaVJones/DEQprojects/blob/main/functions/StreamStatsAutoDelineation.R) which be downloaded for sourcing locally in your environment.
+You will also need to use a custom function built for scraping the StreamStats API. This function is contained in the sourced script [StreamStatsAutoDelineation.R](https://github.com/EmmaVJones/DEQprojects/blob/main/functions/StreamStatsAutoDelineation.R){target="_blank"} which be downloaded for sourcing locally in your environment.
 
 ```{r sourcedScript, eval = F} 
 source('StreamStatsAutoDelineation.R') # for custom web scraping tool to hit USGS StreamStats API
 ```
 
-Create an example dataset of stations that we want to delineate. Note: we are using the tibble::tribble() function to define a tibble row by row, which makes for easy visualization of test datasets. This is just one of many ways to create a [tibble](https://tibble.tidyverse.org/).
+Create an example dataset of stations that we want to delineate. Note: we are using the tibble::tribble() function to define a tibble row by row, which makes for easy visualization of test datasets. This is just one of many ways to create a [tibble](https://tibble.tidyverse.org/){target="_blank"}.
 
 ```{r example data}
 exampleSites <-  tribble(
@@ -71,7 +71,7 @@ stationDelineationPoint <- stationDelineation$point %>%
 
 We can plot the results quickly to verify the desired watershed was returned. StreamStats returns a watershed for the input coordinates to the best of its ability; however, the accuracy of the coordinates, datum, projection, etc. can influence the accuracy of the returned watershed. It is best practice to always review the returned watershed. Below is a minimal example of how to do this in R with an interactive map. Note: you can switch basemaps to the USGS Hydrography layer for further information using the layers button in the top left corner.
 
-The following interactive map is created with the [inlmisc package](https://github.com/USGS-R/inlmisc), see the package author's article for a [detailed tutorial](https://waterdata.usgs.gov/blog/inlmiscmaps/). The [interactive mapping](#interactiveMapping) section covers some basics with [leaflet](https://rstudio.github.io/leaflet/).  
+The following interactive map is created with the [inlmisc package](https://github.com/USGS-R/inlmisc){target="_blank"}, see the package author's article for a [detailed tutorial](https://waterdata.usgs.gov/blog/inlmiscmaps/){target="_blank"}. The [interactive mapping](#interactiveMapping) section covers some basics with [leaflet](https://rstudio.github.io/leaflet/){target="_blank"}.  
 
 ```{r review single watershed}
 CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
@@ -170,4 +170,4 @@ CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
     
 ### QA
 
-Should any of the returned watersheds prove incorrect based on visual analysis, you must remove that watershed from your dataset, manually delineate the watershed using [StreamStats](https://streamstats.usgs.gov/ss/), and include that new watershed into your polygon dataset. See the [Using Spatial Datasets](#usingSpatialDatasets) section for example workflows.
+Should any of the returned watersheds prove incorrect based on visual analysis, you must remove that watershed from your dataset, manually delineate the watershed using [StreamStats](https://streamstats.usgs.gov/ss/){target="_blank"}, and include that new watershed into your polygon dataset. See the [Using Spatial Datasets](#usingSpatialDatasets) section for example workflows.
