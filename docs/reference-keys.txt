@@ -1,5 +1,5 @@
-fig:unnamed-chunk-15
 fig:unnamed-chunk-16
+fig:unnamed-chunk-17
 background
 whyR
 accessible-open-source-software
@@ -44,6 +44,8 @@ data-exporation-rstudio-connections-pane
 data-views-interaction
 data-update-frequency
 commonWQMqueries
+connect-to-internal-data-resources
+query-all-water-monitoring-data-from-a-provided-watershed
 commonBenthicqueries
 commonWQAqueries
 commonTMDLqueries
@@ -63,6 +65,7 @@ gis-rest-service-data-1
 level-up-your-querying-game
 set-up-your-environment
 query-one-layer
+query-layer-two-based-on-information-from-layer-one
 spatially-intersect-layers
 usingSpatialDatasets
 interactiveMapping

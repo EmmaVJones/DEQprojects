@@ -106,6 +106,7 @@ CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
     addPolygons(data=bBoxPolygon, weight=2, fill=FALSE, color="blue") 
 
 ```
+
 ### Query Layer Two Based On Information From Layer One
 
 We can tell the GIS REST service to only retrieve monitoring stations within this bounding box (i.e. query a layer based on information from another layer) by adding this bounding box information into our query of the WQM Stations layer. This forces the REST service to perform the more computationally expensive step of only returning stations within our area. We are also going to add the XY coordinates to the object to make the mapping steps easier using st_coordinates(). 

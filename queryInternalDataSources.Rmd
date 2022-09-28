@@ -37,7 +37,10 @@ Alternatively, data "pinned" on the R server are available to all staff (on the 
 
 ## Common WQM queries{#commonWQMqueries}
 
-Coming Soon!
+**Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
+
+```{r child = 'subchapters/commonWQMqueries.Rmd'}
+```
 
 ## Common Benthic queries{#commonBenthicqueries}
 

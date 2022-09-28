@@ -1,0 +1,277 @@
+---
+title: "Common Water Quality Monitoring Queries"
+author: "Emma Jones"
+date: "9/26/2022"
+output: html_document
+---
+
+```{r common wqm queries setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DT)
+library(leaflet)
+library(inlmisc)
+```
+
+This section will highlight a few common queries one might want to perform to acquire water quality monitoring data from CEDS data. This article assumes the user had local rights to query data from the WQM area of ODS and pinned data. See the [Connect to ODS](#connectToODS) and [Connecting to R Connect (for Pinned Data)](#connectToConnectPins) modules for more information on connecting your local environment to the these data repositories. 
+
+
+### Connect to Internal Data Resources
+
+Before we can query data from any of the below examples, we need to set up our connections to ODS and the pinned data resources on the R Connect service. Your connection strings may differ from the example below due to local system differences.
+
+```{r common wqm queries libraries, eval=FALSE}
+library(tidyverse)
+# libraries for ODS
+library(pool)
+library(dbplyr)
+# libraries for pins
+library(pins)
+library(config)
+
+# set up connection to ODS production
+pool <- dbPool(
+  drv = odbc::odbc(),
+  Driver = "ODBC Driver 11 for SQL Server", 
+  Server= "DEQ-SQLODS-PROD,50000", 
+  dbname = "ODS", 
+  trusted_connection = "yes"
+)
+
+# connect to R Connect for pinned data
+conn <- config::get(file = "PINSconfig.yml", "connectionSettings") # get configuration settings
+
+board_register_rsconnect(key = conn$CONNECT_API_KEY, 
+                         server = conn$CONNECT_SERVER)
+```
+
+
+### Query All Water Monitoring Data from a Provided Watershed
+
+We can use a combination of geospatial and querying skills to retrieve all the water monitoring information from a given watershed. Detailed instructions on automated watershed delineation is available in the [Watershed Delineation](#watershedDelineation) section. We will sample that method for this tutorial.
+
+For this example, we will look for all water monitoring data from the watershed that drains to the Occoquan Reservoir. First, we need to scrape USGS StreamStats for this watershed. The point we will use as our pour point is the dam (38.694394085503646, -77.27644004865934). First, we need to bring in the packages and scripts to perform the spatial and web scraping operations of to delineate our watershed.
+
+```{r common wqm queries streamstats, eval=F}
+library(sf) # for spatial analysis
+library(leaflet) # for interactive mapping
+library(inlmisc) # for interactive mapping on top of leaflet
+
+source('StreamStatsAutoDelineation.R') # for custom web scraping tool to hit USGS StreamStats API
+
+# delineate watershed
+stationDelineation <- streamStats_Delineation(state= 'VA',
+                                              longitude = -77.27644004865934, 
+                                              latitude = 38.694394085503646, 
+                                              UID = 'Occoquan')
+
+# convert to a more useable format
+stationDelineationWatershed <- stationDelineation$polygon %>%
+  reduce(rbind) %>%
+  arrange(UID)
+stationDelineationPoint <- stationDelineation$point %>%
+  reduce(rbind) %>%
+  arrange(UID)
+```
+
+```{r common wqm queries streamstats real, echo=F}
+stationDelineationWatershed <- readRDS('../data/occoquanWatershed.RDS')
+stationDelineationPoint <- readRDS('../data/occoquanPoint.RDS')
+```
+
+
+Next let's make sure the watershed retrieved makes sense for our goals.
+
+```{r common wqm queries streamstats map}
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+    addPolygons(data= stationDelineationWatershed,  color = 'black', weight = 1,
+                  fillColor='blue', fillOpacity = 0.4,stroke=0.1,
+                  group="Watershed",
+                  popup=leafpop::popupTable(stationDelineationWatershed, zcol=c('UID'))) %>%
+    addCircleMarkers(data = stationDelineationPoint, color='orange', fillColor='black', radius = 5,
+                     fillOpacity = 1, opacity=1,weight = 1,stroke=T, group="Station",
+                     label = ~UID,
+                     popup=leafpop::popupTable(stationDelineationPoint)) %>%
+    addLayersControl(baseGroups=c("Topo","Imagery","Hydrography"),
+                       overlayGroups = c('Station','Watershed'),
+                       options=layersControlOptions(collapsed=T),
+                       position='topleft')
+```
+
+Now let's leverage the spatial WQM station information on the R server to identify all the DEQ stations that fall in this polygon. There are multiple ways to spatially intersect polygon and point features. This example uses the sf::st_join() function to spatially join all overlapping geometries and then filters on the successfully joined rows. We will also plot the points to make sure the spatial join performed as we wanted.
+
+```{r common wqm queries wqmstations, eval =FALSE}
+wqmStations <- pin_get('ejones/WQM-Stations-Spatial', board = 'rsconnect') %>% 
+  # Immediately transform this tabular data into a spatial object
+  st_as_sf(coords = c("Longitude", "Latitude"),  # make spatial layer using these columns
+           remove = F, # don't remove these lat/lon cols from df
+           crs = 4326) 
+
+# Identify which stations fall into the watershed with a spatial join
+occoquanStations <- st_join(wqmStations, stationDelineationWatershed) %>% 
+  filter(UID == 'Occoquan')
+
+# Plot the points to make sure we retrieved what we wanted
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+    addPolygons(data= stationDelineationWatershed,  color = 'black', weight = 1,
+                  fillColor='blue', fillOpacity = 0.4,stroke=0.1,
+                  group="Watershed",
+                  popup=leafpop::popupTable(stationDelineationWatershed, zcol=c('UID'))) %>%
+    addCircleMarkers(data = occoquanStations, color='orange', fillColor='black', radius = 5,
+                     fillOpacity = 1, opacity=1,weight = 1,stroke=T, group="Station",
+                     label = ~StationID,
+                     popup=leafpop::popupTable(occoquanStations)) %>%
+    addLayersControl(baseGroups=c("Topo","Imagery","Hydrography"),
+                       overlayGroups = c('Station','Watershed'),
+                       options=layersControlOptions(collapsed=T),
+                       position='topleft')
+```
+
+```{r common wqm queries wqmstations real, echo=F}
+occoquanStations <- readRDS('../data/occoquanStations.RDS')
+
+# Plot the points to make sure we retrieved what we wanted
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+    addPolygons(data= stationDelineationWatershed,  color = 'black', weight = 1,
+                  fillColor='blue', fillOpacity = 0.4,stroke=0.1,
+                  group="Watershed",
+                  popup=leafpop::popupTable(stationDelineationWatershed, zcol=c('UID'))) %>%
+    addCircleMarkers(data = occoquanStations, color='orange', fillColor='black', radius = 5,
+                     fillOpacity = 1, opacity=1,weight = 1,stroke=T, group="Station",
+                     label = ~StationID,
+                     popup=leafpop::popupTable(occoquanStations)) %>%
+    addLayersControl(baseGroups=c("Topo","Imagery","Hydrography"),
+                       overlayGroups = c('Station','Watershed'),
+                       options=layersControlOptions(collapsed=T),
+                       position='topleft')
+```
+
+
+So there are `r nrow(occoquanStations)` stations in CEDS that have been sampled in the desired area. Let's go pull the monitoring data from these sites now. We are interested in all available sampling data, but one could limit the sampling events to a certain period of time if desired. The query below will only return field data from the selected sites. Note we need to use the !! operator (!! is pronounced "bang bang") in order to send the desired StationIDs from the occoquanStations object to the ODS query. 
+
+```{r common wqm queries query ODS field, eval=F}
+fieldData <- pool %>% tbl(in_schema("wqm", "Wqm_Field_Data_View")) %>%
+  filter(Fdt_Sta_Id %in% !! occoquanStations$StationID) %>% 
+  as_tibble()
+
+# preview data retrieved
+head(fieldData) %>% 
+  DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+```{r common wqm queries query ODS field real, echo=F}
+fieldData <- readRDS('../data/occoquanFieldData.RDS')
+# preview data retrieved
+head(fieldData) %>% 
+  DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+
+To acquire analyte data from DCLS, we need to use the unique Ana_Sam_Fdt_Id code from the fieldData object. We will join the StationID and sample date information to this object so we can better understand the data returned. Again, note the use of the !! to call the Fdt_Id field from the fieldData object for our query.
+
+```{r common wqm queries query ODS analyte, eval=F}
+analyteData <- pool %>% tbl(in_schema("wqm", "Wqm_Analytes_View")) %>%
+  filter(Ana_Sam_Fdt_Id %in% !! fieldData$Fdt_Id) %>% 
+  as_tibble() %>%
+  left_join(dplyr::select(fieldData, Fdt_Id, Fdt_Sta_Id, Fdt_Date_Time), by = c("Ana_Sam_Fdt_Id" = "Fdt_Id"))
+
+# preview data retrieved
+head(analyteData) %>% 
+  DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+```{r common wqm queries query ODS analyte real, echo=F}
+analyteData <- readRDS('../data/occoquanAnalyteData.RDS')
+# preview data retrieved
+head(analyteData) %>% 
+  DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+So we have the data for the desired sites, but the data formats don't exactly match how we typically work with monitoring data at DEQ. The field data are in a wide format and the analyte data are in a long format. Let's use a standardized data wrangling process to return the data in a combined, wide format with one row per sampling event. To do so, we will use the "conventionals" data format and a custom script that does all the data manipulation and cleaning for us. We will source that script locally ([you can download and review the script here](https://github.com/EmmaVJones/WQMdataQueryTool/blob/main/conventionalsFunction02032022.R)). We also need a few more pieces of data to make this script work, so we will pull that data from ODS before calling the function that smashes all the data together, known as conventionalsSummary(). 
+
+```{r common wqm queries query conventionals, eval=F}
+source('conventionalsFunction02032022.R')
+
+# Basic station info from CEDS required for function
+stationsInfo <- pool %>% tbl(in_schema("wqm",  "Wqm_Stations_View")) %>%
+  filter(Sta_Id %in% !! occoquanStations$StationID) %>%
+  as_tibble()
+stationsGIS_View <-  pool %>% tbl(in_schema("wqm",  "Wqm_Sta_GIS_View")) %>%
+  filter(Station_Id %in% !! occoquanStations$StationID) %>%
+  as_tibble()
+
+# conventionals-like dataset for standardized data consolidation
+organizedData <- conventionalsSummary(conventionals = pin_get("conventionals2022IRfinalWithSecchi", board = "rsconnect")[0,],
+                                      stationFieldDataUserFilter = fieldData, 
+                                      stationAnalyteDataUserFilter = analyteData, 
+                                      stationInfo = stationsInfo,
+                                      stationGIS_View = stationsGIS_View,
+                                      dropCodes = c('QF'), # lab codes we want to drop
+                                      assessmentUse = F,
+                                      overwriteUncensoredZeros= T)
+```
+
+Once the conventionalsSummary() function completes the data manipulation, we can investigate the list object it returns. Should you only want parameters consistent with the Water Quality Assessment conventionals dataset, use the `organizedData$Conventionals` object. Should you want to explore all parameters sampled, use the `organizedData$More` object. 
+
+```{r common wqm queries query conventionals real, echo=F}
+organizedData <- readRDS('../data/occoquanOrganizedData.RDS')
+```
+
+
+```{r common wqm queries explore organizedData conventionals}
+head(organizedData$Conventionals) %>% 
+   DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+```{r common wqm queries explore more}
+head(organizedData$More) %>% 
+   DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+We can also use this information to pull all the benthic macroinvertebrate data from this watershed as well. Using the StationID information from the occoquanStations object, we can pull pre-analyzed Stream Condition Index (SCI) scores from the R Connect server pinned data. 
+
+Benthic data are calculated using all three SCI methods for application rendering purposes, but users should only use the appropriate SCI method based on the correct Level III Ecoregion, Basin, and/or speaking with their regional biologist. We will pull all benthic information statewide for each SCI method, filter these results by the desired StationIDs and ecoregion/basin information, and then combine them all into a single result for sharing. **Again, it is highly recommended that you speak with your Regional Biologist prior to doing further analyses with the default SCI metrics and results to ensure the suggested SCI method is appropriate for each site.**
+
+```{r common wqm queries explore SCI, eval=F}
+# pull in all SCI info for all stations
+VSCIresults <- pin_get("ejones/VSCIresults", board = "rsconnect")
+VCPMI63results <- pin_get("ejones/VCPMI63results", board = "rsconnect")
+VCPMI65results <- pin_get("ejones/VCPMI65results", board = "rsconnect")
+
+
+# identify which SCI to use
+SCI_filter <- filter(VSCIresults, StationID %in% filter(occoquanStations, ! US_L3CODE %in% c(63,65))$StationID) %>%
+  bind_rows(
+    filter(VCPMI63results, StationID %in% filter(occoquanStations,  US_L3CODE %in% c(63) | str_detect(Basin, "Chowan"))$StationID)  ) %>%
+  bind_rows(
+    filter(VCPMI65results, StationID %in% filter(occoquanStations,  US_L3CODE %in% c(65) & !str_detect(Basin, "Chowan"))$StationID)  ) %>%
+  left_join(dplyr::select(occoquanStations, StationID , Sta_Desc), by = c('StationID')) %>%
+  dplyr::select(StationID, Sta_Desc, BenSampID, `Collection Date`, RepNum, SCI, `SCI Score`, `SCI Threshold`,`Sample Comments`:Season, everything()) %>% 
+  filter(`Target Count` == 110) # only bring back rarified samples
+
+head(SCI_filter) %>% 
+   DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+
+```{r common wqm queries explore SCI real, echo=F}
+SCI_filter <- readRDS('../data/occoquanSCI_filter.RDS')
+
+head(SCI_filter) %>% 
+   DT::datatable( rownames = F, options = list(scrollX = T))
+```
+
+Lastly, one can pull the associated raw benthic results as well as the qualitative Rapid Biological Protocol (RBP) habitat results from pinned data on the R server for the desired stations within the watershed of interest. 
+
+```{r common wqm queries explore raw, eval = F}
+benthics <- pin_get("ejones/benthics", board = "rsconnect") %>% 
+  filter(StationID %in% occoquanStations$StationID)
+habSamps <- pin_get("ejones/habSamps", board = "rsconnect") %>% 
+  filter(StationID %in% occoquanStations$StationID)
+habValues <- pin_get("ejones/habValues", board = "rsconnect")%>% 
+  filter(HabSampID %in% habSamps$HabSampID)
+habObs <- pin_get("ejones/habObs", board = "rsconnect")%>% 
+  filter(HabSampID %in% habSamps$HabSampID)
+```
+
+Please see the [Common Benthic Queries](#commonBenthicqueries) section for more detailed information on querying and manipulating benthic macroinvertebrate data. 
