@@ -1,0 +1,25 @@
+# Best Practices{#bestPractices}
+
+
+```{r bestPractices setup, include=FALSE}
+```
+
+All programming languages have certain "best practices" that should be upheld to ensure users are upholding established procedures that are deemed most effective for interaction with said programming language. R is no stranger to rules around best practices. Below are a few resources to help familiarize yourself with some common best practices for R (many of which are universal to computing environments in general). 
+
+* [Data Carpentry Example Best Practices](https://swcarpentry.github.io/r-novice-inflammation/06-best-practices-R/)
+* [USGS Water Data Example Best Practices](https://waterdata.usgs.gov/blog/intro-best-practices/)
+* [R Bloggers Example Best Practices](https://www.r-bloggers.com/2018/09/r-code-best-practices/)
+* [Best Coding Practices for R](https://bookdown.org/content/d1e53ac9-28ce-472f-bc2c-f499f18264a3/)
+    + This is a whole book of best practices!
+
+**The links provided are by no means comprehensive; best practices change over time and can be altered depending on use cases.** 
+
+Here at DEQ, we have identified a few best practices that we use daily to better manage our projects and day to day interactions with the R environment. Again, **the following articles are by no means comprehensive of all best practices employed within the agency.** 
+
+## Version Control{#versionControl}
+
+**Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
+
+```{r child = 'subchapters/versionControl.Rmd'}
+```
+

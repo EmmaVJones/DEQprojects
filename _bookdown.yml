@@ -8,6 +8,7 @@ rmd_files: [
   "queryInternalDataSources.Rmd",
   "spatialAnalysis.Rmd",
   "shinyAppHelp.Rmd",
+  "bestPractices.Rmd",
   "miscTips.Rmd"]
 delete_merged_file: true 
 output_dir: "docs"
