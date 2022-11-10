@@ -33,6 +33,7 @@ odsprod-vs-odstest
 dbi-method-for-ods-connection
 pool-method-for-ods-connection
 more-information-on-drivers
+note-on-using-the-sql-server-driver
 pool-dbname-vs-database
 pool-method-query-data
 queryDataFromODS

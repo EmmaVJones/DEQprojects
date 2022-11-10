@@ -55,7 +55,7 @@ We connect to a database by establishing a connection object with a very specifi
 There are a few things to note in this connection string:
 
 1. The driver method used is the ODBC driver from the odbc R package. 
-2. The driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "SQL Server", "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0" [see below for more information on drivers](#more-information-on-drivers)
+2.Examples of drivers that work with ODS are "SQL Server", "ODBC Driver 18 for SQL Server", "ODBC Driver 17 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0" [see below for more information on drivers](#more-information-on-drivers); however, **[we do not recommend using the "SQL Server" driver.](#note-on-using-the-sql-server-driver)**
 3. The server argument specifies the server name (DEQ-SQLODS-PROD) and port (50000) that you are using for the connection
 4. The database argument specifies which database you wish to connect to (ODS)
 5. The trusted_connection argument must always be "yes"
@@ -106,7 +106,7 @@ To connect to a database, you must establish a pool object. This object stores y
 There are a few things to note in this connection string:
 
 1. The driver method used is the ODBC driver from the odbc R package.
-2. The specific Driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are "SQL Server", "ODBC Driver 12 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0" [see below for more information on drivers](#more-information-on-drivers)
+2. The specific Driver version is unique to your computer. You must input the exact name of the driver software and version you have installed on your machine. Examples of drivers that work with ODS are "SQL Server", "ODBC Driver 18 for SQL Server", "ODBC Driver 17 for SQL Server", "ODBC Driver 11 for SQL Server", and "SQL Server Native Client 11.0" [see below for more information on drivers](#more-information-on-drivers); however, **[we do not recommend the using "SQL Server" driver.](#note-on-using-the-sql-server-driver)**
 3. The Server argument specifies the server name and port (50000) you are using for the connection
 4. The dbname argument specifies which database you wish to connect to (ODS)
 5. The trusted_connection argument must always be "yes"
@@ -126,9 +126,17 @@ After running the above chunk, you should have a list object named pool in your 
 
 #### More Information on Drivers
 
-You may or may not have database drivers already installed on your machine. To check, open the ODBC Data Source Administrator (64-bit) software. Under the "Drivers" tab, you should see all available drivers installed locally. If you do not have an ODBC driver already installed, you will need to install it. Please contact VCCC for assistance installing drivers.
+You may or may not have database drivers already installed on your machine. To check, open the ODBC Data Source Administrator (64-bit) software. Under the "Drivers" tab, you should see all available drivers installed locally. [We highly recommend you connect with an ODBC driver for optimum performance](#note-on-using-the-sql-server-driver). Thus, if you do not have an ODBC driver already installed, you will need to install it. Please contact VCCC for assistance installing drivers.
 
 ![](images/ODBCavailableDrivers.PNG)
+
+##### Note on using the SQL Server Driver
+
+Users may successfully connect to ODS using the "SQL Server" driver and build elementary queries. However, more complicated queries that rely on externally scoped variables are not possible using the "SQL Server" driver. Thus, **we highly recommend users only connect to ODS using an ODBC driver**. To date, the following ODBC drivers allow users to connect to ODS successfully and perform more complicated queries: 
+ 
+* [ODBC Driver 18 for SQL Server](https://go.microsoft.com/fwlink/?linkid=2214634)
+* [ODBC Driver 17 for SQL Server](https://go.microsoft.com/fwlink/?linkid=2200731)
+* ODBC Driver 11 for SQL Server
 
 
 #### Pool: dbname vs database

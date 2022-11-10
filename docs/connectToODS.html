@@ -24,7 +24,7 @@
 <meta name="author" content="DEQ R Development Team" />
 
 
-<meta name="date" content="2022-10-31" />
+<meta name="date" content="2022-11-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -332,8 +332,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We connect to a database by establishing a connection object with a very specific connection string.</p>
 <p>There are a few things to note in this connection string:</p>
 <ol style="list-style-type: decimal">
-<li>The driver method used is the ODBC driver from the odbc R package.</li>
-<li>The driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are “SQL Server,” “ODBC Driver 12 for SQL Server,” “ODBC Driver 11 for SQL Server,” and “SQL Server Native Client 11.0” <a href="connectToODS.html#more-information-on-drivers">see below for more information on drivers</a></li>
+<li>The driver method used is the ODBC driver from the odbc R package.
+2.Examples of drivers that work with ODS are “SQL Server,” “ODBC Driver 18 for SQL Server,” “ODBC Driver 17 for SQL Server,” “ODBC Driver 11 for SQL Server,” and “SQL Server Native Client 11.0” <a href="connectToODS.html#more-information-on-drivers">see below for more information on drivers</a>; however, <strong><a href="connectToODS.html#note-on-using-the-sql-server-driver">we do not recommend using the “SQL Server” driver.</a></strong></li>
 <li>The server argument specifies the server name (DEQ-SQLODS-PROD) and port (50000) that you are using for the connection</li>
 <li>The database argument specifies which database you wish to connect to (ODS)</li>
 <li>The trusted_connection argument must always be “yes”</li>
@@ -416,7 +416,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>There are a few things to note in this connection string:</p>
 <ol style="list-style-type: decimal">
 <li>The driver method used is the ODBC driver from the odbc R package.</li>
-<li>The specific Driver version is unique to your computer. You must input the exact ODBC driver software version you have installed on your machine. Examples of drivers that work with ODS are “SQL Server,” “ODBC Driver 12 for SQL Server,” “ODBC Driver 11 for SQL Server,” and “SQL Server Native Client 11.0” <a href="connectToODS.html#more-information-on-drivers">see below for more information on drivers</a></li>
+<li>The specific Driver version is unique to your computer. You must input the exact name of the driver software and version you have installed on your machine. Examples of drivers that work with ODS are “SQL Server,” “ODBC Driver 18 for SQL Server,” “ODBC Driver 17 for SQL Server,” “ODBC Driver 11 for SQL Server,” and “SQL Server Native Client 11.0” <a href="connectToODS.html#more-information-on-drivers">see below for more information on drivers</a>; however, <strong><a href="connectToODS.html#note-on-using-the-sql-server-driver">we do not recommend the using “SQL Server” driver.</a></strong></li>
 <li>The Server argument specifies the server name and port (50000) you are using for the connection</li>
 <li>The dbname argument specifies which database you wish to connect to (ODS)</li>
 <li>The trusted_connection argument must always be “yes”</li>
@@ -432,8 +432,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>After running the above chunk, you should have a list object named pool in your environment. We will use this object to build a minimal query to test our local connection to the ODS production environment.</p>
 <div id="more-information-on-drivers" class="section level4" number="2.2.4.1">
 <h4><span class="header-section-number">2.2.4.1</span> More Information on Drivers</h4>
-<p>You may or may not have database drivers already installed on your machine. To check, open the ODBC Data Source Administrator (64-bit) software. Under the “Drivers” tab, you should see all available drivers installed locally. If you do not have an ODBC driver already installed, you will need to install it. Please contact VCCC for assistance installing drivers.</p>
+<p>You may or may not have database drivers already installed on your machine. To check, open the ODBC Data Source Administrator (64-bit) software. Under the “Drivers” tab, you should see all available drivers installed locally. <a href="connectToODS.html#note-on-using-the-sql-server-driver">We highly recommend you connect with an ODBC driver for optimum performance</a>. Thus, if you do not have an ODBC driver already installed, you will need to install it. Please contact VCCC for assistance installing drivers.</p>
 <p><img src="images/ODBCavailableDrivers.PNG" /></p>
+<div id="note-on-using-the-sql-server-driver" class="section level5" number="2.2.4.1.1">
+<h5><span class="header-section-number">2.2.4.1.1</span> Note on using the SQL Server Driver</h5>
+<p>Users may successfully connect to ODS using the “SQL Server” driver and build elementary queries. However, more complicated queries that rely on externally scoped variables are not possible using the “SQL Server” driver. Thus, <strong>we highly recommend users only connect to ODS using an ODBC driver</strong>. To date, the following ODBC drivers allow users to connect to ODS successfully and perform more complicated queries:</p>
+<ul>
+<li><a href="https://go.microsoft.com/fwlink/?linkid=2214634">ODBC Driver 18 for SQL Server</a></li>
+<li><a href="https://go.microsoft.com/fwlink/?linkid=2200731">ODBC Driver 17 for SQL Server</a></li>
+<li>ODBC Driver 11 for SQL Server</li>
+</ul>
+</div>
 </div>
 <div id="pool-dbname-vs-database" class="section level4" number="2.2.4.2">
 <h4><span class="header-section-number">2.2.4.2</span> Pool: dbname vs database</h4>
