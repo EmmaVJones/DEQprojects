@@ -1,5 +1,5 @@
-fig:unnamed-chunk-16
 fig:unnamed-chunk-17
+fig:unnamed-chunk-18
 background
 whyR
 accessible-open-source-software
@@ -80,6 +80,15 @@ shinyAppHelp
 shiny-file-organization
 shiny-tricks
 markdown-and-user-friendly-output-files
+bestPractices
+versionControl
+what-is-version-control
+what-type-of-version-control
+git-basics
+how-to-connect-to-deqs-gitlab
+how-to-implement-git-in-your-workflow
+bash-method-for-users-that-like-a-challenge
+rstudio-method-point-and-click-magic
 miscTips
 regular-expression-and-pattern-matching
 regexOverview

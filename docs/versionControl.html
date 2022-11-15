@@ -24,7 +24,7 @@
 <meta name="author" content="DEQ R Development Team" />
 
 
-<meta name="date" content="2022-10-31" />
+<meta name="date" content="2022-11-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -257,6 +257,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1" data-path="versionControl.html"><a href="versionControl.html"><i class="fa fa-check"></i><b>5.1</b> Version Control</a>
 <ul>
 <li class="chapter" data-level="5.1.1" data-path="versionControl.html"><a href="versionControl.html#what-is-version-control"><i class="fa fa-check"></i><b>5.1.1</b> What is Version Control?</a></li>
+<li class="chapter" data-level="5.1.2" data-path="versionControl.html"><a href="versionControl.html#git-basics"><i class="fa fa-check"></i><b>5.1.2</b> Git Basics</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="miscTips.html"><a href="miscTips.html"><i class="fa fa-check"></i><b>6</b> Miscellaeous Tips and Tricks</a>
@@ -309,18 +310,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong>Section Contact: Emma Jones (<a href="mailto:emma.jones@deq.virginia.gov" class="email">emma.jones@deq.virginia.gov</a>)</strong></p>
 <div id="what-is-version-control" class="section level3" number="5.1.1">
 <h3><span class="header-section-number">5.1.1</span> What is Version Control?</h3>
-<p>Version control is essentially a method for tracking all the changes that occur to any saved code. It is also a very effective way of collaborating with other programmers/developers on projects. No worries if that idea still is not entirely clear. Let’s go through an example in a non programming environment to better explain this concept.</p>
-<p>Say you are working on writing a report with two colleagues. You start the process and get a full draft written and save the document as <code>DraftReport.docx</code>. Right before you email this version to your colleagues for their review you rethink how you want to present a paragraph. Well, shoot. <a href="images/facepalm.png">You deleted the way you worded it</a> the when you were writing the draft. Okay, you rewrite that section and save your document as <code>DraftReport1.docx</code> and email it to your colleagues. Then, each colleague edits your draft and sends you back a document with tracked changes. These are named <code>DraftReport2.docx</code> and <code>DraftReport_withEdits.docx</code>. Great, now it’s up to you to <a href="images/facepalm.png">manually go through each document and incorporate their edits</a>. <a href="images/facepalm.png">You save this edited version as <code>DraftReport_withEdits2.docx</code></a>. You give the report a little break to come back to it with fresh eyes. When you go back to the report, <a href="images/facepalm.png">you struggle to remember which was the last version you were editing, at this point there are four version of this report in your directory</a> (hey, at least you put all the reports in one project directory, that’s a start!). You figure out which report to edit and decide to get smart about naming conventions. You edit the report and save it as <code>FinalReport.docx</code> and ship that off to your colleagues for a last review. Guess what? <a href="images/facepalm.png">They each return you a report with edits and a new document name</a>. <a href="images/facepalm.png">We are at seven report versions</a>, but you still need to condense these edits into one document. That’s document number eight, called <code>FinalFinalReport.docx</code>. You mean business now! You send this version to your manager for a super final review. They are very professional and send you back a report with edits named <code>FinalReport.docx</code>. Well shoot, if you bring that into your project directory then you will overwrite your existing <code>FinalReport.docx</code>, so you instead name this version <code>FinalReport_myInitials.docx</code>. After a bit more review, you are finally ready to share your report with the world, but what do we call such a document? Let’s call the final final final report something special so future us can know what we published, <a href="images/facepalm.png"><code>EndAllToBeAllReport.docx</code></a>. If you are keeping count, that’s the tenth version of your report in the directory. But of course you will know which version was the last version of the document if ever you need to review it again. I mean, you wrote the thing, right?</p>
+<p>Version control is essentially a method for tracking all the changes that occur to any saved code. It is also a very effective way of collaborating with other programmers/developers on projects. No worries if that idea still is not entirely clear. Let’s go through an example in a non-programming environment to better explain this concept.</p>
+<p>Say you are working on writing a report with two colleagues. You start the process and get a full draft written and save the document as <code>DraftReport.docx</code>. Right before you email this version to your colleagues for their review you rethink how you want to present a paragraph. Well, shoot. <a href="images/facepalm.png">You deleted the way you worded it</a> when you were writing the draft. Okay, you rewrite that section and save your document as <code>DraftReport1.docx</code> and email it to your colleagues. Then, each colleague edits your draft and sends you back a document with tracked changes. These are named <code>DraftReport2.docx</code> and <code>DraftReport_withEdits.docx</code>. Great, now it’s up to you to <a href="images/facepalm.png">manually go through each document and incorporate their edits</a>. <a href="images/facepalm.png">You save this edited version as <code>DraftReport_withEdits2.docx</code></a>. You give the report a little break so you can come back to it with fresh eyes. When you go back to the report, <a href="images/facepalm.png">you struggle to remember which was the last version you were editing, at this point there are four version of this report in your directory</a> (hey, at least you put all the reports in one project directory, that’s a start!). You figure out which report to edit and decide to get smart about naming conventions. You edit the report and save it as <code>FinalReport.docx</code> and ship that off to your colleagues for a last review. Guess what? <a href="images/facepalm.png">They each return you a report with edits and a new document name</a>. <a href="images/facepalm.png">We are at seven report versions</a>, but you still need to condense these edits into one document. That’s document number eight, called <code>FinalFinalReport.docx</code>. You mean business now! You send this version to your manager for a super final review. They are very professional and send you back a report with edits named <code>FinalReport.docx</code>. Well shoot, if you bring that into your project directory then you will overwrite your existing <code>FinalReport.docx</code>, so you instead name this version <code>FinalReport_myInitials.docx</code>. After a bit more review, you are finally ready to share your report with the world, but what do we call such a document? Let’s call the final final final report something special so future us can know what we published, <a href="images/facepalm.png"><code>EndAllToBeAllReport.docx</code></a>. If you are keeping count, that’s the tenth version of your report in the directory. But, of course you will know which version was the last version of the document if ever you need to review it again. I mean, you wrote the thing, right?</p>
 <p>Fast forward a year. You need to review the final report. <a href="images/facepalm.png">You open the directory with your reports and start deciphering which version is the final final final version</a>.</p>
 <p>Get the idea? I know, it’s painful to see our mistakes laid bare. We have all been there more times that we would like to admit.</p>
-<p>Version control can help solve most of these project management issues. By implementing a version control strategy into the above example workflow, you could easily refer or revert back to previous versions of your document (commit), see line by line changes made at each step of your process (diff), maintain one main version of your document with easy ways to incorporate changes from your colleagues (branches, merge, issues), and share the whole project and project history with colleagues in case they need to know what happened step by step during the development process (repository).</p>
+<p>Version control can help solve most of these project management issues. By implementing a version control strategy into the above example workflow, you could easily refer or revert back to previous versions of your document (commit), see line by line changes made at each step of your process (diff), maintain one main version of your document with easy ways to incorporate changes from your colleagues (branches, merge, issues), and share the whole project and project history with colleagues in case they need to know what happened step-by-step during the development process (repository).</p>
 <div id="what-type-of-version-control" class="section level4" number="5.1.1.1">
 <h4><span class="header-section-number">5.1.1.1</span> What type of Version Control?</h4>
-<p>There are many ways to use version control but we will focus just on <a href="https://git-scm.com/">Git</a> and <a href="https://gitlab.deq.virginia.gov/">DEQ’s GitLab</a> in this article. In short, Git is a software used to track file changes and GitLab is a platform that allows you to host projects in a secure location to track changes (read: this is a backup of your local system). <a href="https://github.com/">GitHub</a> is a free, open source version of GitLab that is open to the world. We at DEQ use GitLab for more secure version control system behind our firewall (you need to be on VPN to access GitLab).</p>
+<p>There are many ways to use version control, but we will focus just on <a href="https://git-scm.com/">Git</a> and <a href="https://gitlab.deq.virginia.gov/">DEQ’s GitLab</a> in this article. In short, Git is a software used to track file changes and GitLab is a platform that allows you to host projects in a secure location to track changes (read: this is a backup of your local system). <a href="https://github.com/">GitHub</a> is a free, open source version of GitLab that is open to the world. We at DEQ use GitLab for more secure version control system behind our firewall (you need to be on VPN to access GitLab).</p>
 </div>
-<div id="git-basics" class="section level4" number="5.1.1.2">
-<h4><span class="header-section-number">5.1.1.2</span> Git Basics</h4>
-<p>There are plenty of tutorials that can get you going with git. Instead of recreating the wheel, we recommend reviewing these links to get started with Git.</p>
+</div>
+<div id="git-basics" class="section level3" number="5.1.2">
+<h3><span class="header-section-number">5.1.2</span> Git Basics</h3>
+<p>There are plenty of tutorials that can get you going with Git. Instead of recreating the wheel, we recommend reviewing these links to get started with Git.</p>
 <ul>
 <li><a href="https://rverse-tutorials.github.io/RWorkflow-NWFSC-2022/week1-introtogit.html">RWorkflow: Intro to Git and GitHub</a>
 <ul>
@@ -333,9 +335,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><strong>Note: the tutorial author Jenny Bryan is an R legend, her materials are excellent resources!</strong></li>
 </ul></li>
 </ul>
-</div>
-<div id="how-to-connect-to-deqs-gitlab" class="section level4" number="5.1.1.3">
-<h4><span class="header-section-number">5.1.1.3</span> How to Connect To DEQ’s GitLab</h4>
+<div id="how-to-connect-to-deqs-gitlab" class="section level4" number="5.1.2.1">
+<h4><span class="header-section-number">5.1.2.1</span> How to Connect To DEQ’s GitLab</h4>
 <p>First, you need an account. Unlike GitHub, you need an administrator to create a GitLab account for you. Please email Connor Brogan (<a href="mailto:connor.brogan@deq.virginia.gov" class="email">connor.brogan@deq.virginia.gov</a>), Joe Famularo (<a href="mailto:joe.famularo@deq.virginia.gov" class="email">joe.famularo@deq.virginia.gov</a>), and Emma Jones (<a href="mailto:emma.jones@deq.virginia.gov" class="email">emma.jones@deq.virginia.gov</a>) to get this process started.</p>
 <p>Next, you will need to set up a secure connection to the GitLab environment to your local environment via ssh. <a href="https://gitlab.deq.virginia.gov/help/user/ssh.md">This guide goes into many details</a>, the highlights are shown below. Please consult the guide before reaching out to OIS staff for help troubleshooting your connection.</p>
 <ol style="list-style-type: decimal">
@@ -349,14 +350,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>A successful connection will look like this:</p>
 <p><img src="images/versionControl_sshConnectionSuccess.PNG" /></p>
 </div>
-<div id="how-to-implement-git-in-your-workflow" class="section level4" number="5.1.1.4">
-<h4><span class="header-section-number">5.1.1.4</span> How to Implement Git in your Workflow</h4>
+<div id="how-to-implement-git-in-your-workflow" class="section level4" number="5.1.2.2">
+<h4><span class="header-section-number">5.1.2.2</span> How to Implement Git in your Workflow</h4>
+<p>Below we will detail two ways of using Git in your normal workflow. These include Bash (command line; read: more control, larger learning curve) and using an RStudio GUI (Graphical User Interface in the IDE- Integrated Development Environment; read: much more user-friendly at the start). Neither method is more correct than the other. Do whatever you feel most comfortable with and just use it!</p>
+</div>
+<div id="bash-method-for-users-that-like-a-challenge" class="section level4" number="5.1.2.3">
+<h4><span class="header-section-number">5.1.2.3</span> Bash Method: For Users that like a Challenge</h4>
 <p>First, you need to create a local directory where you will house all your local projects that you will link to GitLab. Below is an example file structure.</p>
 <p><img src="images/versionControl_fileStructure.PNG" /></p>
 <p>Then, in GitLab, create a new repository for your project. Always add a README file and gitignore.</p>
 <p>Next, you need to get this remote repository to your local environment so you can actually do stuff.</p>
-<div id="bash-method" class="section level5" number="5.1.1.4.1">
-<h5><span class="header-section-number">5.1.1.4.1</span> Bash Method</h5>
 <p>In GitLab in a browser window, navigate to the new repository and locate the “Clone” drop down button. Click the copy button next to “Clone with SSH.” Keep this on your clipboard.</p>
 <p><img src="images/versionControl_clone.PNG" /></p>
 <p>Right click in your GitLab directory in your Windows File Explorer program. Click on “Git Bash Here” to open a terminal window in your current GitLab directory. Use the following script to clone the remote repository to your local environment.</p>
@@ -377,11 +380,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb81-8"><a href="versionControl.html#cb81-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code></pre></div>
 <p>This is not a comprehensive list of all git commands one could or should use. Simple google queries can answer most questions on using bash with Git.</p>
 </div>
-<div id="rstudio-method" class="section level5" number="5.1.1.4.2">
-<h5><span class="header-section-number">5.1.1.4.2</span> RStudio Method</h5>
-<p>Insert stuff here RStudio Git people!</p>
+<div id="rstudio-method-point-and-click-magic" class="section level4" number="5.1.2.4">
+<h4><span class="header-section-number">5.1.2.4</span> RStudio Method: Point and Click Magic</h4>
+<p>Cloning a git repository in RStudio is relatively easy and may be a good place to start if you’re new to using version control.</p>
+<ol style="list-style-type: decimal">
+<li><p>Open RStudio and navigate to File &gt; New Project…</p></li>
+<li><p>Select Version Control.</p></li>
+<li><p>Select Git. You should see a screen with inputs for “Repository URL,” “Project directory name,” and “Create project as a subdirectory of.”</p></li>
+</ol>
+<p><img src="images/NewProjectWizardClone.PNG" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Now you’ll need to provide the repository URL from GitLab. This is a common step between the RStudio method and the Bash method described above. Navigate to your repository and select the “Clone” drop down button. Click the copy button next to “Clone with SSH.”</li>
+</ol>
+<p><img src="images/versionControl_clone.PNG" /></p>
+<ol start="5" style="list-style-type: decimal">
+<li><p>Paste this in the “Repository URL” input in RStudio. The project directory name should be automatically populated with the repository name.</p></li>
+<li><p>Navigate to the location where you want this repository to rest using the “Browse…” button</p></li>
+<li><p>Select “Create Project.”</p></li>
+<li><p>If successful, RStudio will open your new project.</p></li>
+</ol>
+<p>That’s it! You’re repository is now cloned in your local environment and you can begin writing code. Open this project as you would any other and you should see a Git tab where your Environment, History, Connectitons, etc. are located. To commit, push, or pull your code navigate to this Git tab.</p>
+<p><img src="images/GitWindow.PNG" /></p>
+<p>Select commit and the Review Changes window will open. Here you can compare changes from your last commit, add a commit message, select the files you’d like to commit, and also push or pull your code.</p>
+<p><img src="images/ReviewChanges.PNG" /></p>
 
-</div>
 </div>
 </div>
 </div>

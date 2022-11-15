@@ -18,7 +18,7 @@ Here at DEQ, we have identified a few best practices that we use daily to better
 
 ## Version Control{#versionControl}
 
-**Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
+**Section Contacts: Emma Jones (emma.jones@deq.virginia.gov) & Joe Famularo (joe.famularo@deq.virginia.gov)**
 
 ```{r child = 'subchapters/versionControl.Rmd'}
 ```

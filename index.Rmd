@@ -15,7 +15,7 @@ split_by: "section"
 
 # Background
 
-The purpose of this book is to describe common tasks undertaken by DEQ staff and clearly outline similar methodologies in R in order to promote learning opportunities for various skill levels of R users.
+The purpose of this book is to describe common tasks undertaken by DEQ staff and clearly outlines how to accomplish these objectives using the R programming language in order to promote learning opportunities for various skill levels of R users.
 
 This project is an example of a [bookdown](https://bookdown.org/yihui/bookdown/) report built using R and [RStudio's R Markdown](http://rmarkdown.rstudio.com/). Many authors have contributed to this effort:
 

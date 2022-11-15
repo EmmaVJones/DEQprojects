@@ -11,41 +11,41 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### What is Version Control?
 
-Version control is essentially a method for tracking all the changes that occur to any saved code. It is also a very effective way of collaborating with other programmers/developers on projects. No worries if that idea still is not entirely clear. Let's go through an example in a non programming environment to better explain this concept. 
+Version control is essentially a method for tracking all the changes that occur to any saved code. It is also a very effective way of collaborating with other programmers/developers on projects. No worries if that idea still is not entirely clear. Let's go through an example in a non-programming environment to better explain this concept.
 
-Say you are working on writing a report with two colleagues. You start the process and get a full draft written and save the document as `DraftReport.docx`. Right before you email this version to your colleagues for their review you rethink how you want to present a paragraph. Well, shoot. [You deleted the way you worded it][versionControlHelpful] the when you were writing the draft. Okay, you rewrite that section and save your document as `DraftReport1.docx` and email it to your colleagues. Then, each colleague edits your draft and sends you back a document with tracked changes. These are named `DraftReport2.docx` and `DraftReport_withEdits.docx`. Great, now it's up to you to [manually go through each document and incorporate their edits][versionControlHelpful]. [You save this edited version as `DraftReport_withEdits2.docx`][versionControlHelpful]. You give the report a little break to come back to it with fresh eyes. When you go back to the report, [you struggle to remember which was the last version you were editing, at this point there are four version of this report in your directory][versionControlHelpful] (hey, at least you put all the reports in one project directory, that's a start!). You figure out which report to edit and decide to get smart about naming conventions. You edit the report and save it as `FinalReport.docx` and ship that off to your colleagues for a last review. Guess what? [They each return you a report with edits and a new document name][versionControlHelpful]. [We are at seven report versions][versionControlHelpful], but you still need to condense these edits into one document. That's document number eight, called `FinalFinalReport.docx`. You mean business now! You send this version to your manager for a super final review. They are very professional and send you back a report with edits named `FinalReport.docx`. Well shoot, if you bring that into your project directory then you will overwrite your existing `FinalReport.docx`, so you instead name this version `FinalReport_myInitials.docx`. After a bit more review, you are finally ready to share your report with the world, but what do we call such a document? Let's call the final final final report something special so future us can know what we published, [`EndAllToBeAllReport.docx`][versionControlHelpful]. If you are keeping count, that's the tenth version of your report in the directory. But of course you will know which version was the last version of the document if ever you need to review it again. I mean, you wrote the thing, right?
+Say you are working on writing a report with two colleagues. You start the process and get a full draft written and save the document as `DraftReport.docx`. Right before you email this version to your colleagues for their review you rethink how you want to present a paragraph. Well, shoot. [You deleted the way you worded it](images/facepalm.png) when you were writing the draft. Okay, you rewrite that section and save your document as `DraftReport1.docx` and email it to your colleagues. Then, each colleague edits your draft and sends you back a document with tracked changes. These are named `DraftReport2.docx` and `DraftReport_withEdits.docx`. Great, now it's up to you to [manually go through each document and incorporate their edits](images/facepalm.png). [You save this edited version as `DraftReport_withEdits2.docx`](images/facepalm.png). You give the report a little break so you can come back to it with fresh eyes. When you go back to the report, [you struggle to remember which was the last version you were editing, at this point there are four version of this report in your directory](images/facepalm.png) (hey, at least you put all the reports in one project directory, that's a start!). You figure out which report to edit and decide to get smart about naming conventions. You edit the report and save it as `FinalReport.docx` and ship that off to your colleagues for a last review. Guess what? [They each return you a report with edits and a new document name](images/facepalm.png). [We are at seven report versions](images/facepalm.png), but you still need to condense these edits into one document. That's document number eight, called `FinalFinalReport.docx`. You mean business now! You send this version to your manager for a super final review. They are very professional and send you back a report with edits named `FinalReport.docx`. Well shoot, if you bring that into your project directory then you will overwrite your existing `FinalReport.docx`, so you instead name this version `FinalReport_myInitials.docx`. After a bit more review, you are finally ready to share your report with the world, but what do we call such a document? Let's call the final final final report something special so future us can know what we published, [`EndAllToBeAllReport.docx`](images/facepalm.png). If you are keeping count, that's the tenth version of your report in the directory. But, of course you will know which version was the last version of the document if ever you need to review it again. I mean, you wrote the thing, right?
 
-Fast forward a year. You need to review the final report. [You open the directory with your reports and start deciphering which version is the final final final version][versionControlHelpful].
+Fast forward a year. You need to review the final report. [You open the directory with your reports and start deciphering which version is the final final final version](images/facepalm.png).
 
-Get the idea? I know, it's painful to see our mistakes laid bare. We have all been there more times that we would like to admit. 
+Get the idea? I know, it's painful to see our mistakes laid bare. We have all been there more times that we would like to admit.
 
-Version control can help solve most of these project management issues. By implementing a version control strategy into the above example workflow, you could easily refer or revert back to previous versions of your document (commit), see line by line changes made at each step of your process (diff), maintain one main version of your document with easy ways to incorporate changes from your colleagues (branches, merge, issues), and share the whole project and project history with colleagues in case they need to know what happened step by step during the development process (repository). 
+Version control can help solve most of these project management issues. By implementing a version control strategy into the above example workflow, you could easily refer or revert back to previous versions of your document (commit), see line by line changes made at each step of your process (diff), maintain one main version of your document with easy ways to incorporate changes from your colleagues (branches, merge, issues), and share the whole project and project history with colleagues in case they need to know what happened step-by-step during the development process (repository).
 
 #### What type of Version Control?
 
-There are many ways to use version control but we will focus just on [Git](https://git-scm.com/) and [DEQ's GitLab](https://gitlab.deq.virginia.gov/) in this article. In short, Git is a software used to track file changes and GitLab is a platform that allows you to host projects in a secure location to track changes (read: this is a backup of your local system). [GitHub](https://github.com/) is a free, open source version of GitLab that is open to the world. We at DEQ use GitLab for more secure version control system behind our firewall (you need to be on VPN to access GitLab). 
+There are many ways to use version control, but we will focus just on [Git](https://git-scm.com/) and [DEQ's GitLab](https://gitlab.deq.virginia.gov/) in this article. In short, Git is a software used to track file changes and GitLab is a platform that allows you to host projects in a secure location to track changes (read: this is a backup of your local system). [GitHub](https://github.com/) is a free, open source version of GitLab that is open to the world. We at DEQ use GitLab for more secure version control system behind our firewall (you need to be on VPN to access GitLab).
 
-#### Git Basics
+### Git Basics
 
-There are plenty of tutorials that can get you going with git. Instead of recreating the wheel, we recommend reviewing these links to get started with Git.
+There are plenty of tutorials that can get you going with Git. Instead of recreating the wheel, we recommend reviewing these links to get started with Git.
 
-* [RWorkflow: Intro to Git and GitHub](https://rverse-tutorials.github.io/RWorkflow-NWFSC-2022/week1-introtogit.html)
-    + [Lecture Video](https://youtu.be/M1sOC4046PQ)
-* [Data Carpentry: A quick introduction to Git and GitHub](https://datacarpentry.org/semester-biology/materials/git-in-30-minutes/)
-* [useR 2016 Conference Tutorial](https://happygitwithr.com/)
-    + [Bookdown Reference: Happy Git and GitHub for the useR](https://www.r-project.org/conferences/useR-2016/tutorials/01.html)
-    + **Note: the tutorial author Jenny Bryan is an R legend, her materials are excellent resources!**
-    
+-   [RWorkflow: Intro to Git and GitHub](https://rverse-tutorials.github.io/RWorkflow-NWFSC-2022/week1-introtogit.html)
+    -   [Lecture Video](https://youtu.be/M1sOC4046PQ)
+-   [Data Carpentry: A quick introduction to Git and GitHub](https://datacarpentry.org/semester-biology/materials/git-in-30-minutes/)
+-   [useR 2016 Conference Tutorial](https://happygitwithr.com/)
+    -   [Bookdown Reference: Happy Git and GitHub for the useR](https://www.r-project.org/conferences/useR-2016/tutorials/01.html)
+    -   **Note: the tutorial author Jenny Bryan is an R legend, her materials are excellent resources!**
+
 #### How to Connect To DEQ's GitLab
 
-First, you need an account. Unlike GitHub, you need an administrator to create a GitLab account for you. Please email Connor Brogan (connor.brogan@deq.virginia.gov), Joe Famularo (joe.famularo@deq.virginia.gov), and Emma Jones (emma.jones@deq.virginia.gov) to get this process started.
+First, you need an account. Unlike GitHub, you need an administrator to create a GitLab account for you. Please email Connor Brogan ([connor.brogan\@deq.virginia.gov](mailto:connor.brogan@deq.virginia.gov){.email}), Joe Famularo ([joe.famularo\@deq.virginia.gov](mailto:joe.famularo@deq.virginia.gov){.email}), and Emma Jones ([emma.jones\@deq.virginia.gov](mailto:emma.jones@deq.virginia.gov){.email}) to get this process started.
 
-Next, you will need to set up a secure connection to the GitLab environment to your local environment via ssh. [This guide goes into many details](https://gitlab.deq.virginia.gov/help/user/ssh.md), the highlights are shown below. Please consult the guide before reaching out to OIS staff for help troubleshooting your connection. 
+Next, you will need to set up a secure connection to the GitLab environment to your local environment via ssh. [This guide goes into many details](https://gitlab.deq.virginia.gov/help/user/ssh.md), the highlights are shown below. Please consult the guide before reaching out to OIS staff for help troubleshooting your connection.
 
-1. [See if you already have an existing SSH key pair](https://gitlab.deq.virginia.gov/help/user/ssh.md#see-if-you-have-an-existing-ssh-key-pair) 
-    + If not, [Generate an SSH key pair](https://gitlab.deq.virginia.gov/help/user/ssh.md#generate-an-ssh-key-pair)
-2. [Add SSH key to your GitLab account](https://gitlab.deq.virginia.gov/help/user/ssh.md#add-an-ssh-key-to-your-gitlab-account)
-3. [Verify that you can connect](https://gitlab.deq.virginia.gov/help/user/ssh.md#verify-that-you-can-connect)
+1.  [See if you already have an existing SSH key pair](https://gitlab.deq.virginia.gov/help/user/ssh.md#see-if-you-have-an-existing-ssh-key-pair)
+    -   If not, [Generate an SSH key pair](https://gitlab.deq.virginia.gov/help/user/ssh.md#generate-an-ssh-key-pair)
+2.  [Add SSH key to your GitLab account](https://gitlab.deq.virginia.gov/help/user/ssh.md#add-an-ssh-key-to-your-gitlab-account)
+3.  [Verify that you can connect](https://gitlab.deq.virginia.gov/help/user/ssh.md#verify-that-you-can-connect)
 
 A successful connection will look like this:
 
@@ -53,23 +53,27 @@ A successful connection will look like this:
 
 #### How to Implement Git in your Workflow
 
-First, you need to create a local directory where you will house all your local projects that you will link to GitLab. Below is an example file structure. 
+Below we will detail two ways of using Git in your normal workflow. These include Bash (command line; read: more control, larger learning curve) and using an RStudio GUI (Graphical User Interface in the IDE- Integrated Development Environment; read: much more user-friendly at the start). Neither method is more correct than the other. Do whatever you feel most comfortable with and just use it!
+
+
+#### Bash Method: For Users that like a Challenge
+
+First, you need to create a local directory where you will house all your local projects that you will link to GitLab. Below is an example file structure.
 
 ![](images/versionControl_fileStructure.PNG)
 
-Then, in GitLab, create a new repository for your project. Always add a README file and gitignore. 
+Then, in GitLab, create a new repository for your project. Always add a README file and gitignore.
 
 Next, you need to get this remote repository to your local environment so you can actually do stuff.
 
-##### Bash Method
 
 In GitLab in a browser window, navigate to the new repository and locate the "Clone" drop down button. Click the copy button next to "Clone with SSH." Keep this on your clipboard.
 
 ![](images/versionControl_clone.PNG)
 
-Right click in your GitLab directory in your Windows File Explorer program. Click on "Git Bash Here" to open a terminal window in your current GitLab directory. Use the following script to clone the remote repository to your local environment. 
+Right click in your GitLab directory in your Windows File Explorer program. Click on "Git Bash Here" to open a terminal window in your current GitLab directory. Use the following script to clone the remote repository to your local environment.
 
-**Pro Tip: The Ctrl+V paste shortcut doesn't work in a command prompt. Use Shift+Insert instead to paste the link from your clipboard or right click the line you are editing and select Paste.** 
+**Pro Tip: The Ctrl+V paste shortcut doesn't work in a command prompt. Use Shift+Insert instead to paste the link from your clipboard or right click the line you are editing and select Paste.**
 
 ```{Bash eval= F}
 git clone [link from GitLab]
@@ -77,11 +81,11 @@ git clone [link from GitLab]
 #git clone git@gitlab.deq.virginia.gov:deq_water/wqm/testproject.git
 ```
 
-You were successful if you now have a directory in your GitLab directory named the same as your GitLab repo. 
+You were successful if you now have a directory in your GitLab directory named the same as your GitLab repo.
 
 ![](images/versionControl_clone2.PNG)
 
-Open the new directory and start working. When you are ready to make your first commit to the remote repository, right click in your Windows File Explorer window and choose "Git Bash Here" to open a command prompt in your current location. Stage updates, commit, push, pull, etc. using the following script examples. 
+Open the new directory and start working. When you are ready to make your first commit to the remote repository, right click in your Windows File Explorer window and choose "Git Bash Here" to open a command prompt in your current location. Stage updates, commit, push, pull, etc. using the following script examples.
 
 ```{Bash eval= F}
 # Stage all files (not excluded in the gitignore) for commit
@@ -96,11 +100,34 @@ git push origin main
 
 This is not a comprehensive list of all git commands one could or should use. Simple google queries can answer most questions on using bash with Git.
 
-##### RStudio Method
+#### RStudio Method: Point and Click Magic
 
-Insert stuff here RStudio Git people!
+Cloning a git repository in RStudio is relatively easy and may be a good place to start if you're new to using version control.
 
+1.  Open RStudio and navigate to File > New Project...
 
+2.  Select Version Control.
 
+3.  Select Git. You should see a screen with inputs for "Repository URL", "Project directory name", and "Create project as a subdirectory of".
 
-[versionControlHelpful]: images/facepalm.png
+![](images/NewProjectWizardClone.PNG)
+
+4.  Now you'll need to provide the repository URL from GitLab. This is a common step between the RStudio method and the Bash method described above. Navigate to your repository and select the "Clone" drop down button. Click the copy button next to "Clone with SSH".
+
+![](images/versionControl_clone.PNG)
+
+5.  Paste this in the "Repository URL" input in RStudio. The project directory name should be automatically populated with the repository name.
+
+6.  Navigate to the location where you want this repository to rest using the "Browse..." button
+
+7.  Select "Create Project".
+
+8.  If successful, RStudio will open your new project.
+
+That's it! You're repository is now cloned in your local environment and you can begin writing code. Open this project as you would any other and you should see a Git tab where your Environment, History, Connectitons, etc. are located. To commit, push, or pull your code navigate to this Git tab.
+
+![](images/GitWindow.PNG)
+
+Select commit and the Review Changes window will open. Here you can compare changes from your last commit, add a commit message, select the files you'd like to commit, and also push or pull your code.
+
+![](images/ReviewChanges.PNG)
