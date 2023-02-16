@@ -1,5 +1,5 @@
-fig:unnamed-chunk-17
 fig:unnamed-chunk-18
+fig:unnamed-chunk-19
 background
 whyR
 accessible-open-source-software
@@ -110,3 +110,10 @@ explore-the-endpoint-in-a-browser
 query-api-with-r
 example-query-cmc-api-for-assessment-uses
 parting-challenge
+scrapeDataFromFTP
+what-is-an-ftp
+tiger-dataset-use-case
+required-packages-2
+build-base-ftp-web-address-call
+custom-tigerroads-ftp-function
+parse-data-into-single-file

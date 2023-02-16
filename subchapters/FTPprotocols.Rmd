@@ -1,0 +1,136 @@
+---
+title: "Scrape Data from an FTP Site"
+author: "Emma Jones"
+date: "2/15/2023"
+output: html_document
+---
+
+```{r FTP setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### What is an FTP?
+
+File transfer protocol (FTP) is a mechanism for transferring data, usually large amounts of data, over a network connection. Typically, an FTP server (sometimes called the remote host) will host data that users (sometimes called the client or local host) want to source locally. FTP protocols allow the client to connect to the remote server, identify the desired data, and download the data for local use. FTP sites can be open access or require authentication, depending on the host server configuration. Accessing data through FTP is typically reserved to older data systems as REST and API file transfer protocols have gained popularity due to privacy concerns associated with FTP systems. To understand APIs, see the [Accessing APIs from R](#accessAPIfromR) section. 
+
+
+### TIGER Dataset Use Case
+
+The US Census Bureau distributes the [Topologically Integrated Geographic Encoding and Referencing system (TIGER)](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html) spatial datasets for researchers to integrate into their work. Geospatial products include shapefiles, KML, and file geodatabases representing annual updates to spatial representations of geographic boundaries (congressional districts, counties, zip codes, etc.) and features (roads, railroads, coastlines, etc.). Users may use a web interface or FTP protocols to access the data. The web interface is user-friendly when smaller amounts of data are required, but for large datasets and repeated tasks, using the FTP site is optimal to automate and standardize data retrieved. 
+
+The [Freshwater Probabilistic Monitoring program](https://www.deq.virginia.gov/water/water-quality/monitoring/probabilistic-monitoring) utilizes the TIGER roads dataset, among other spatial datasets, to calculate road length, density, stream and road crossings, etc. within watersheds and riparian zones for all sites sampled statewide. This process requires analysts to retrieve new road layers every year. These road layers are stored by state and county FIPS code, so using the web interface would be challenging to retrieve all data for Virginia, but watersheds extend beyond state boundaries, so all counties with drainages to Virginia must also be compiled from North Carolina, Tennessee, West Virginia, Maryland, and the District of Columbia. It would be very easy to miss a geographic region without automation from year to year. 
+
+### Required Packages
+
+In order to pull data from the US Census FTP site using R, users must have the following packaged loaded into your environment.
+
+```{r FTP packages, eval = FALSE}
+library(rvest) 
+library(tidyverse)
+library(stringr) 
+library(sf) 
+```
+
+### Build Base FTP Web Address Call
+
+Next, we will build the web address call that will send our desired data request to the FTP server. It is best to test these URL requests iteratively in a web browser. One can parse the URL call to operationalize the logic for more automated use by separating out the year statement like the example below.
+
+The chunk also establishes the name of a directory where all data retrieved will be stored using the object name `dirName`. It is important to create this directory locally before pulling data or the operation will not complete because it has nowhere to place the data.
+
+```{r FTP step1, eval = F}
+# Identify year to pull data from. This is critical to getting the FTP web address correct for 
+#         all subsequent analyses. If the web address fed to the subsequent function is incorrect, then
+#         no data can be pulled.
+
+# e.g. https://www2.census.gov/geo/tiger/TIGER2018/  is the appropriate web address for 2018 data.
+
+year <- 2021
+FTPaddress <- paste0("https://www2.census.gov/geo/tiger/TIGER",year,"/ROADS")
+dirName <- 'tigerRoadsPull' # create a folder in the project directory with this exact name to store all downloaded zip files
+```
+
+
+### Custom TIGERroads FTP function
+
+Building this workflow into a custom function makes this process more reproducible and efficient. The below function uses the `year` and `dirName` objects created above to efficiently pull data from the TIGER FTP site. This function will go to the area of the TIGER FTP site specified in the custom URL, look for the file provided in the `fileName` argument, and download that file to the directory specified in the `outDirectory` argument. This function is built to handle multiple requests, so users can provided multiple `fileName` arguments in the form of a vector for the embedded loop to iterate over.
+
+```{r FTP custom function, eval = F}
+downloadTigerRoadsByYear <- function(year, # year we want data from
+                                     fileName, # structured file name to retrieve
+                                     outDirectory # where we want to save the results
+                                     ){
+  for(i in 1:length(fileName)){
+    download.file(url = paste0('https://www2.census.gov/geo/tiger/TIGER',
+                               year,'/ROADS/', fileName[i]),
+                  destfile = paste0(outDirectory,'/', fileName[i]))
+  }
+}
+```
+
+
+To use the `downloadTigerRoadsByYear()` function, users need to provide one or more files to look for on the FTP site.  The FTP stores each road file by concatenated state and county FIPS codes. For this example, we will pull three counties in Virginia by the appropriate FIPS codes: 51775, 51121, 51735, which equate to Salem City, Montgomery County, and Poquoson City. 
+
+```{r FTP function use, eval=FALSE}
+FIPScodes <- c("51775", "51121", "51735")
+downloadTigerRoadsByYear(year,
+                         paste0('tl_',year,'_', as.character(FIPScodes),'_roads.zip'),
+                         paste0(dirName,'/', year))
+```
+
+When the function has completed running, the directory the data was placed in will be filled with three zip files.
+
+![](images/FTP1.png)
+
+### Parse Data into Single File
+
+To use this data efficiently, we will extract each .zip file and combine them into a single spatial dataset. First, create a new directory named 'unzipped' inside the `dirName` directory to house all the unzipped files. Inside this new directory named 'unzipped', create a new directory named the year specified in the `year` object. This next chunk will unzip all the files downloaded from the FTP site and place them inside the appropriate `year` directory in the 'unzipped' directory.
+
+```{r FTP unzip, eval=FALSE}
+# Unzip and combine all files in the dirName directory into one shapefile
+filenames <- list.files( paste0(dirName,'/', year), pattern="*.zip", full.names=TRUE)
+
+lapply(filenames, unzip, exdir=paste0('tigerRoadsPull/unzipped/',year)) # unzip all filenames that end in zip into folder named unzipped
+filenames_slim <- gsub('.zip', '' , gsub(paste0('tigerRoadsPull/',year,'/'),'', filenames ))
+```
+
+When pulling lots of data, there can be momentary interruptions in server connectivity that could result in a file or files not downloaded. In this chunk, we will double check that all desired files were downloaded and extracted. 
+
+```{r FTP QA, eval=FALSE}
+# check to make sure all downloaded files were unzipped correctly
+filenamesUnzipped <- list.files(paste0(dirName,'/unzipped/',year), pattern="*.shx", full.names=F) # search by .cpg bc .shp has a few extension options and duplicates unique names
+filenamesUnzipped_slim <- gsub('.shx','',filenamesUnzipped)
+
+all(filenames_slim %in% filenamesUnzipped_slim )
+# if true then cool
+```
+
+
+The 'unzipped' directory will now look like this:
+
+![](images/FTP2.png)
+
+If files are missing, you should rerun the `downloadTigerRoadsByYear()` function with just the missing files, extract the data, and rerun the QA check. Here is a bit of code to help you identify which files might be missing.
+
+```{r FTP missing, eval=FALSE}
+# if not then find out which missing
+filenames_slim [!(filenames_slim %in% filenamesUnzipped_slim )]
+# an output of character(0) is good because it means there are none missing
+```
+
+Lastly, we will combine all the individual county files into a single shapefile to make the dataset most useful. The purrr library is very useful to map the sf::st_read function across all the files in the directory, parsing them into a single object. The last step in this chunk saves the `shapefiles` object locally using a specified directory schema as a shapefile for use in further analyses. You should update the directory schema to match your local environment.
+
+```{r FTP combine, eval=FALSE}
+# Read in unzipped files and combine to single object
+filenamesUnzipped <- paste0(dirName,'/unzipped/',year,'/',gsub('.shx','.shp', filenamesUnzipped)) 
+
+shapefiles <- filenamesUnzipped %>%
+  map(st_read) %>%
+  reduce(rbind)
+  
+
+# Save out shapefile
+st_write(shapefiles, paste0('GISdata/TIGERroads/', year, 'tigerRoads.shp'))
+```
+
+
