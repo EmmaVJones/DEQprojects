@@ -24,7 +24,7 @@
 <meta name="author" content="DEQ R Development Team" />
 
 
-<meta name="date" content="2023-02-16" />
+<meta name="date" content="2023-05-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -244,12 +244,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6.3" data-path="watershed-delineation.html"><a href="watershed-delineation.html#qa"><i class="fa fa-check"></i><b>3.6.3</b> QA</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="landcover-analysis.html"><a href="landcover-analysis.html"><i class="fa fa-check"></i><b>3.7</b> Landcover analysis</a></li>
-<li class="chapter" data-level="3.8" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.8</b> Spatial joins</a></li>
+<li class="chapter" data-level="3.8" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.8</b> Spatial joins</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="spatial-joins.html"><a href="spatial-joins.html#case-study-water-permit-review"><i class="fa fa-check"></i><b>3.8.1</b> Case Study: Water Permit Review</a></li>
+<li class="chapter" data-level="3.8.2" data-path="spatial-joins.html"><a href="spatial-joins.html#polygons-of-interest"><i class="fa fa-check"></i><b>3.8.2</b> Polygons of Interest</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html"><i class="fa fa-check"></i><b>4</b> Shiny App Pro Tips</a>
 <ul>
 <li class="chapter" data-level="4.1" data-path="shiny-file-organization.html"><a href="shiny-file-organization.html"><i class="fa fa-check"></i><b>4.1</b> Shiny file organization</a></li>
-<li class="chapter" data-level="4.2" data-path="shiny-tricks.html"><a href="shiny-tricks.html"><i class="fa fa-check"></i><b>4.2</b> Shiny Tricks</a></li>
+<li class="chapter" data-level="4.2" data-path="shiny-tricks.html"><a href="shiny-tricks.html"><i class="fa fa-check"></i><b>4.2</b> Shiny Tricks</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="shiny-tricks.html"><a href="shiny-tricks.html#mandatory-shiny-inputs"><i class="fa fa-check"></i><b>4.2.1</b> Mandatory Shiny Inputs</a></li>
+</ul></li>
 <li class="chapter" data-level="4.3" data-path="markdown-and-user-friendly-output-files.html"><a href="markdown-and-user-friendly-output-files.html"><i class="fa fa-check"></i><b>4.3</b> Markdown and User-Friendly Output Files</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="bestPractices.html"><a href="bestPractices.html"><i class="fa fa-check"></i><b>5</b> Best Practices</a>
@@ -373,20 +380,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="images/versionControl_clone.PNG" /></p>
 <p>Right click in your GitLab directory in your Windows File Explorer program. Click on “Git Bash Here” to open a terminal window in your current GitLab directory. Use the following script to clone the remote repository to your local environment.</p>
 <p><strong>Pro Tip: The Ctrl+V paste shortcut doesn’t work in a command prompt. Use Shift+Insert instead to paste the link from your clipboard or right click the line you are editing and select Paste.</strong></p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb80-1"><a href="versionControl.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone [link from GitLab]</span>
-<span id="cb80-2"><a href="versionControl.html#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Example</span></span>
-<span id="cb80-3"><a href="versionControl.html#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="co">#git clone git@gitlab.deq.virginia.gov:deq_water/wqm/testproject.git</span></span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb97-1"><a href="versionControl.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone [link from GitLab]</span>
+<span id="cb97-2"><a href="versionControl.html#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Example</span></span>
+<span id="cb97-3"><a href="versionControl.html#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="co">#git clone git@gitlab.deq.virginia.gov:deq_water/wqm/testproject.git</span></span></code></pre></div>
 <p>You were successful if you now have a directory in your GitLab directory named the same as your GitLab repo.</p>
 <p><img src="images/versionControl_clone2.PNG" /></p>
 <p>Open the new directory and start working. When you are ready to make your first commit to the remote repository, right click in your Windows File Explorer window and choose “Git Bash Here” to open a command prompt in your current location. Stage updates, commit, push, pull, etc. using the following script examples.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb81-1"><a href="versionControl.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stage all files (not excluded in the gitignore) for commit</span></span>
-<span id="cb81-2"><a href="versionControl.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add -A</span>
-<span id="cb81-3"><a href="versionControl.html#cb81-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-4"><a href="versionControl.html#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Commit all files staged and add a commit message</span></span>
-<span id="cb81-5"><a href="versionControl.html#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit -a -m <span class="st">&#39;update readme&#39;</span></span>
-<span id="cb81-6"><a href="versionControl.html#cb81-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-7"><a href="versionControl.html#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Push commits to remote repo (main branch)</span></span>
-<span id="cb81-8"><a href="versionControl.html#cb81-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb98-1"><a href="versionControl.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stage all files (not excluded in the gitignore) for commit</span></span>
+<span id="cb98-2"><a href="versionControl.html#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add -A</span>
+<span id="cb98-3"><a href="versionControl.html#cb98-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-4"><a href="versionControl.html#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Commit all files staged and add a commit message</span></span>
+<span id="cb98-5"><a href="versionControl.html#cb98-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit -a -m <span class="st">&#39;update readme&#39;</span></span>
+<span id="cb98-6"><a href="versionControl.html#cb98-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-7"><a href="versionControl.html#cb98-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Push commits to remote repo (main branch)</span></span>
+<span id="cb98-8"><a href="versionControl.html#cb98-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code></pre></div>
 <p>This is not a comprehensive list of all git commands one could or should use. Simple google queries can answer most questions on using bash with Git.</p>
 </div>
 <div id="rstudio-method-point-and-click-magic" class="section level4" number="5.1.2.4">

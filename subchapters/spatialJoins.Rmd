@@ -1,0 +1,197 @@
+---
+title: "Spatial Joins"
+author: "Emma Jones"
+date: "5/9/2023"
+output: html_document
+---
+
+```{r spatial joins setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Spatial joins are incredibly useful operations that allow users to link different spatial features together. If you have ever wondered if something falls inside something else, that's a spatial join (or intersection, if we want to be completely honest with ourselves). If you have ever wanted to know information about feature y based on feature x, that's a spatial join. 
+
+### Case Study: Water Permit Review
+
+A use case for using spatial joins in R is demonstrated through the process of reviewing permits in the Water Programs. During the permit review process, Water Planning staff should  identify whether or not permits fall into TMDL watersheds. The following workflow documents how to identify whether or not a permitted outfall falls into a TMDL watershed.
+
+
+#### Point Locations
+
+First, we must create a dataset of all the point locations we want to compare against polygons (TMDL watersheds). An easy way to visually create a dataset in R (for demonstration purposes) is by using the tibble::tribble() function. We will create a tibble of 17 sites we want to investigate further. This might not be the most efficient way to bring data into your R environment for real data examples, so we advise reading in datasets from local files when possible.  
+
+```{r spatial joins create point data}
+library(tidyverse)
+
+outfalls <- tribble(
+  ~SiteID, ~Latitude, ~Longitude,
+  "Site 1",  37.48516,	-79.166643,
+  "Site 2",  37.489919,	-79.228329,
+  "Site 3", 37.048334,	-79.886112,
+  "Site 4", 37.377499,	-79.558333,
+  "Site 5", 37.211113,	-79.299446,
+  "Site 6", 37.146388,	-79.619167,
+  "Site 7", 37.363862,	-79.955802,
+  "Site 8", 37.365318,	-79.956827,
+  "Site 9", 37.24955,	-79.943387,
+  "Site 10", 37.066667,	-78.958333,
+  "Site 11", 36.627502,	-80.288611,
+  "Site 12", 36.57995,	-79.428251,
+  "Site 13", 36.579799,	-79.427712,
+  "Site 14", 36.783053,	-80.003705,
+  "Site 15", 36.951112,	-79.351669,
+  "Site 16", 36.99861,	-80.723612,
+  "Site 17", 37.335081,	-80.757731)
+```
+
+Now convert the `outfalls` object into a spatial dataset using the sf package.
+
+```{r spatial joins point data sf}
+
+library(sf)
+
+outfalls <- st_as_sf(outfalls, 
+                     coords = c('Longitude', 'Latitude'), 
+                     remove = F, # don't remove these lat/lon cols from dataset
+                     crs = 4326) # EPSG 4326 = WGS84 coordinate reference system
+```
+
+Let's look at these points before proceeding to see if there is anything special about these points?
+
+```{r spatial joins point map}
+library(leaflet)
+library(inlmisc)
+
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addCircleMarkers(data = outfalls, 
+              color = 'black',
+              fillColor = 'blue', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~SiteID )
+```
+
+These stations all appear to be in the Blue Ridge Regional Office region, so we will use this to dial further data queries.
+
+
+### Polygons of Interest
+
+We know we need to compare these points to TMDL watersheds, so let's use the latest published version of this dataset that is available on the internal GIS REST service. See the [Consuming GIS REST Services in R](#consumingGISRESTservices) section to learn more about querying the GIS REST service. 
+
+The below chunk creates a spatial object of all the TMDL watersheds in the state and creates a map of all the returned watersheds overlayed by the outfall points from above.
+
+```{r spatial joins tmdl watersheds, eval = F}
+
+library(httr)
+
+url <- parse_url("https://gis.deq.virginia.gov/arcgis/rest/services")
+url$path <- paste(url$path, "staff/DEQInternalDataViewer/MapServer/72/query", sep = "/")
+url$query <- list(where = "REGION = 'WCRO'", #"OBJECTID_1 > 0",
+                  outFields = "*",
+                  returnGeometry = "true",
+                  f = "geojson")
+request <- build_url(url)
+# create a spatial dataset based on the REST query
+TMDLwatersheds <- st_read(request)
+
+# map returned watersheds and outfall points
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = TMDLwatersheds, 
+              color = 'gray',
+              fillColor = 'gray', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~PJ_NAME ) %>% 
+  addCircleMarkers(data = outfalls, 
+              color = 'black',
+              fillColor = 'blue', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~SiteID )
+```
+```{r spatial joins tmdl watersheds local data, echo = F}
+
+TMDLwatersheds <- readRDS('../data/TMDLwatersheds.RDS')
+
+# map returned watersheds and outfall points
+CreateWebMap(maps = c("Topo","Imagery","Hydrography"), collapsed = TRUE) %>%
+  addPolygons(data = TMDLwatersheds, 
+              color = 'gray',
+              fillColor = 'gray', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~PJ_NAME ) %>% 
+  addCircleMarkers(data = outfalls, 
+              color = 'black',
+              fillColor = 'blue', 
+              fillOpacity = 0.6,
+              stroke=5,
+              label = ~SiteID )
+```
+
+#### Spatial Join
+
+So far we have identified that the outfall point do fall within our TMDL watersheds, but how do we know which outfalls are contained within specific TMDL watersheds? Enter the **spatial join**. We will use the outfalls as our left hand join argument to join to our TMDL watershed layer in order to extract the TMDL watershed information relative to each outfall. Said in a more general way, we will use the points as our left hand join argument to join to our polygon layer in order to extract the polygon information relative to each point. 
+
+```{r spatial joins join time, eval=FALSE}
+outfallsInTMDL <- st_join(outfalls, TMDLwatersheds)
+```
+![](images/geographyError.jpg)
+
+Wait, what?
+
+It looks like the joining step ran into an error. Time to figure out what that error message means in order to solve the problem. 
+
+![](images/googleHelp.jpg)
+
+So after a bit of poking around the internet, it seems this error is generated when there are geometry issues with one of the two spatial datasets involved in the join. Polygon features are usually to blame for geometry issues. Let's start there with our troubleshooting. 
+
+Let's try and repair the geometry issues in the local version of the TMDLwatersheds data using sf's built in geometry repair function st_make_valid(). 
+
+```{r spatial joins fix geometry, eval = F}
+TMDLwatersheds_fixedGeometry <- st_make_valid(TMDLwatersheds)
+```
+
+Now let's try the join again and see if we can get join to work properly.
+
+
+
+```{r spatial joins join time2, eval = F}
+outfallsInTMDL <- st_join(outfalls, TMDLwatersheds_fixedGeometry)
+```
+
+Huzzah! It worked. Let's see what the returned data look like in tabular form. 
+
+```{r spatial joins hidden local data bc 3.6.2 doesnt have function, echo=F, message=FALSE, error=FALSE}
+outfallsInTMDL <- readRDS('../data/outfallsInTMDL.RDS')
+```
+
+
+```{r spatial joins DT}
+library(DT)
+
+datatable(outfallsInTMDL %>%  st_drop_geometry()) # drop spatial component for the HTML table
+```
+
+Looks good! We have each point that fell into a polygon attached to the metadata (or attribute information) associated with each polygon. **Note: The sites with multiple rows indicate that the point falls into multiple overlapping polygons.**
+
+Let's do a quick summary to understand this data:
+
+```{r spatial joins summary}
+outfallsInTMDL %>% 
+  st_drop_geometry() %>%  #drop spatial part for this analysis
+  group_by(SiteID) %>% 
+  summarise(`n Projects` = n(),
+            `Project Names` = paste(unique(PJ_NAME), collapse = ', '),
+            `Project Types` = paste(unique(IMP_NAME), collapse = ', '))
+```
+Depending on how the user needs to share the results of the analysis, the data can be saved in tabular or spatial data formats. The chunk below shows how to save the results in two different formats.
+
+```{r spatial joins data out, eval =FALSE}
+# save as a csv
+write.csv(outfallsInTMDL %>% st_drop_geometry(), 'outfallsInTMDL.csv', na = '', row.names = F) # don't include geometry in tabular output
+
+# save as a shapefile
+st_write(outfallsInTMDL, 'outfallsInTMDL.shp')
+```
+

@@ -1,0 +1,497 @@
+---
+title: "Hiding/Showing Mandatory Input Labels"
+author: "Connor Brogan"
+date: "3/29/2023"
+output: 
+  html_document: 
+   css: "www/requiredInputApp.css"
+   code_folding: hide
+runtime: shiny
+---
+
+You're creating a new Shiny app that you will be sharing with several co-workers. Your supervisor has asked that you make it user friendly so that it can be given to new employees without creating any error or issues with the team's workflow. At first, this seemed easy. You created the app, tested it, and got it all working. But then you realized that the program has a number of inputs that are required to get it to work. When the user doesn't enter these, the program spits out a generic warning message. Your other teammates don't have any issues with this since they know all the science behind-the-scenes and know which inputs are required. But your new users are left scratching their heads. So what do you do?
+
+You could turn to the **shinyjs** package and its *disable()* function. This would block users from accessing certain inputs until the required conditions are met. But, without detailed help menus or a user manual, new users may still be confused why they can't get the program to work. Maybe you take the verbose strategy. You write a detailed error message for every fork in your QC function such that your program tells the user exactly what's wrong. This is usually an acceptable solution, but if your program has too many inputs it can leave your users frustrated as they try to identify the input linked to the warning.
+
+In these cases, I like to set-up "Mandatory Inputs". You are likely familiar with these from nFORM, Google forms, or any number of other applications. When you click run, the program checks if all required inputs have been entered. Those that haven't been are marked with a red asterisk (<span class = "mandatory_star_display">\*</span>). This is best used when paired with verbose error messages so the user can quickly identify what is wrong with their inputs! In the example below, the input is marked as required as soon as you press the "Check if Number is Even" button, but only if you didn't enter a number or otherwise entered an odd number.
+
+<div class = "smallApp">
+```{r Mandatory Input demo-app,echo = TRUE,message = FALSE,error = FALSE,warning = FALSE}
+library(shiny)
+library(shinyjs)
+
+#First, we define a function, labelMandatory, that will output a tagList that
+#includes a label and a span HTML element. The tagList will group these elements
+#together for us to use as an input to a Shiny input function. The inputs here
+#are the label that we want displayed for that Shiny input and the id of the
+#parent Shiny input
+labelMandatory <- function(label,id) {
+  #The tagList out will be used as a label for a Shiny input. The label input
+  #will be displayed, but the span will targeted by shinyjs::hideElement() when
+  #it is not required
+  out <- tagList(
+    label,
+    #Give the span an id. This allows us to target the span with hide- and
+    #showElement() in shinyjs
+    span("*", id = paste0(id,"-span"),class = "mandatory_star")
+  )
+  return(out)
+}
+
+
+#Now we will build a basic shiny app that has a numericInput and checks to see
+#if the entered number is even
+ui <- fluidPage(
+    #In line styles to mark the asterisk as red and position it better within the
+  #label. These are not necessary, but make it look prettier and using
+  #display:none; ensures the mandatory asterisks are hidden at first
+  tags$head(
+    tags$style(HTML(
+      "body{
+          background-color:aliceblue;
+       }
+       .mandatory_star{
+          color: red;
+          display:none;
+          vertical-align:sub;
+          font-weight:bold;
+          font-size:large;
+        }"
+    ))
+  ),
+  #Need to use shinyjs within the ui
+  useShinyjs(),
+
+  #We create a text input. We set the label using labelMandatory. We need to
+  #provide the label and the id of the input
+  numericInput(inputId = "numericInput",
+            label = labelMandatory("Please enter a number:","numericInput"),
+            value = NULL),
+  
+  #An actionButton, used for demonstration purposes. When clicked, it will
+  #trigger the shinyjs command to hide or show the asterisk in the text input
+  #label
+  actionButton("goButton","Check if Number is Even")
+  
+)#End of fluidPage
+
+server <- function(input, output, session) {
+  #When the user clicks goButton, check to see if numericInput has been entered.
+  #If it is not even or not entered, output a message and mark it as mandatory
+  observeEvent(input$goButton,{
+    
+    #Hide all mandatory stars to reset the UI. Only those that cause problems
+    #will be displayed. We can use the wild selector to target all span elements
+    #of class mandatory_star
+    hideElement(selector="span.mandatory_star")
+    
+    #Check to see if input has been entered:
+    if(!isTruthy(input$numericInput)){
+      #Warning message
+      showNotification(type = "error",
+                       ui = "Please enter a number")
+      #Show the span within the input field by passing the correct span id
+      showElement(id = paste0("numericInput","-span"))
+      
+    }else if(input$numericInput %% 2 == 1){
+      #Warning message
+      showNotification(type = "error",
+                       ui = "The number must be even")
+      #Show the span within the input field by passing the correct span id
+      showElement(id = paste0("numericInput","-span"))
+      
+    }else{
+      #Warning message
+      showNotification(type = "message",
+                       ui = "The number is even. Mission Accomplished.")
+    }
+    
+  })#End of observeEvent
+}#End of Server function
+
+#Call Shiny App
+shinyApp(ui, server)
+```
+</div>
+
+The above example works using a little bit of **shinyjs** and a bit of HTML/css. If you're not familiar with those concepts, fret not. I will try to explain them as I go, although if you want to learn more I do recommend this basic course on [html](https://www.codecademy.com/learn/learn-html) and the corresponding course on [css](https://www.codecademy.com/courses/learn-css/).
+
+The first necessary piece of code is part of the package **shinyjs**. After calling the package and building it into our app's user-interface (UI) via a *useShinyjs()* call, we leverage the very powerful functions *hideElement()* and *showElement()*. These functions do almost verbatim what their name implies: they use Javascript (js, as in shinyjs) to literally hide or show/display an HTML element. Essentially, they send a custom javascript command that causes these elements to change their [*display* css property](https://www.w3schools.com/css/css_display_visibility.asp) from its default (often set to the "inline" value) to the value "none". So, *hideElement()* will give an HTML element the property "display:none;" and *showElement()* will give it "display:inline;" or something similar. 
+
+That's pretty technical, but what is important is that *hideElement()* removes something from the users view and *showElement()* adds it back. Returning to the Shiny app example above, these are the functions that hide and show the mandatory <span class = "mandatory_star_display">\*</span> that is in the input label! These functions can target HTML elements by either using an id/shiny tag or with a css selector. Using an id/shiny tag is an effective and quick way to target individual elements. So, for instance, let's say you want to hide or display a single *numericInput()*. Here we could just use the ID that we gave numericInput:
+
+<div class = "smallApp">
+```{r Mandatory Input demo-hideShowElement,echo = TRUE,message = FALSE,error = FALSE,warning = FALSE}
+ui <- fluidPage(
+  #Need to use shinyjs within the ui
+  useShinyjs(),
+  tags$head(
+    tags$style(HTML(
+      "body{
+          background-color:aliceblue;
+        }"
+    ))
+  ),
+
+  #We create a numeric input that we want to display or hide based on the button
+  numericInput(inputId = "hideShowNumericInput",
+            label = "This input will be hidden or displayed by clicking the button",
+            value = NULL),
+  
+  #An actionButton, used for demonstration purposes. When clicked, it will
+  #trigger the shinyjs command to hide or show the numeric input
+  actionButton("goButton","Hide/Show Element")
+  
+)#End of fluidPage
+
+server <- function(input, output, session) {
+  #When the user clicks goButton, hide or show hideShowNumericInput
+  observeEvent(input$goButton,{
+    
+    #If the user clicks the button, toggle the display state of
+    #hideShowNumericInput. If the number of times the button has been pressed is
+    #odd, hide the element. Otherwise, display it!
+    if(input$goButton %% 2 == 1){
+      hideElement(id = "hideShowNumericInput")
+    }else{
+      showElement(id = "hideShowNumericInput")
+    }
+  })#End of observeEvent
+}#End of Server function
+
+#Call Shiny App
+shinyApp(ui, server)
+```
+</div>
+
+Rather than hiding/showing a single HTML element, we may want to do something a little more powerful and target groups of inputs. In these cases, we would want to target any number of our required inputs AND we only want to target the label. We don't need to hide/show the entire Shiny input, but just the little asterisk in the label. So, we would instead want to give *hide/showElement()* a css selector. Using this, we can target a group of HTML elements based on our argument. For instance, in the below app, we target all "label" HTML elements to hide/show the labels of the Shiny inputs. We can use *toggleElement()* to switch from hiding to showing and vice versa without needing to write it all out.
+<div class = "smallApp">
+```{r Mandatory Input demo-toggleSelector,echo = TRUE,message = FALSE,error = FALSE,warning = FALSE}
+ui <- fluidPage(
+  #Need to use shinyjs within the ui
+  useShinyjs(),
+  tags$head(
+    tags$style(HTML(
+      "body{
+          background-color:aliceblue;
+        }"
+    ))
+  ),
+  
+  fluidRow(
+    column(6,
+           #We create a numeric input that we want to display or hide based on
+           #the button
+           numericInput(inputId = "numericInput1",
+                        label = "This label will be hidden/displayed by clicking the button",
+                        value = NULL),
+    ),
+    column(6,
+           #We create a text input that we want to display or hide based on the
+           #button
+            textInput(inputId = "numericInput2",
+                      label = "This label will also be hidden/displayed by clicking the button",
+                      value = ""),
+    )
+  ),
+  
+  #An actionButton, used for demonstration purposes. When clicked, it will
+  #trigger the shinyjs command to hide or show the shiny input labels
+  actionButton("goButton","Hide/Show Element")
+  
+)#End of fluidPage
+
+server <- function(input, output, session) {
+  #When the user clicks goButton, hide or show hideShowNumericInput
+  observeEvent(input$goButton,{
+    
+    #If the user clicks the button, toggle the display state of
+    #all the Shiny input labels!
+    toggleElement(selector = "label")
+    
+  })#End of observeEvent
+}#End of Server function
+
+#Call Shiny App
+shinyApp(ui, server)
+```
+</div>
+
+Now, how can we leverage *hide/showElement()* to help us with our mandatory inputs? The above example clearly illustrates that we can hide or display the entire label of a Shiny input, but what if we just want to target a portion of it like our asterisk? This is where we need our custom function *labelMandatory()* (which is taken from [Dean Attalis's R blog](https://www.r-bloggers.com/2015/06/mimicking-a-google-form-with-a-shiny-app/)). 
+
+```{r Mandatory Input label-mandatory-def,class.source = "fold-show"}
+#First, we define a function, labelMandatory, that will output a tagList that
+#includes a label and a span HTML element. The tagList will group these elements
+#together for us to use as an input to a Shiny input function. The inputs here
+#are the label that we want displayed for that Shiny input and the id of the
+#parent Shiny input
+labelMandatory <- function(label,id) {
+  #The tagList out will be used as a label for a Shiny input. The label input
+  #will be displayed, but the span will targeted by shinyjs::hideElement() when
+  #it is not required
+  out <- tagList(
+    label,
+    #Give the span an id. This allows us to target the span with hide- and
+    #showElement() in shinyjs
+    span("*", id = paste0(id,"-span"),class = "mandatory_star")
+  )
+  return(out)
+}
+```
+
+*labelMandatory()* creates a shiny *tagList* that contains both a label and a *span* HTML element (of class mandatory_star, which is css that we write into our app) that holds an asterisk. The span element is given an ID equivalent to the user input pasted with "-span". This can be fed right into the "id  = " argument of any Shiny input function to create a label that holds text and this *span* element. Why does that matter? Well, it means we can now target the span elements within the labels using *hide/showElements()*! We just have to set the selector to look for all span HTML elements of class mandatory_star (i.e. selector = "span.mandatory_star"). Or, we can toggle the visibility of individual elements based on the ID that we give *labelMandatory()*. Below, we add some css to our app to define the mandatory_star css class used in *labelMandatory()* which allows us to make the asterisk appear in bold and red. 
+
+<div class = "smallApp">
+```{r Mandatory Input demo-doubleToggle,echo = TRUE,message = FALSE,error = FALSE,warning = FALSE}
+#First, we define a function, labelMandatory, that will output a tagList that
+#includes a label and a span HTML element. The tagList will group these elements
+#together for us to use as an input to a Shiny input function. The inputs here
+#are the label that we want displayed for that Shiny input and the id of the
+#parent Shiny input
+labelMandatory <- function(label,id) {
+  #The tagList out will be used as a label for a Shiny input. The label input
+  #will be displayed, but the span will targeted by shinyjs::hideElement() when
+  #it is not required
+  out <- tagList(
+    label,
+    #Give the span an id. This allows us to target the span with hide- and
+    #showElement() in shinyjs
+    span("*", id = paste0(id,"-span"),class = "mandatory_star")
+  )
+  return(out)
+}
+
+ui <- fluidPage(
+  #In line styles to mark the asterisk as red and position it better within the
+  #label. These are not necessary, but make it look prettier and using
+  #display:none; ensures the mandatory asterisks are hidden at first
+  tags$head(
+    tags$style(HTML(
+      "body{
+          background-color:aliceblue;
+       }
+      .mandatory_star{
+          color: red;
+          display:none;
+          vertical-align:sub;
+          font-weight:bold;
+          font-size:large;
+        }"
+    ))
+  ),
+    
+  #Need to use shinyjs within the ui
+  useShinyjs(),
+  
+  fluidRow(
+    column(6,
+           #We create a numeric input that we want to display or hide based on
+           #the button
+           numericInput(inputId = "numericInput1",
+                        label = labelMandatory(label = "This label's asterisk will be hidden/displayed by clicking the All button",
+                                               id = "numericInput1"),
+                        value = NULL),
+    ),
+    column(6,
+           #We create a text input that we want to display or hide based on the
+           #button
+            textInput(inputId = "numericInput2",
+                      label = labelMandatory(label = "This label's asterisk will be hidden/displayed by clicking the All button",
+                                               id = "numericInput2"),
+                      value = ""),
+    )
+  ),
+  
+    fluidRow(
+    column(6,
+           #An actionButton, used for demonstration purposes. When clicked, it
+           #will trigger the shinyjs command to hide or show all labels
+           actionButton("goButton1","Hide/Show All Asterisks")
+    ),
+    column(6,
+           #An actionButton, used for demonstration purposes. When clicked, it
+           #will trigger the shinyjs command to hide or show all labels
+           actionButton("goButton2","Hide/Show The Second asterisk")
+    )
+  ),
+  
+
+  
+)#End of fluidPage
+
+server <- function(input, output, session) {
+  #When the user clicks goButton1, hide or show all mandatory stars by targeting
+  #span elements of the appropriate css class
+  observeEvent(input$goButton1,{
+    #If the user clicks the button, toggle the display state of
+    #all the Shiny input labels!
+    toggleElement(selector = "span.mandatory_star")
+  })#End of observeEvent
+  
+  #When the user clicks goButton2, hide or show just the mandatory star of the
+  #second input by targeting it's span id
+  observeEvent(input$goButton2,{
+    #If the user clicks the button, toggle the display state of
+    #all the Shiny input labels!
+    toggleElement(id = "numericInput2-span")
+  })#End of observeEvent
+  
+}#End of Server function
+
+#Call Shiny App
+shinyApp(ui, server)
+```
+</div>
+
+Neat! So, we can use the custom function *labelMandatory()* to add these "mandatory star" asterisks into shiny input labels. We can style them with css that we feed into our user interface code. Then, we can target the *span* elements created by *labelMandatory()* to hide/show elements with the functions from **shinyjs**. This approach will work well for smaller applications where there are few mandatory inputs. However, for bigger applications or those with many required inputs, it can be tedious to write all the *toggle/hide/showElement()* calls you need. For these, I rely on a slightly different approach. I will typically include a verbose quality control function that reviews all the inputs at once and assesses any potential issues with the user entries. Each time the function finds an issue, it notes the names of the elements causing the issue in a list, dataframe, or vector. It returns this list to the app server, which can then use *mapply()* to hide/show any of the asterisks associated with the problem elements. This is how I created the below app, which has several inputs.
+
+<div class = "bigApp">
+```{r Mandatory Input demo-Final,echo = TRUE,message = FALSE,error = FALSE,warning = FALSE}
+#Now we will build a basic shiny app that has a numericInput and checks to see
+#if the entered number is even
+ui <- fluidPage(
+    #In line styles to mark the asterisk as red and position it better within the
+  #label. These are not necessary, but make it look prettier and using
+  #display:none; ensures the mandatory asterisks are hidden at first
+  tags$head(
+    tags$style(HTML(
+      "body{
+          background-color:aliceblue;
+       }
+       .mandatory_star{
+          color: red;
+          display:none;
+          vertical-align:sub;
+          font-weight:bold;
+          font-size:large;
+        }"
+    ))
+  ),
+  #Need to use shinyjs within the ui
+  useShinyjs(),
+  
+  #Six different Shiny inputs, each of which will need to be filled out for the
+  #program to run successfully
+  fluidRow(
+    column(6,
+           numericInput(inputId = "input1",
+                        label = labelMandatory(label = "Numeric Input #1",
+                                               id = "input1"),
+                        value = NULL),
+           dateInput(inputId = "input2",
+                     value = NA,
+                     label = labelMandatory(label = "Date Input #1",
+                                            id = "input2")),
+           textInput(inputId = "input3",
+                     label = labelMandatory(label = "Text Input #1",
+                                            id = "input3"))
+    ),
+    column(6,
+           radioButtons(inputId = "input4",inline = TRUE,
+                        choices = 1:4,
+                        label = labelMandatory(label = "Radio Buttons #1",
+                                               id = "input4"),
+                        selected = character()),
+           textInput(inputId = "input5",
+                     label = labelMandatory(label = "Text Input #2",
+                                            id = "input5")),
+           numericInput(inputId = "input6",
+                        label = labelMandatory(label = "Numeric Input #2",
+                                               id = "input6"),
+                        value = NULL),
+    )
+  ),
+  
+  
+  #An actionButton, used for demonstration purposes. When clicked, it will
+  #trigger the shinyjs command to hide or show the asterisk in the text input
+  #label
+  actionButton("goButton","Check if Number is Even")
+  
+)#End of fluidPage
+
+server <- function(input, output, session) {
+  
+  #Create a function that can ensure all require shiny inputs have been entered.
+  #If some are missing, return their inputIds in a list
+  QCFunction <- function(input){
+    #Error list will hold the inputIds of any shiny inputs that failed to pass
+    #the QC
+    errorList <- character()
+    #Err will be TRUE if the QC finds any issues with the user inputs, which in
+    #this case occurs when any shinyInput has not been entered
+    err <- FALSE
+    
+    #A vector of the element ids of the various ShinyInputs
+    shinyInputs <- c(input$input1,input$input2,input$input3,
+                     input$input4,input$input5,input$input6)
+    shinyInputIds <- paste0("input",1:6)
+    
+    #Check to see if any of the inputs are not "truthy", which is to say that
+    #they generally have not been entered or have not been entered with useable
+    #information. Not perfect, but useful for demonstrations here.
+    areFalsey <- !mapply(FUN = isTruthy,shinyInputs)
+    
+    #If any of the inputs are falsey, the program should fail to run
+    err <- any(areFalsey)
+    if(err){
+      showNotification(type = "error","One of the inputs has not been entered.")
+      
+      #Set the errorList to contain the names of any of the inputs that failed
+      #the QC (e.g. those that were falsey)
+      errorList <- shinyInputIds[areFalsey]
+    }
+    
+    return(list(
+      err = err,
+      errorList = errorList
+    ))
+  }
+  #Create a reactiveVal to store the results of errorList. reactiveVal's and
+  #reactiveValue's are the only global variables in Shiny apps that can pass
+  #reactive data from one portion of the app to the next
+  errorList <- reactiveVal(character())
+  
+  #When the user clicks goButton, run the program QC to generate the errorList.
+  #if the QC is passed, show a successful message. Otherwise, do nothing
+  observeEvent(input$goButton,{
+    QC <- QCFunction(input)
+    
+    #If QC$err is FALSE, no issues were encountered in the QC function. Show a
+    #successful message. Otherwise, update errorList
+    if(!QC$err){
+      showNotification(type = "message","All inputs entered, program complete!")
+      #QC was passed, reset errorList() reactiveVal
+      errorList(character())
+    }else{
+      #If the QC fails, store the errorList output from the QC function within
+      #the reactiveVal for use throughout the shiny server code
+      errorList(QC$errorList)
+    }
+  })#End of observeEvent
+  
+  #Each time the errorList reactiveVal changes, show the mandatory stars next to
+  #any Shiny inputs that the user entered incorrectly
+  observeEvent(errorList(),ignoreInit = TRUE,{
+    #First, hide all mandatory stars. This ensures the fields marked
+    #mandatory are reset in between each press of input$comp
+    hideElement(selector="span.mandatory_star")
+    #Now, find all input IDs that are TRUE within errorList(). These will
+    #need to be marked as mandatory
+    inputIDs <- errorList()
+    #Create the span ID
+    spanInputIDs <- paste0(inputIDs,"-span")
+    #Use shinyjs::showElement to mark each input as mandatory based on the
+    #spanIDs that were created by labelMandatory()
+    mapply(FUN = showElement,
+           id = spanInputIDs)
+  })
+  
+  
+  
+}#End of Server function
+
+#Call Shiny App
+shinyApp(ui, server)
+```
+</div>

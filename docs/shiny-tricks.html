@@ -24,7 +24,7 @@
 <meta name="author" content="DEQ R Development Team" />
 
 
-<meta name="date" content="2023-02-16" />
+<meta name="date" content="2023-05-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -244,12 +244,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.6.3" data-path="watershed-delineation.html"><a href="watershed-delineation.html#qa"><i class="fa fa-check"></i><b>3.6.3</b> QA</a></li>
 </ul></li>
 <li class="chapter" data-level="3.7" data-path="landcover-analysis.html"><a href="landcover-analysis.html"><i class="fa fa-check"></i><b>3.7</b> Landcover analysis</a></li>
-<li class="chapter" data-level="3.8" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.8</b> Spatial joins</a></li>
+<li class="chapter" data-level="3.8" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.8</b> Spatial joins</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="spatial-joins.html"><a href="spatial-joins.html#case-study-water-permit-review"><i class="fa fa-check"></i><b>3.8.1</b> Case Study: Water Permit Review</a></li>
+<li class="chapter" data-level="3.8.2" data-path="spatial-joins.html"><a href="spatial-joins.html#polygons-of-interest"><i class="fa fa-check"></i><b>3.8.2</b> Polygons of Interest</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html"><i class="fa fa-check"></i><b>4</b> Shiny App Pro Tips</a>
 <ul>
 <li class="chapter" data-level="4.1" data-path="shiny-file-organization.html"><a href="shiny-file-organization.html"><i class="fa fa-check"></i><b>4.1</b> Shiny file organization</a></li>
-<li class="chapter" data-level="4.2" data-path="shiny-tricks.html"><a href="shiny-tricks.html"><i class="fa fa-check"></i><b>4.2</b> Shiny Tricks</a></li>
+<li class="chapter" data-level="4.2" data-path="shiny-tricks.html"><a href="shiny-tricks.html"><i class="fa fa-check"></i><b>4.2</b> Shiny Tricks</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="shiny-tricks.html"><a href="shiny-tricks.html#mandatory-shiny-inputs"><i class="fa fa-check"></i><b>4.2.1</b> Mandatory Shiny Inputs</a></li>
+</ul></li>
 <li class="chapter" data-level="4.3" data-path="markdown-and-user-friendly-output-files.html"><a href="markdown-and-user-friendly-output-files.html"><i class="fa fa-check"></i><b>4.3</b> Markdown and User-Friendly Output Files</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="bestPractices.html"><a href="bestPractices.html"><i class="fa fa-check"></i><b>5</b> Best Practices</a>
@@ -316,7 +323,476 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="shiny-tricks" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> Shiny Tricks</h2>
-<p>Coming Soon!</p>
+<div id="mandatory-shiny-inputs" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Mandatory Shiny Inputs</h3>
+<p><strong>Section Contact: Connor Brogan (<a href="mailto:connor.brogan@deq.virginia.gov" class="email">connor.brogan@deq.virginia.gov</a>)</strong></p>
+<p>You’re creating a new Shiny app that you will be sharing with several co-workers. Your supervisor has asked that you make it user friendly so that it can be given to new employees without creating any error or issues with the team’s workflow. At first, this seemed easy. You created the app, tested it, and got it all working. But then you realized that the program has a number of inputs that are required to get it to work. When the user doesn’t enter these, the program spits out a generic warning message. Your other teammates don’t have any issues with this since they know all the science behind-the-scenes and know which inputs are required. But your new users are left scratching their heads. So what do you do?</p>
+<p>You could turn to the <strong>shinyjs</strong> package and its <em>disable()</em> function. This would block users from accessing certain inputs until the required conditions are met. But, without detailed help menus or a user manual, new users may still be confused why they can’t get the program to work. Maybe you take the verbose strategy. You write a detailed error message for every fork in your QC function such that your program tells the user exactly what’s wrong. This is usually an acceptable solution, but if your program has too many inputs it can leave your users frustrated as they try to identify the input linked to the warning.</p>
+<p>In these cases, I like to set-up “Mandatory Inputs.” You are likely familiar with these from nFORM, Google forms, or any number of other applications. When you click run, the program checks if all required inputs have been entered. Those that haven’t been are marked with a red asterisk (<span class="mandatory_star_display">*</span>). This is best used when paired with verbose error messages so the user can quickly identify what is wrong with their inputs! In the example below, the input is marked as required as soon as you press the “Check if Number is Even” button, but only if you didn’t enter a number or otherwise entered an odd number.</p>
+<div class="smallApp">
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="shiny-tricks.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb91-2"><a href="shiny-tricks.html#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinyjs)</span>
+<span id="cb91-3"><a href="shiny-tricks.html#cb91-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-4"><a href="shiny-tricks.html#cb91-4" aria-hidden="true" tabindex="-1"></a><span class="co">#First, we define a function, labelMandatory, that will output a tagList that</span></span>
+<span id="cb91-5"><a href="shiny-tricks.html#cb91-5" aria-hidden="true" tabindex="-1"></a><span class="co">#includes a label and a span HTML element. The tagList will group these elements</span></span>
+<span id="cb91-6"><a href="shiny-tricks.html#cb91-6" aria-hidden="true" tabindex="-1"></a><span class="co">#together for us to use as an input to a Shiny input function. The inputs here</span></span>
+<span id="cb91-7"><a href="shiny-tricks.html#cb91-7" aria-hidden="true" tabindex="-1"></a><span class="co">#are the label that we want displayed for that Shiny input and the id of the</span></span>
+<span id="cb91-8"><a href="shiny-tricks.html#cb91-8" aria-hidden="true" tabindex="-1"></a><span class="co">#parent Shiny input</span></span>
+<span id="cb91-9"><a href="shiny-tricks.html#cb91-9" aria-hidden="true" tabindex="-1"></a>labelMandatory <span class="ot">&lt;-</span> <span class="cf">function</span>(label,id) {</span>
+<span id="cb91-10"><a href="shiny-tricks.html#cb91-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#The tagList out will be used as a label for a Shiny input. The label input</span></span>
+<span id="cb91-11"><a href="shiny-tricks.html#cb91-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#will be displayed, but the span will targeted by shinyjs::hideElement() when</span></span>
+<span id="cb91-12"><a href="shiny-tricks.html#cb91-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#it is not required</span></span>
+<span id="cb91-13"><a href="shiny-tricks.html#cb91-13" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">tagList</span>(</span>
+<span id="cb91-14"><a href="shiny-tricks.html#cb91-14" aria-hidden="true" tabindex="-1"></a>    label,</span>
+<span id="cb91-15"><a href="shiny-tricks.html#cb91-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Give the span an id. This allows us to target the span with hide- and</span></span>
+<span id="cb91-16"><a href="shiny-tricks.html#cb91-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">#showElement() in shinyjs</span></span>
+<span id="cb91-17"><a href="shiny-tricks.html#cb91-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">span</span>(<span class="st">&quot;*&quot;</span>, <span class="at">id =</span> <span class="fu">paste0</span>(id,<span class="st">&quot;-span&quot;</span>),<span class="at">class =</span> <span class="st">&quot;mandatory_star&quot;</span>)</span>
+<span id="cb91-18"><a href="shiny-tricks.html#cb91-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb91-19"><a href="shiny-tricks.html#cb91-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb91-20"><a href="shiny-tricks.html#cb91-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb91-21"><a href="shiny-tricks.html#cb91-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-22"><a href="shiny-tricks.html#cb91-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-23"><a href="shiny-tricks.html#cb91-23" aria-hidden="true" tabindex="-1"></a><span class="co">#Now we will build a basic shiny app that has a numericInput and checks to see</span></span>
+<span id="cb91-24"><a href="shiny-tricks.html#cb91-24" aria-hidden="true" tabindex="-1"></a><span class="co">#if the entered number is even</span></span>
+<span id="cb91-25"><a href="shiny-tricks.html#cb91-25" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb91-26"><a href="shiny-tricks.html#cb91-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#In line styles to mark the asterisk as red and position it better within the</span></span>
+<span id="cb91-27"><a href="shiny-tricks.html#cb91-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">#label. These are not necessary, but make it look prettier and using</span></span>
+<span id="cb91-28"><a href="shiny-tricks.html#cb91-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">#display:none; ensures the mandatory asterisks are hidden at first</span></span>
+<span id="cb91-29"><a href="shiny-tricks.html#cb91-29" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">head</span>(</span>
+<span id="cb91-30"><a href="shiny-tricks.html#cb91-30" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">style</span>(<span class="fu">HTML</span>(</span>
+<span id="cb91-31"><a href="shiny-tricks.html#cb91-31" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;body{</span></span>
+<span id="cb91-32"><a href="shiny-tricks.html#cb91-32" aria-hidden="true" tabindex="-1"></a><span class="st">          background-color:aliceblue;</span></span>
+<span id="cb91-33"><a href="shiny-tricks.html#cb91-33" aria-hidden="true" tabindex="-1"></a><span class="st">       }</span></span>
+<span id="cb91-34"><a href="shiny-tricks.html#cb91-34" aria-hidden="true" tabindex="-1"></a><span class="st">       .mandatory_star{</span></span>
+<span id="cb91-35"><a href="shiny-tricks.html#cb91-35" aria-hidden="true" tabindex="-1"></a><span class="st">          color: red;</span></span>
+<span id="cb91-36"><a href="shiny-tricks.html#cb91-36" aria-hidden="true" tabindex="-1"></a><span class="st">          display:none;</span></span>
+<span id="cb91-37"><a href="shiny-tricks.html#cb91-37" aria-hidden="true" tabindex="-1"></a><span class="st">          vertical-align:sub;</span></span>
+<span id="cb91-38"><a href="shiny-tricks.html#cb91-38" aria-hidden="true" tabindex="-1"></a><span class="st">          font-weight:bold;</span></span>
+<span id="cb91-39"><a href="shiny-tricks.html#cb91-39" aria-hidden="true" tabindex="-1"></a><span class="st">          font-size:large;</span></span>
+<span id="cb91-40"><a href="shiny-tricks.html#cb91-40" aria-hidden="true" tabindex="-1"></a><span class="st">        }&quot;</span></span>
+<span id="cb91-41"><a href="shiny-tricks.html#cb91-41" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb91-42"><a href="shiny-tricks.html#cb91-42" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb91-43"><a href="shiny-tricks.html#cb91-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Need to use shinyjs within the ui</span></span>
+<span id="cb91-44"><a href="shiny-tricks.html#cb91-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">useShinyjs</span>(),</span>
+<span id="cb91-45"><a href="shiny-tricks.html#cb91-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-46"><a href="shiny-tricks.html#cb91-46" aria-hidden="true" tabindex="-1"></a>  <span class="co">#We create a text input. We set the label using labelMandatory. We need to</span></span>
+<span id="cb91-47"><a href="shiny-tricks.html#cb91-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#provide the label and the id of the input</span></span>
+<span id="cb91-48"><a href="shiny-tricks.html#cb91-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;numericInput&quot;</span>,</span>
+<span id="cb91-49"><a href="shiny-tricks.html#cb91-49" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="st">&quot;Please enter a number:&quot;</span>,<span class="st">&quot;numericInput&quot;</span>),</span>
+<span id="cb91-50"><a href="shiny-tricks.html#cb91-50" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="cn">NULL</span>),</span>
+<span id="cb91-51"><a href="shiny-tricks.html#cb91-51" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb91-52"><a href="shiny-tricks.html#cb91-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">#An actionButton, used for demonstration purposes. When clicked, it will</span></span>
+<span id="cb91-53"><a href="shiny-tricks.html#cb91-53" aria-hidden="true" tabindex="-1"></a>  <span class="co">#trigger the shinyjs command to hide or show the asterisk in the text input</span></span>
+<span id="cb91-54"><a href="shiny-tricks.html#cb91-54" aria-hidden="true" tabindex="-1"></a>  <span class="co">#label</span></span>
+<span id="cb91-55"><a href="shiny-tricks.html#cb91-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">actionButton</span>(<span class="st">&quot;goButton&quot;</span>,<span class="st">&quot;Check if Number is Even&quot;</span>)</span>
+<span id="cb91-56"><a href="shiny-tricks.html#cb91-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb91-57"><a href="shiny-tricks.html#cb91-57" aria-hidden="true" tabindex="-1"></a>)<span class="co">#End of fluidPage</span></span>
+<span id="cb91-58"><a href="shiny-tricks.html#cb91-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-59"><a href="shiny-tricks.html#cb91-59" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb91-60"><a href="shiny-tricks.html#cb91-60" aria-hidden="true" tabindex="-1"></a>  <span class="co">#When the user clicks goButton, check to see if numericInput has been entered.</span></span>
+<span id="cb91-61"><a href="shiny-tricks.html#cb91-61" aria-hidden="true" tabindex="-1"></a>  <span class="co">#If it is not even or not entered, output a message and mark it as mandatory</span></span>
+<span id="cb91-62"><a href="shiny-tricks.html#cb91-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>goButton,{</span>
+<span id="cb91-63"><a href="shiny-tricks.html#cb91-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb91-64"><a href="shiny-tricks.html#cb91-64" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Hide all mandatory stars to reset the UI. Only those that cause problems</span></span>
+<span id="cb91-65"><a href="shiny-tricks.html#cb91-65" aria-hidden="true" tabindex="-1"></a>    <span class="co">#will be displayed. We can use the wild selector to target all span elements</span></span>
+<span id="cb91-66"><a href="shiny-tricks.html#cb91-66" aria-hidden="true" tabindex="-1"></a>    <span class="co">#of class mandatory_star</span></span>
+<span id="cb91-67"><a href="shiny-tricks.html#cb91-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hideElement</span>(<span class="at">selector=</span><span class="st">&quot;span.mandatory_star&quot;</span>)</span>
+<span id="cb91-68"><a href="shiny-tricks.html#cb91-68" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb91-69"><a href="shiny-tricks.html#cb91-69" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Check to see if input has been entered:</span></span>
+<span id="cb91-70"><a href="shiny-tricks.html#cb91-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">isTruthy</span>(input<span class="sc">$</span>numericInput)){</span>
+<span id="cb91-71"><a href="shiny-tricks.html#cb91-71" aria-hidden="true" tabindex="-1"></a>      <span class="co">#Warning message</span></span>
+<span id="cb91-72"><a href="shiny-tricks.html#cb91-72" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="at">type =</span> <span class="st">&quot;error&quot;</span>,</span>
+<span id="cb91-73"><a href="shiny-tricks.html#cb91-73" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ui =</span> <span class="st">&quot;Please enter a number&quot;</span>)</span>
+<span id="cb91-74"><a href="shiny-tricks.html#cb91-74" aria-hidden="true" tabindex="-1"></a>      <span class="co">#Show the span within the input field by passing the correct span id</span></span>
+<span id="cb91-75"><a href="shiny-tricks.html#cb91-75" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showElement</span>(<span class="at">id =</span> <span class="fu">paste0</span>(<span class="st">&quot;numericInput&quot;</span>,<span class="st">&quot;-span&quot;</span>))</span>
+<span id="cb91-76"><a href="shiny-tricks.html#cb91-76" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb91-77"><a href="shiny-tricks.html#cb91-77" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span> <span class="cf">if</span>(input<span class="sc">$</span>numericInput <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb91-78"><a href="shiny-tricks.html#cb91-78" aria-hidden="true" tabindex="-1"></a>      <span class="co">#Warning message</span></span>
+<span id="cb91-79"><a href="shiny-tricks.html#cb91-79" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="at">type =</span> <span class="st">&quot;error&quot;</span>,</span>
+<span id="cb91-80"><a href="shiny-tricks.html#cb91-80" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ui =</span> <span class="st">&quot;The number must be even&quot;</span>)</span>
+<span id="cb91-81"><a href="shiny-tricks.html#cb91-81" aria-hidden="true" tabindex="-1"></a>      <span class="co">#Show the span within the input field by passing the correct span id</span></span>
+<span id="cb91-82"><a href="shiny-tricks.html#cb91-82" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showElement</span>(<span class="at">id =</span> <span class="fu">paste0</span>(<span class="st">&quot;numericInput&quot;</span>,<span class="st">&quot;-span&quot;</span>))</span>
+<span id="cb91-83"><a href="shiny-tricks.html#cb91-83" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb91-84"><a href="shiny-tricks.html#cb91-84" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb91-85"><a href="shiny-tricks.html#cb91-85" aria-hidden="true" tabindex="-1"></a>      <span class="co">#Warning message</span></span>
+<span id="cb91-86"><a href="shiny-tricks.html#cb91-86" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="at">type =</span> <span class="st">&quot;message&quot;</span>,</span>
+<span id="cb91-87"><a href="shiny-tricks.html#cb91-87" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ui =</span> <span class="st">&quot;The number is even. Mission Accomplished.&quot;</span>)</span>
+<span id="cb91-88"><a href="shiny-tricks.html#cb91-88" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb91-89"><a href="shiny-tricks.html#cb91-89" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb91-90"><a href="shiny-tricks.html#cb91-90" aria-hidden="true" tabindex="-1"></a>  })<span class="co">#End of observeEvent</span></span>
+<span id="cb91-91"><a href="shiny-tricks.html#cb91-91" aria-hidden="true" tabindex="-1"></a>}<span class="co">#End of Server function</span></span>
+<span id="cb91-92"><a href="shiny-tricks.html#cb91-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-93"><a href="shiny-tricks.html#cb91-93" aria-hidden="true" tabindex="-1"></a><span class="co">#Call Shiny App</span></span>
+<span id="cb91-94"><a href="shiny-tricks.html#cb91-94" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+<p><img src="series_files/figure-html/Mandatory%20Input%20demo-app-1.png" width="672" /></p>
+</div>
+<p>The above example works using a little bit of <strong>shinyjs</strong> and a bit of HTML/css. If you’re not familiar with those concepts, fret not. I will try to explain them as I go, although if you want to learn more I do recommend this basic course on <a href="https://www.codecademy.com/learn/learn-html">html</a> and the corresponding course on <a href="https://www.codecademy.com/courses/learn-css/">css</a>.</p>
+<p>The first necessary piece of code is part of the package <strong>shinyjs</strong>. After calling the package and building it into our app’s user-interface (UI) via a <em>useShinyjs()</em> call, we leverage the very powerful functions <em>hideElement()</em> and <em>showElement()</em>. These functions do almost verbatim what their name implies: they use Javascript (js, as in shinyjs) to literally hide or show/display an HTML element. Essentially, they send a custom javascript command that causes these elements to change their <a href="https://www.w3schools.com/css/css_display_visibility.asp"><em>display</em> css property</a> from its default (often set to the “inline” value) to the value “none.” So, <em>hideElement()</em> will give an HTML element the property “display:none;” and <em>showElement()</em> will give it “display:inline;” or something similar.</p>
+<p>That’s pretty technical, but what is important is that <em>hideElement()</em> removes something from the users view and <em>showElement()</em> adds it back. Returning to the Shiny app example above, these are the functions that hide and show the mandatory <span class="mandatory_star_display">*</span> that is in the input label! These functions can target HTML elements by either using an id/shiny tag or with a css selector. Using an id/shiny tag is an effective and quick way to target individual elements. So, for instance, let’s say you want to hide or display a single <em>numericInput()</em>. Here we could just use the ID that we gave numericInput:</p>
+<div class="smallApp">
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="shiny-tricks.html#cb92-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb92-2"><a href="shiny-tricks.html#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Need to use shinyjs within the ui</span></span>
+<span id="cb92-3"><a href="shiny-tricks.html#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">useShinyjs</span>(),</span>
+<span id="cb92-4"><a href="shiny-tricks.html#cb92-4" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">head</span>(</span>
+<span id="cb92-5"><a href="shiny-tricks.html#cb92-5" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">style</span>(<span class="fu">HTML</span>(</span>
+<span id="cb92-6"><a href="shiny-tricks.html#cb92-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;body{</span></span>
+<span id="cb92-7"><a href="shiny-tricks.html#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="st">          background-color:aliceblue;</span></span>
+<span id="cb92-8"><a href="shiny-tricks.html#cb92-8" aria-hidden="true" tabindex="-1"></a><span class="st">        }&quot;</span></span>
+<span id="cb92-9"><a href="shiny-tricks.html#cb92-9" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb92-10"><a href="shiny-tricks.html#cb92-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb92-11"><a href="shiny-tricks.html#cb92-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-12"><a href="shiny-tricks.html#cb92-12" aria-hidden="true" tabindex="-1"></a>  <span class="co">#We create a numeric input that we want to display or hide based on the button</span></span>
+<span id="cb92-13"><a href="shiny-tricks.html#cb92-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;hideShowNumericInput&quot;</span>,</span>
+<span id="cb92-14"><a href="shiny-tricks.html#cb92-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="st">&quot;This input will be hidden or displayed by clicking the button&quot;</span>,</span>
+<span id="cb92-15"><a href="shiny-tricks.html#cb92-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="cn">NULL</span>),</span>
+<span id="cb92-16"><a href="shiny-tricks.html#cb92-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb92-17"><a href="shiny-tricks.html#cb92-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#An actionButton, used for demonstration purposes. When clicked, it will</span></span>
+<span id="cb92-18"><a href="shiny-tricks.html#cb92-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#trigger the shinyjs command to hide or show the numeric input</span></span>
+<span id="cb92-19"><a href="shiny-tricks.html#cb92-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">actionButton</span>(<span class="st">&quot;goButton&quot;</span>,<span class="st">&quot;Hide/Show Element&quot;</span>)</span>
+<span id="cb92-20"><a href="shiny-tricks.html#cb92-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb92-21"><a href="shiny-tricks.html#cb92-21" aria-hidden="true" tabindex="-1"></a>)<span class="co">#End of fluidPage</span></span>
+<span id="cb92-22"><a href="shiny-tricks.html#cb92-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-23"><a href="shiny-tricks.html#cb92-23" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb92-24"><a href="shiny-tricks.html#cb92-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">#When the user clicks goButton, hide or show hideShowNumericInput</span></span>
+<span id="cb92-25"><a href="shiny-tricks.html#cb92-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>goButton,{</span>
+<span id="cb92-26"><a href="shiny-tricks.html#cb92-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb92-27"><a href="shiny-tricks.html#cb92-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">#If the user clicks the button, toggle the display state of</span></span>
+<span id="cb92-28"><a href="shiny-tricks.html#cb92-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#hideShowNumericInput. If the number of times the button has been pressed is</span></span>
+<span id="cb92-29"><a href="shiny-tricks.html#cb92-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">#odd, hide the element. Otherwise, display it!</span></span>
+<span id="cb92-30"><a href="shiny-tricks.html#cb92-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(input<span class="sc">$</span>goButton <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">1</span>){</span>
+<span id="cb92-31"><a href="shiny-tricks.html#cb92-31" aria-hidden="true" tabindex="-1"></a>      <span class="fu">hideElement</span>(<span class="at">id =</span> <span class="st">&quot;hideShowNumericInput&quot;</span>)</span>
+<span id="cb92-32"><a href="shiny-tricks.html#cb92-32" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb92-33"><a href="shiny-tricks.html#cb92-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showElement</span>(<span class="at">id =</span> <span class="st">&quot;hideShowNumericInput&quot;</span>)</span>
+<span id="cb92-34"><a href="shiny-tricks.html#cb92-34" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb92-35"><a href="shiny-tricks.html#cb92-35" aria-hidden="true" tabindex="-1"></a>  })<span class="co">#End of observeEvent</span></span>
+<span id="cb92-36"><a href="shiny-tricks.html#cb92-36" aria-hidden="true" tabindex="-1"></a>}<span class="co">#End of Server function</span></span>
+<span id="cb92-37"><a href="shiny-tricks.html#cb92-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-38"><a href="shiny-tricks.html#cb92-38" aria-hidden="true" tabindex="-1"></a><span class="co">#Call Shiny App</span></span>
+<span id="cb92-39"><a href="shiny-tricks.html#cb92-39" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+<p><img src="series_files/figure-html/Mandatory%20Input%20demo-hideShowElement-1.png" width="672" /></p>
+</div>
+Rather than hiding/showing a single HTML element, we may want to do something a little more powerful and target groups of inputs. In these cases, we would want to target any number of our required inputs AND we only want to target the label. We don’t need to hide/show the entire Shiny input, but just the little asterisk in the label. So, we would instead want to give <em>hide/showElement()</em> a css selector. Using this, we can target a group of HTML elements based on our argument. For instance, in the below app, we target all “label” HTML elements to hide/show the labels of the Shiny inputs. We can use <em>toggleElement()</em> to switch from hiding to showing and vice versa without needing to write it all out.
+<div class="smallApp">
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="shiny-tricks.html#cb93-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb93-2"><a href="shiny-tricks.html#cb93-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Need to use shinyjs within the ui</span></span>
+<span id="cb93-3"><a href="shiny-tricks.html#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">useShinyjs</span>(),</span>
+<span id="cb93-4"><a href="shiny-tricks.html#cb93-4" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">head</span>(</span>
+<span id="cb93-5"><a href="shiny-tricks.html#cb93-5" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">style</span>(<span class="fu">HTML</span>(</span>
+<span id="cb93-6"><a href="shiny-tricks.html#cb93-6" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;body{</span></span>
+<span id="cb93-7"><a href="shiny-tricks.html#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="st">          background-color:aliceblue;</span></span>
+<span id="cb93-8"><a href="shiny-tricks.html#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="st">        }&quot;</span></span>
+<span id="cb93-9"><a href="shiny-tricks.html#cb93-9" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb93-10"><a href="shiny-tricks.html#cb93-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb93-11"><a href="shiny-tricks.html#cb93-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb93-12"><a href="shiny-tricks.html#cb93-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb93-13"><a href="shiny-tricks.html#cb93-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb93-14"><a href="shiny-tricks.html#cb93-14" aria-hidden="true" tabindex="-1"></a>           <span class="co">#We create a numeric input that we want to display or hide based on</span></span>
+<span id="cb93-15"><a href="shiny-tricks.html#cb93-15" aria-hidden="true" tabindex="-1"></a>           <span class="co">#the button</span></span>
+<span id="cb93-16"><a href="shiny-tricks.html#cb93-16" aria-hidden="true" tabindex="-1"></a>           <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;numericInput1&quot;</span>,</span>
+<span id="cb93-17"><a href="shiny-tricks.html#cb93-17" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label =</span> <span class="st">&quot;This label will be hidden/displayed by clicking the button&quot;</span>,</span>
+<span id="cb93-18"><a href="shiny-tricks.html#cb93-18" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value =</span> <span class="cn">NULL</span>),</span>
+<span id="cb93-19"><a href="shiny-tricks.html#cb93-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb93-20"><a href="shiny-tricks.html#cb93-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb93-21"><a href="shiny-tricks.html#cb93-21" aria-hidden="true" tabindex="-1"></a>           <span class="co">#We create a text input that we want to display or hide based on the</span></span>
+<span id="cb93-22"><a href="shiny-tricks.html#cb93-22" aria-hidden="true" tabindex="-1"></a>           <span class="co">#button</span></span>
+<span id="cb93-23"><a href="shiny-tricks.html#cb93-23" aria-hidden="true" tabindex="-1"></a>            <span class="fu">textInput</span>(<span class="at">inputId =</span> <span class="st">&quot;numericInput2&quot;</span>,</span>
+<span id="cb93-24"><a href="shiny-tricks.html#cb93-24" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> <span class="st">&quot;This label will also be hidden/displayed by clicking the button&quot;</span>,</span>
+<span id="cb93-25"><a href="shiny-tricks.html#cb93-25" aria-hidden="true" tabindex="-1"></a>                      <span class="at">value =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb93-26"><a href="shiny-tricks.html#cb93-26" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb93-27"><a href="shiny-tricks.html#cb93-27" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb93-28"><a href="shiny-tricks.html#cb93-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb93-29"><a href="shiny-tricks.html#cb93-29" aria-hidden="true" tabindex="-1"></a>  <span class="co">#An actionButton, used for demonstration purposes. When clicked, it will</span></span>
+<span id="cb93-30"><a href="shiny-tricks.html#cb93-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">#trigger the shinyjs command to hide or show the shiny input labels</span></span>
+<span id="cb93-31"><a href="shiny-tricks.html#cb93-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">actionButton</span>(<span class="st">&quot;goButton&quot;</span>,<span class="st">&quot;Hide/Show Element&quot;</span>)</span>
+<span id="cb93-32"><a href="shiny-tricks.html#cb93-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb93-33"><a href="shiny-tricks.html#cb93-33" aria-hidden="true" tabindex="-1"></a>)<span class="co">#End of fluidPage</span></span>
+<span id="cb93-34"><a href="shiny-tricks.html#cb93-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-35"><a href="shiny-tricks.html#cb93-35" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb93-36"><a href="shiny-tricks.html#cb93-36" aria-hidden="true" tabindex="-1"></a>  <span class="co">#When the user clicks goButton, hide or show hideShowNumericInput</span></span>
+<span id="cb93-37"><a href="shiny-tricks.html#cb93-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>goButton,{</span>
+<span id="cb93-38"><a href="shiny-tricks.html#cb93-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb93-39"><a href="shiny-tricks.html#cb93-39" aria-hidden="true" tabindex="-1"></a>    <span class="co">#If the user clicks the button, toggle the display state of</span></span>
+<span id="cb93-40"><a href="shiny-tricks.html#cb93-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">#all the Shiny input labels!</span></span>
+<span id="cb93-41"><a href="shiny-tricks.html#cb93-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">toggleElement</span>(<span class="at">selector =</span> <span class="st">&quot;label&quot;</span>)</span>
+<span id="cb93-42"><a href="shiny-tricks.html#cb93-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb93-43"><a href="shiny-tricks.html#cb93-43" aria-hidden="true" tabindex="-1"></a>  })<span class="co">#End of observeEvent</span></span>
+<span id="cb93-44"><a href="shiny-tricks.html#cb93-44" aria-hidden="true" tabindex="-1"></a>}<span class="co">#End of Server function</span></span>
+<span id="cb93-45"><a href="shiny-tricks.html#cb93-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-46"><a href="shiny-tricks.html#cb93-46" aria-hidden="true" tabindex="-1"></a><span class="co">#Call Shiny App</span></span>
+<span id="cb93-47"><a href="shiny-tricks.html#cb93-47" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+<p><img src="series_files/figure-html/Mandatory%20Input%20demo-toggleSelector-1.png" width="672" /></p>
+</div>
+<p>Now, how can we leverage <em>hide/showElement()</em> to help us with our mandatory inputs? The above example clearly illustrates that we can hide or display the entire label of a Shiny input, but what if we just want to target a portion of it like our asterisk? This is where we need our custom function <em>labelMandatory()</em> (which is taken from <a href="https://www.r-bloggers.com/2015/06/mimicking-a-google-form-with-a-shiny-app/">Dean Attalis’s R blog</a>).</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb94-1"><a href="shiny-tricks.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First, we define a function, labelMandatory, that will output a tagList that</span></span>
+<span id="cb94-2"><a href="shiny-tricks.html#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="co">#includes a label and a span HTML element. The tagList will group these elements</span></span>
+<span id="cb94-3"><a href="shiny-tricks.html#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="co">#together for us to use as an input to a Shiny input function. The inputs here</span></span>
+<span id="cb94-4"><a href="shiny-tricks.html#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="co">#are the label that we want displayed for that Shiny input and the id of the</span></span>
+<span id="cb94-5"><a href="shiny-tricks.html#cb94-5" aria-hidden="true" tabindex="-1"></a><span class="co">#parent Shiny input</span></span>
+<span id="cb94-6"><a href="shiny-tricks.html#cb94-6" aria-hidden="true" tabindex="-1"></a>labelMandatory <span class="ot">&lt;-</span> <span class="cf">function</span>(label,id) {</span>
+<span id="cb94-7"><a href="shiny-tricks.html#cb94-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#The tagList out will be used as a label for a Shiny input. The label input</span></span>
+<span id="cb94-8"><a href="shiny-tricks.html#cb94-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#will be displayed, but the span will targeted by shinyjs::hideElement() when</span></span>
+<span id="cb94-9"><a href="shiny-tricks.html#cb94-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#it is not required</span></span>
+<span id="cb94-10"><a href="shiny-tricks.html#cb94-10" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">tagList</span>(</span>
+<span id="cb94-11"><a href="shiny-tricks.html#cb94-11" aria-hidden="true" tabindex="-1"></a>    label,</span>
+<span id="cb94-12"><a href="shiny-tricks.html#cb94-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Give the span an id. This allows us to target the span with hide- and</span></span>
+<span id="cb94-13"><a href="shiny-tricks.html#cb94-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#showElement() in shinyjs</span></span>
+<span id="cb94-14"><a href="shiny-tricks.html#cb94-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">span</span>(<span class="st">&quot;*&quot;</span>, <span class="at">id =</span> <span class="fu">paste0</span>(id,<span class="st">&quot;-span&quot;</span>),<span class="at">class =</span> <span class="st">&quot;mandatory_star&quot;</span>)</span>
+<span id="cb94-15"><a href="shiny-tricks.html#cb94-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb94-16"><a href="shiny-tricks.html#cb94-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb94-17"><a href="shiny-tricks.html#cb94-17" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p><em>labelMandatory()</em> creates a shiny <em>tagList</em> that contains both a label and a <em>span</em> HTML element (of class mandatory_star, which is css that we write into our app) that holds an asterisk. The span element is given an ID equivalent to the user input pasted with “-span.” This can be fed right into the “id =” argument of any Shiny input function to create a label that holds text and this <em>span</em> element. Why does that matter? Well, it means we can now target the span elements within the labels using <em>hide/showElements()</em>! We just have to set the selector to look for all span HTML elements of class mandatory_star (i.e. selector = “span.mandatory_star”). Or, we can toggle the visibility of individual elements based on the ID that we give <em>labelMandatory()</em>. Below, we add some css to our app to define the mandatory_star css class used in <em>labelMandatory()</em> which allows us to make the asterisk appear in bold and red.</p>
+<div class="smallApp">
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="shiny-tricks.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First, we define a function, labelMandatory, that will output a tagList that</span></span>
+<span id="cb95-2"><a href="shiny-tricks.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="co">#includes a label and a span HTML element. The tagList will group these elements</span></span>
+<span id="cb95-3"><a href="shiny-tricks.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="co">#together for us to use as an input to a Shiny input function. The inputs here</span></span>
+<span id="cb95-4"><a href="shiny-tricks.html#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="co">#are the label that we want displayed for that Shiny input and the id of the</span></span>
+<span id="cb95-5"><a href="shiny-tricks.html#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="co">#parent Shiny input</span></span>
+<span id="cb95-6"><a href="shiny-tricks.html#cb95-6" aria-hidden="true" tabindex="-1"></a>labelMandatory <span class="ot">&lt;-</span> <span class="cf">function</span>(label,id) {</span>
+<span id="cb95-7"><a href="shiny-tricks.html#cb95-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#The tagList out will be used as a label for a Shiny input. The label input</span></span>
+<span id="cb95-8"><a href="shiny-tricks.html#cb95-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#will be displayed, but the span will targeted by shinyjs::hideElement() when</span></span>
+<span id="cb95-9"><a href="shiny-tricks.html#cb95-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#it is not required</span></span>
+<span id="cb95-10"><a href="shiny-tricks.html#cb95-10" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">tagList</span>(</span>
+<span id="cb95-11"><a href="shiny-tricks.html#cb95-11" aria-hidden="true" tabindex="-1"></a>    label,</span>
+<span id="cb95-12"><a href="shiny-tricks.html#cb95-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Give the span an id. This allows us to target the span with hide- and</span></span>
+<span id="cb95-13"><a href="shiny-tricks.html#cb95-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#showElement() in shinyjs</span></span>
+<span id="cb95-14"><a href="shiny-tricks.html#cb95-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">span</span>(<span class="st">&quot;*&quot;</span>, <span class="at">id =</span> <span class="fu">paste0</span>(id,<span class="st">&quot;-span&quot;</span>),<span class="at">class =</span> <span class="st">&quot;mandatory_star&quot;</span>)</span>
+<span id="cb95-15"><a href="shiny-tricks.html#cb95-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb95-16"><a href="shiny-tricks.html#cb95-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
+<span id="cb95-17"><a href="shiny-tricks.html#cb95-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb95-18"><a href="shiny-tricks.html#cb95-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-19"><a href="shiny-tricks.html#cb95-19" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb95-20"><a href="shiny-tricks.html#cb95-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#In line styles to mark the asterisk as red and position it better within the</span></span>
+<span id="cb95-21"><a href="shiny-tricks.html#cb95-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">#label. These are not necessary, but make it look prettier and using</span></span>
+<span id="cb95-22"><a href="shiny-tricks.html#cb95-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">#display:none; ensures the mandatory asterisks are hidden at first</span></span>
+<span id="cb95-23"><a href="shiny-tricks.html#cb95-23" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">head</span>(</span>
+<span id="cb95-24"><a href="shiny-tricks.html#cb95-24" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">style</span>(<span class="fu">HTML</span>(</span>
+<span id="cb95-25"><a href="shiny-tricks.html#cb95-25" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;body{</span></span>
+<span id="cb95-26"><a href="shiny-tricks.html#cb95-26" aria-hidden="true" tabindex="-1"></a><span class="st">          background-color:aliceblue;</span></span>
+<span id="cb95-27"><a href="shiny-tricks.html#cb95-27" aria-hidden="true" tabindex="-1"></a><span class="st">       }</span></span>
+<span id="cb95-28"><a href="shiny-tricks.html#cb95-28" aria-hidden="true" tabindex="-1"></a><span class="st">      .mandatory_star{</span></span>
+<span id="cb95-29"><a href="shiny-tricks.html#cb95-29" aria-hidden="true" tabindex="-1"></a><span class="st">          color: red;</span></span>
+<span id="cb95-30"><a href="shiny-tricks.html#cb95-30" aria-hidden="true" tabindex="-1"></a><span class="st">          display:none;</span></span>
+<span id="cb95-31"><a href="shiny-tricks.html#cb95-31" aria-hidden="true" tabindex="-1"></a><span class="st">          vertical-align:sub;</span></span>
+<span id="cb95-32"><a href="shiny-tricks.html#cb95-32" aria-hidden="true" tabindex="-1"></a><span class="st">          font-weight:bold;</span></span>
+<span id="cb95-33"><a href="shiny-tricks.html#cb95-33" aria-hidden="true" tabindex="-1"></a><span class="st">          font-size:large;</span></span>
+<span id="cb95-34"><a href="shiny-tricks.html#cb95-34" aria-hidden="true" tabindex="-1"></a><span class="st">        }&quot;</span></span>
+<span id="cb95-35"><a href="shiny-tricks.html#cb95-35" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb95-36"><a href="shiny-tricks.html#cb95-36" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb95-37"><a href="shiny-tricks.html#cb95-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb95-38"><a href="shiny-tricks.html#cb95-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Need to use shinyjs within the ui</span></span>
+<span id="cb95-39"><a href="shiny-tricks.html#cb95-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">useShinyjs</span>(),</span>
+<span id="cb95-40"><a href="shiny-tricks.html#cb95-40" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb95-41"><a href="shiny-tricks.html#cb95-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb95-42"><a href="shiny-tricks.html#cb95-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb95-43"><a href="shiny-tricks.html#cb95-43" aria-hidden="true" tabindex="-1"></a>           <span class="co">#We create a numeric input that we want to display or hide based on</span></span>
+<span id="cb95-44"><a href="shiny-tricks.html#cb95-44" aria-hidden="true" tabindex="-1"></a>           <span class="co">#the button</span></span>
+<span id="cb95-45"><a href="shiny-tricks.html#cb95-45" aria-hidden="true" tabindex="-1"></a>           <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;numericInput1&quot;</span>,</span>
+<span id="cb95-46"><a href="shiny-tricks.html#cb95-46" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;This label&#39;s asterisk will be hidden/displayed by clicking the All button&quot;</span>,</span>
+<span id="cb95-47"><a href="shiny-tricks.html#cb95-47" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">id =</span> <span class="st">&quot;numericInput1&quot;</span>),</span>
+<span id="cb95-48"><a href="shiny-tricks.html#cb95-48" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value =</span> <span class="cn">NULL</span>),</span>
+<span id="cb95-49"><a href="shiny-tricks.html#cb95-49" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb95-50"><a href="shiny-tricks.html#cb95-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb95-51"><a href="shiny-tricks.html#cb95-51" aria-hidden="true" tabindex="-1"></a>           <span class="co">#We create a text input that we want to display or hide based on the</span></span>
+<span id="cb95-52"><a href="shiny-tricks.html#cb95-52" aria-hidden="true" tabindex="-1"></a>           <span class="co">#button</span></span>
+<span id="cb95-53"><a href="shiny-tricks.html#cb95-53" aria-hidden="true" tabindex="-1"></a>            <span class="fu">textInput</span>(<span class="at">inputId =</span> <span class="st">&quot;numericInput2&quot;</span>,</span>
+<span id="cb95-54"><a href="shiny-tricks.html#cb95-54" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;This label&#39;s asterisk will be hidden/displayed by clicking the All button&quot;</span>,</span>
+<span id="cb95-55"><a href="shiny-tricks.html#cb95-55" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">id =</span> <span class="st">&quot;numericInput2&quot;</span>),</span>
+<span id="cb95-56"><a href="shiny-tricks.html#cb95-56" aria-hidden="true" tabindex="-1"></a>                      <span class="at">value =</span> <span class="st">&quot;&quot;</span>),</span>
+<span id="cb95-57"><a href="shiny-tricks.html#cb95-57" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb95-58"><a href="shiny-tricks.html#cb95-58" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb95-59"><a href="shiny-tricks.html#cb95-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb95-60"><a href="shiny-tricks.html#cb95-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fluidRow</span>(</span>
+<span id="cb95-61"><a href="shiny-tricks.html#cb95-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb95-62"><a href="shiny-tricks.html#cb95-62" aria-hidden="true" tabindex="-1"></a>           <span class="co">#An actionButton, used for demonstration purposes. When clicked, it</span></span>
+<span id="cb95-63"><a href="shiny-tricks.html#cb95-63" aria-hidden="true" tabindex="-1"></a>           <span class="co">#will trigger the shinyjs command to hide or show all labels</span></span>
+<span id="cb95-64"><a href="shiny-tricks.html#cb95-64" aria-hidden="true" tabindex="-1"></a>           <span class="fu">actionButton</span>(<span class="st">&quot;goButton1&quot;</span>,<span class="st">&quot;Hide/Show All Asterisks&quot;</span>)</span>
+<span id="cb95-65"><a href="shiny-tricks.html#cb95-65" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb95-66"><a href="shiny-tricks.html#cb95-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb95-67"><a href="shiny-tricks.html#cb95-67" aria-hidden="true" tabindex="-1"></a>           <span class="co">#An actionButton, used for demonstration purposes. When clicked, it</span></span>
+<span id="cb95-68"><a href="shiny-tricks.html#cb95-68" aria-hidden="true" tabindex="-1"></a>           <span class="co">#will trigger the shinyjs command to hide or show all labels</span></span>
+<span id="cb95-69"><a href="shiny-tricks.html#cb95-69" aria-hidden="true" tabindex="-1"></a>           <span class="fu">actionButton</span>(<span class="st">&quot;goButton2&quot;</span>,<span class="st">&quot;Hide/Show The Second asterisk&quot;</span>)</span>
+<span id="cb95-70"><a href="shiny-tricks.html#cb95-70" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb95-71"><a href="shiny-tricks.html#cb95-71" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb95-72"><a href="shiny-tricks.html#cb95-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb95-73"><a href="shiny-tricks.html#cb95-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-74"><a href="shiny-tricks.html#cb95-74" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb95-75"><a href="shiny-tricks.html#cb95-75" aria-hidden="true" tabindex="-1"></a>)<span class="co">#End of fluidPage</span></span>
+<span id="cb95-76"><a href="shiny-tricks.html#cb95-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-77"><a href="shiny-tricks.html#cb95-77" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb95-78"><a href="shiny-tricks.html#cb95-78" aria-hidden="true" tabindex="-1"></a>  <span class="co">#When the user clicks goButton1, hide or show all mandatory stars by targeting</span></span>
+<span id="cb95-79"><a href="shiny-tricks.html#cb95-79" aria-hidden="true" tabindex="-1"></a>  <span class="co">#span elements of the appropriate css class</span></span>
+<span id="cb95-80"><a href="shiny-tricks.html#cb95-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>goButton1,{</span>
+<span id="cb95-81"><a href="shiny-tricks.html#cb95-81" aria-hidden="true" tabindex="-1"></a>    <span class="co">#If the user clicks the button, toggle the display state of</span></span>
+<span id="cb95-82"><a href="shiny-tricks.html#cb95-82" aria-hidden="true" tabindex="-1"></a>    <span class="co">#all the Shiny input labels!</span></span>
+<span id="cb95-83"><a href="shiny-tricks.html#cb95-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">toggleElement</span>(<span class="at">selector =</span> <span class="st">&quot;span.mandatory_star&quot;</span>)</span>
+<span id="cb95-84"><a href="shiny-tricks.html#cb95-84" aria-hidden="true" tabindex="-1"></a>  })<span class="co">#End of observeEvent</span></span>
+<span id="cb95-85"><a href="shiny-tricks.html#cb95-85" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb95-86"><a href="shiny-tricks.html#cb95-86" aria-hidden="true" tabindex="-1"></a>  <span class="co">#When the user clicks goButton2, hide or show just the mandatory star of the</span></span>
+<span id="cb95-87"><a href="shiny-tricks.html#cb95-87" aria-hidden="true" tabindex="-1"></a>  <span class="co">#second input by targeting it&#39;s span id</span></span>
+<span id="cb95-88"><a href="shiny-tricks.html#cb95-88" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>goButton2,{</span>
+<span id="cb95-89"><a href="shiny-tricks.html#cb95-89" aria-hidden="true" tabindex="-1"></a>    <span class="co">#If the user clicks the button, toggle the display state of</span></span>
+<span id="cb95-90"><a href="shiny-tricks.html#cb95-90" aria-hidden="true" tabindex="-1"></a>    <span class="co">#all the Shiny input labels!</span></span>
+<span id="cb95-91"><a href="shiny-tricks.html#cb95-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">toggleElement</span>(<span class="at">id =</span> <span class="st">&quot;numericInput2-span&quot;</span>)</span>
+<span id="cb95-92"><a href="shiny-tricks.html#cb95-92" aria-hidden="true" tabindex="-1"></a>  })<span class="co">#End of observeEvent</span></span>
+<span id="cb95-93"><a href="shiny-tricks.html#cb95-93" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb95-94"><a href="shiny-tricks.html#cb95-94" aria-hidden="true" tabindex="-1"></a>}<span class="co">#End of Server function</span></span>
+<span id="cb95-95"><a href="shiny-tricks.html#cb95-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-96"><a href="shiny-tricks.html#cb95-96" aria-hidden="true" tabindex="-1"></a><span class="co">#Call Shiny App</span></span>
+<span id="cb95-97"><a href="shiny-tricks.html#cb95-97" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+<p><img src="series_files/figure-html/Mandatory%20Input%20demo-doubleToggle-1.png" width="672" /></p>
+</div>
+<p>Neat! So, we can use the custom function <em>labelMandatory()</em> to add these “mandatory star” asterisks into shiny input labels. We can style them with css that we feed into our user interface code. Then, we can target the <em>span</em> elements created by <em>labelMandatory()</em> to hide/show elements with the functions from <strong>shinyjs</strong>. This approach will work well for smaller applications where there are few mandatory inputs. However, for bigger applications or those with many required inputs, it can be tedious to write all the <em>toggle/hide/showElement()</em> calls you need. For these, I rely on a slightly different approach. I will typically include a verbose quality control function that reviews all the inputs at once and assesses any potential issues with the user entries. Each time the function finds an issue, it notes the names of the elements causing the issue in a list, dataframe, or vector. It returns this list to the app server, which can then use <em>mapply()</em> to hide/show any of the asterisks associated with the problem elements. This is how I created the below app, which has several inputs.</p>
+<div class="bigApp">
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="shiny-tricks.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Now we will build a basic shiny app that has a numericInput and checks to see</span></span>
+<span id="cb96-2"><a href="shiny-tricks.html#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="co">#if the entered number is even</span></span>
+<span id="cb96-3"><a href="shiny-tricks.html#cb96-3" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb96-4"><a href="shiny-tricks.html#cb96-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#In line styles to mark the asterisk as red and position it better within the</span></span>
+<span id="cb96-5"><a href="shiny-tricks.html#cb96-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#label. These are not necessary, but make it look prettier and using</span></span>
+<span id="cb96-6"><a href="shiny-tricks.html#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#display:none; ensures the mandatory asterisks are hidden at first</span></span>
+<span id="cb96-7"><a href="shiny-tricks.html#cb96-7" aria-hidden="true" tabindex="-1"></a>  tags<span class="sc">$</span><span class="fu">head</span>(</span>
+<span id="cb96-8"><a href="shiny-tricks.html#cb96-8" aria-hidden="true" tabindex="-1"></a>    tags<span class="sc">$</span><span class="fu">style</span>(<span class="fu">HTML</span>(</span>
+<span id="cb96-9"><a href="shiny-tricks.html#cb96-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">&quot;body{</span></span>
+<span id="cb96-10"><a href="shiny-tricks.html#cb96-10" aria-hidden="true" tabindex="-1"></a><span class="st">          background-color:aliceblue;</span></span>
+<span id="cb96-11"><a href="shiny-tricks.html#cb96-11" aria-hidden="true" tabindex="-1"></a><span class="st">       }</span></span>
+<span id="cb96-12"><a href="shiny-tricks.html#cb96-12" aria-hidden="true" tabindex="-1"></a><span class="st">       .mandatory_star{</span></span>
+<span id="cb96-13"><a href="shiny-tricks.html#cb96-13" aria-hidden="true" tabindex="-1"></a><span class="st">          color: red;</span></span>
+<span id="cb96-14"><a href="shiny-tricks.html#cb96-14" aria-hidden="true" tabindex="-1"></a><span class="st">          display:none;</span></span>
+<span id="cb96-15"><a href="shiny-tricks.html#cb96-15" aria-hidden="true" tabindex="-1"></a><span class="st">          vertical-align:sub;</span></span>
+<span id="cb96-16"><a href="shiny-tricks.html#cb96-16" aria-hidden="true" tabindex="-1"></a><span class="st">          font-weight:bold;</span></span>
+<span id="cb96-17"><a href="shiny-tricks.html#cb96-17" aria-hidden="true" tabindex="-1"></a><span class="st">          font-size:large;</span></span>
+<span id="cb96-18"><a href="shiny-tricks.html#cb96-18" aria-hidden="true" tabindex="-1"></a><span class="st">        }&quot;</span></span>
+<span id="cb96-19"><a href="shiny-tricks.html#cb96-19" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb96-20"><a href="shiny-tricks.html#cb96-20" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb96-21"><a href="shiny-tricks.html#cb96-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Need to use shinyjs within the ui</span></span>
+<span id="cb96-22"><a href="shiny-tricks.html#cb96-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">useShinyjs</span>(),</span>
+<span id="cb96-23"><a href="shiny-tricks.html#cb96-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-24"><a href="shiny-tricks.html#cb96-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Six different Shiny inputs, each of which will need to be filled out for the</span></span>
+<span id="cb96-25"><a href="shiny-tricks.html#cb96-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">#program to run successfully</span></span>
+<span id="cb96-26"><a href="shiny-tricks.html#cb96-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fluidRow</span>(</span>
+<span id="cb96-27"><a href="shiny-tricks.html#cb96-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb96-28"><a href="shiny-tricks.html#cb96-28" aria-hidden="true" tabindex="-1"></a>           <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;input1&quot;</span>,</span>
+<span id="cb96-29"><a href="shiny-tricks.html#cb96-29" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;Numeric Input #1&quot;</span>,</span>
+<span id="cb96-30"><a href="shiny-tricks.html#cb96-30" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">id =</span> <span class="st">&quot;input1&quot;</span>),</span>
+<span id="cb96-31"><a href="shiny-tricks.html#cb96-31" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value =</span> <span class="cn">NULL</span>),</span>
+<span id="cb96-32"><a href="shiny-tricks.html#cb96-32" aria-hidden="true" tabindex="-1"></a>           <span class="fu">dateInput</span>(<span class="at">inputId =</span> <span class="st">&quot;input2&quot;</span>,</span>
+<span id="cb96-33"><a href="shiny-tricks.html#cb96-33" aria-hidden="true" tabindex="-1"></a>                     <span class="at">value =</span> <span class="cn">NA</span>,</span>
+<span id="cb96-34"><a href="shiny-tricks.html#cb96-34" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;Date Input #1&quot;</span>,</span>
+<span id="cb96-35"><a href="shiny-tricks.html#cb96-35" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">id =</span> <span class="st">&quot;input2&quot;</span>)),</span>
+<span id="cb96-36"><a href="shiny-tricks.html#cb96-36" aria-hidden="true" tabindex="-1"></a>           <span class="fu">textInput</span>(<span class="at">inputId =</span> <span class="st">&quot;input3&quot;</span>,</span>
+<span id="cb96-37"><a href="shiny-tricks.html#cb96-37" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;Text Input #1&quot;</span>,</span>
+<span id="cb96-38"><a href="shiny-tricks.html#cb96-38" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">id =</span> <span class="st">&quot;input3&quot;</span>))</span>
+<span id="cb96-39"><a href="shiny-tricks.html#cb96-39" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb96-40"><a href="shiny-tricks.html#cb96-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column</span>(<span class="dv">6</span>,</span>
+<span id="cb96-41"><a href="shiny-tricks.html#cb96-41" aria-hidden="true" tabindex="-1"></a>           <span class="fu">radioButtons</span>(<span class="at">inputId =</span> <span class="st">&quot;input4&quot;</span>,<span class="at">inline =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb96-42"><a href="shiny-tricks.html#cb96-42" aria-hidden="true" tabindex="-1"></a>                        <span class="at">choices =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>,</span>
+<span id="cb96-43"><a href="shiny-tricks.html#cb96-43" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;Radio Buttons #1&quot;</span>,</span>
+<span id="cb96-44"><a href="shiny-tricks.html#cb96-44" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">id =</span> <span class="st">&quot;input4&quot;</span>),</span>
+<span id="cb96-45"><a href="shiny-tricks.html#cb96-45" aria-hidden="true" tabindex="-1"></a>                        <span class="at">selected =</span> <span class="fu">character</span>()),</span>
+<span id="cb96-46"><a href="shiny-tricks.html#cb96-46" aria-hidden="true" tabindex="-1"></a>           <span class="fu">textInput</span>(<span class="at">inputId =</span> <span class="st">&quot;input5&quot;</span>,</span>
+<span id="cb96-47"><a href="shiny-tricks.html#cb96-47" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;Text Input #2&quot;</span>,</span>
+<span id="cb96-48"><a href="shiny-tricks.html#cb96-48" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">id =</span> <span class="st">&quot;input5&quot;</span>)),</span>
+<span id="cb96-49"><a href="shiny-tricks.html#cb96-49" aria-hidden="true" tabindex="-1"></a>           <span class="fu">numericInput</span>(<span class="at">inputId =</span> <span class="st">&quot;input6&quot;</span>,</span>
+<span id="cb96-50"><a href="shiny-tricks.html#cb96-50" aria-hidden="true" tabindex="-1"></a>                        <span class="at">label =</span> <span class="fu">labelMandatory</span>(<span class="at">label =</span> <span class="st">&quot;Numeric Input #2&quot;</span>,</span>
+<span id="cb96-51"><a href="shiny-tricks.html#cb96-51" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">id =</span> <span class="st">&quot;input6&quot;</span>),</span>
+<span id="cb96-52"><a href="shiny-tricks.html#cb96-52" aria-hidden="true" tabindex="-1"></a>                        <span class="at">value =</span> <span class="cn">NULL</span>),</span>
+<span id="cb96-53"><a href="shiny-tricks.html#cb96-53" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb96-54"><a href="shiny-tricks.html#cb96-54" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb96-55"><a href="shiny-tricks.html#cb96-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-56"><a href="shiny-tricks.html#cb96-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-57"><a href="shiny-tricks.html#cb96-57" aria-hidden="true" tabindex="-1"></a>  <span class="co">#An actionButton, used for demonstration purposes. When clicked, it will</span></span>
+<span id="cb96-58"><a href="shiny-tricks.html#cb96-58" aria-hidden="true" tabindex="-1"></a>  <span class="co">#trigger the shinyjs command to hide or show the asterisk in the text input</span></span>
+<span id="cb96-59"><a href="shiny-tricks.html#cb96-59" aria-hidden="true" tabindex="-1"></a>  <span class="co">#label</span></span>
+<span id="cb96-60"><a href="shiny-tricks.html#cb96-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">actionButton</span>(<span class="st">&quot;goButton&quot;</span>,<span class="st">&quot;Check if Number is Even&quot;</span>)</span>
+<span id="cb96-61"><a href="shiny-tricks.html#cb96-61" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-62"><a href="shiny-tricks.html#cb96-62" aria-hidden="true" tabindex="-1"></a>)<span class="co">#End of fluidPage</span></span>
+<span id="cb96-63"><a href="shiny-tricks.html#cb96-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-64"><a href="shiny-tricks.html#cb96-64" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb96-65"><a href="shiny-tricks.html#cb96-65" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-66"><a href="shiny-tricks.html#cb96-66" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Create a function that can ensure all require shiny inputs have been entered.</span></span>
+<span id="cb96-67"><a href="shiny-tricks.html#cb96-67" aria-hidden="true" tabindex="-1"></a>  <span class="co">#If some are missing, return their inputIds in a list</span></span>
+<span id="cb96-68"><a href="shiny-tricks.html#cb96-68" aria-hidden="true" tabindex="-1"></a>  QCFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(input){</span>
+<span id="cb96-69"><a href="shiny-tricks.html#cb96-69" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Error list will hold the inputIds of any shiny inputs that failed to pass</span></span>
+<span id="cb96-70"><a href="shiny-tricks.html#cb96-70" aria-hidden="true" tabindex="-1"></a>    <span class="co">#the QC</span></span>
+<span id="cb96-71"><a href="shiny-tricks.html#cb96-71" aria-hidden="true" tabindex="-1"></a>    errorList <span class="ot">&lt;-</span> <span class="fu">character</span>()</span>
+<span id="cb96-72"><a href="shiny-tricks.html#cb96-72" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Err will be TRUE if the QC finds any issues with the user inputs, which in</span></span>
+<span id="cb96-73"><a href="shiny-tricks.html#cb96-73" aria-hidden="true" tabindex="-1"></a>    <span class="co">#this case occurs when any shinyInput has not been entered</span></span>
+<span id="cb96-74"><a href="shiny-tricks.html#cb96-74" aria-hidden="true" tabindex="-1"></a>    err <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb96-75"><a href="shiny-tricks.html#cb96-75" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb96-76"><a href="shiny-tricks.html#cb96-76" aria-hidden="true" tabindex="-1"></a>    <span class="co">#A vector of the element ids of the various ShinyInputs</span></span>
+<span id="cb96-77"><a href="shiny-tricks.html#cb96-77" aria-hidden="true" tabindex="-1"></a>    shinyInputs <span class="ot">&lt;-</span> <span class="fu">c</span>(input<span class="sc">$</span>input1,input<span class="sc">$</span>input2,input<span class="sc">$</span>input3,</span>
+<span id="cb96-78"><a href="shiny-tricks.html#cb96-78" aria-hidden="true" tabindex="-1"></a>                     input<span class="sc">$</span>input4,input<span class="sc">$</span>input5,input<span class="sc">$</span>input6)</span>
+<span id="cb96-79"><a href="shiny-tricks.html#cb96-79" aria-hidden="true" tabindex="-1"></a>    shinyInputIds <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;input&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb96-80"><a href="shiny-tricks.html#cb96-80" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb96-81"><a href="shiny-tricks.html#cb96-81" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Check to see if any of the inputs are not &quot;truthy&quot;, which is to say that</span></span>
+<span id="cb96-82"><a href="shiny-tricks.html#cb96-82" aria-hidden="true" tabindex="-1"></a>    <span class="co">#they generally have not been entered or have not been entered with useable</span></span>
+<span id="cb96-83"><a href="shiny-tricks.html#cb96-83" aria-hidden="true" tabindex="-1"></a>    <span class="co">#information. Not perfect, but useful for demonstrations here.</span></span>
+<span id="cb96-84"><a href="shiny-tricks.html#cb96-84" aria-hidden="true" tabindex="-1"></a>    areFalsey <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">mapply</span>(<span class="at">FUN =</span> isTruthy,shinyInputs)</span>
+<span id="cb96-85"><a href="shiny-tricks.html#cb96-85" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb96-86"><a href="shiny-tricks.html#cb96-86" aria-hidden="true" tabindex="-1"></a>    <span class="co">#If any of the inputs are falsey, the program should fail to run</span></span>
+<span id="cb96-87"><a href="shiny-tricks.html#cb96-87" aria-hidden="true" tabindex="-1"></a>    err <span class="ot">&lt;-</span> <span class="fu">any</span>(areFalsey)</span>
+<span id="cb96-88"><a href="shiny-tricks.html#cb96-88" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(err){</span>
+<span id="cb96-89"><a href="shiny-tricks.html#cb96-89" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="at">type =</span> <span class="st">&quot;error&quot;</span>,<span class="st">&quot;One of the inputs has not been entered.&quot;</span>)</span>
+<span id="cb96-90"><a href="shiny-tricks.html#cb96-90" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb96-91"><a href="shiny-tricks.html#cb96-91" aria-hidden="true" tabindex="-1"></a>      <span class="co">#Set the errorList to contain the names of any of the inputs that failed</span></span>
+<span id="cb96-92"><a href="shiny-tricks.html#cb96-92" aria-hidden="true" tabindex="-1"></a>      <span class="co">#the QC (e.g. those that were falsey)</span></span>
+<span id="cb96-93"><a href="shiny-tricks.html#cb96-93" aria-hidden="true" tabindex="-1"></a>      errorList <span class="ot">&lt;-</span> shinyInputIds[areFalsey]</span>
+<span id="cb96-94"><a href="shiny-tricks.html#cb96-94" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-95"><a href="shiny-tricks.html#cb96-95" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb96-96"><a href="shiny-tricks.html#cb96-96" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb96-97"><a href="shiny-tricks.html#cb96-97" aria-hidden="true" tabindex="-1"></a>      <span class="at">err =</span> err,</span>
+<span id="cb96-98"><a href="shiny-tricks.html#cb96-98" aria-hidden="true" tabindex="-1"></a>      <span class="at">errorList =</span> errorList</span>
+<span id="cb96-99"><a href="shiny-tricks.html#cb96-99" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb96-100"><a href="shiny-tricks.html#cb96-100" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb96-101"><a href="shiny-tricks.html#cb96-101" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Create a reactiveVal to store the results of errorList. reactiveVal&#39;s and</span></span>
+<span id="cb96-102"><a href="shiny-tricks.html#cb96-102" aria-hidden="true" tabindex="-1"></a>  <span class="co">#reactiveValue&#39;s are the only global variables in Shiny apps that can pass</span></span>
+<span id="cb96-103"><a href="shiny-tricks.html#cb96-103" aria-hidden="true" tabindex="-1"></a>  <span class="co">#reactive data from one portion of the app to the next</span></span>
+<span id="cb96-104"><a href="shiny-tricks.html#cb96-104" aria-hidden="true" tabindex="-1"></a>  errorList <span class="ot">&lt;-</span> <span class="fu">reactiveVal</span>(<span class="fu">character</span>())</span>
+<span id="cb96-105"><a href="shiny-tricks.html#cb96-105" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-106"><a href="shiny-tricks.html#cb96-106" aria-hidden="true" tabindex="-1"></a>  <span class="co">#When the user clicks goButton, run the program QC to generate the errorList.</span></span>
+<span id="cb96-107"><a href="shiny-tricks.html#cb96-107" aria-hidden="true" tabindex="-1"></a>  <span class="co">#if the QC is passed, show a successful message. Otherwise, do nothing</span></span>
+<span id="cb96-108"><a href="shiny-tricks.html#cb96-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(input<span class="sc">$</span>goButton,{</span>
+<span id="cb96-109"><a href="shiny-tricks.html#cb96-109" aria-hidden="true" tabindex="-1"></a>    QC <span class="ot">&lt;-</span> <span class="fu">QCFunction</span>(input)</span>
+<span id="cb96-110"><a href="shiny-tricks.html#cb96-110" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb96-111"><a href="shiny-tricks.html#cb96-111" aria-hidden="true" tabindex="-1"></a>    <span class="co">#If QC$err is FALSE, no issues were encountered in the QC function. Show a</span></span>
+<span id="cb96-112"><a href="shiny-tricks.html#cb96-112" aria-hidden="true" tabindex="-1"></a>    <span class="co">#successful message. Otherwise, update errorList</span></span>
+<span id="cb96-113"><a href="shiny-tricks.html#cb96-113" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span>QC<span class="sc">$</span>err){</span>
+<span id="cb96-114"><a href="shiny-tricks.html#cb96-114" aria-hidden="true" tabindex="-1"></a>      <span class="fu">showNotification</span>(<span class="at">type =</span> <span class="st">&quot;message&quot;</span>,<span class="st">&quot;All inputs entered, program complete!&quot;</span>)</span>
+<span id="cb96-115"><a href="shiny-tricks.html#cb96-115" aria-hidden="true" tabindex="-1"></a>      <span class="co">#QC was passed, reset errorList() reactiveVal</span></span>
+<span id="cb96-116"><a href="shiny-tricks.html#cb96-116" aria-hidden="true" tabindex="-1"></a>      <span class="fu">errorList</span>(<span class="fu">character</span>())</span>
+<span id="cb96-117"><a href="shiny-tricks.html#cb96-117" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span>{</span>
+<span id="cb96-118"><a href="shiny-tricks.html#cb96-118" aria-hidden="true" tabindex="-1"></a>      <span class="co">#If the QC fails, store the errorList output from the QC function within</span></span>
+<span id="cb96-119"><a href="shiny-tricks.html#cb96-119" aria-hidden="true" tabindex="-1"></a>      <span class="co">#the reactiveVal for use throughout the shiny server code</span></span>
+<span id="cb96-120"><a href="shiny-tricks.html#cb96-120" aria-hidden="true" tabindex="-1"></a>      <span class="fu">errorList</span>(QC<span class="sc">$</span>errorList)</span>
+<span id="cb96-121"><a href="shiny-tricks.html#cb96-121" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-122"><a href="shiny-tricks.html#cb96-122" aria-hidden="true" tabindex="-1"></a>  })<span class="co">#End of observeEvent</span></span>
+<span id="cb96-123"><a href="shiny-tricks.html#cb96-123" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-124"><a href="shiny-tricks.html#cb96-124" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Each time the errorList reactiveVal changes, show the mandatory stars next to</span></span>
+<span id="cb96-125"><a href="shiny-tricks.html#cb96-125" aria-hidden="true" tabindex="-1"></a>  <span class="co">#any Shiny inputs that the user entered incorrectly</span></span>
+<span id="cb96-126"><a href="shiny-tricks.html#cb96-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">observeEvent</span>(<span class="fu">errorList</span>(),<span class="at">ignoreInit =</span> <span class="cn">TRUE</span>,{</span>
+<span id="cb96-127"><a href="shiny-tricks.html#cb96-127" aria-hidden="true" tabindex="-1"></a>    <span class="co">#First, hide all mandatory stars. This ensures the fields marked</span></span>
+<span id="cb96-128"><a href="shiny-tricks.html#cb96-128" aria-hidden="true" tabindex="-1"></a>    <span class="co">#mandatory are reset in between each press of input$comp</span></span>
+<span id="cb96-129"><a href="shiny-tricks.html#cb96-129" aria-hidden="true" tabindex="-1"></a>    <span class="fu">hideElement</span>(<span class="at">selector=</span><span class="st">&quot;span.mandatory_star&quot;</span>)</span>
+<span id="cb96-130"><a href="shiny-tricks.html#cb96-130" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Now, find all input IDs that are TRUE within errorList(). These will</span></span>
+<span id="cb96-131"><a href="shiny-tricks.html#cb96-131" aria-hidden="true" tabindex="-1"></a>    <span class="co">#need to be marked as mandatory</span></span>
+<span id="cb96-132"><a href="shiny-tricks.html#cb96-132" aria-hidden="true" tabindex="-1"></a>    inputIDs <span class="ot">&lt;-</span> <span class="fu">errorList</span>()</span>
+<span id="cb96-133"><a href="shiny-tricks.html#cb96-133" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Create the span ID</span></span>
+<span id="cb96-134"><a href="shiny-tricks.html#cb96-134" aria-hidden="true" tabindex="-1"></a>    spanInputIDs <span class="ot">&lt;-</span> <span class="fu">paste0</span>(inputIDs,<span class="st">&quot;-span&quot;</span>)</span>
+<span id="cb96-135"><a href="shiny-tricks.html#cb96-135" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Use shinyjs::showElement to mark each input as mandatory based on the</span></span>
+<span id="cb96-136"><a href="shiny-tricks.html#cb96-136" aria-hidden="true" tabindex="-1"></a>    <span class="co">#spanIDs that were created by labelMandatory()</span></span>
+<span id="cb96-137"><a href="shiny-tricks.html#cb96-137" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mapply</span>(<span class="at">FUN =</span> showElement,</span>
+<span id="cb96-138"><a href="shiny-tricks.html#cb96-138" aria-hidden="true" tabindex="-1"></a>           <span class="at">id =</span> spanInputIDs)</span>
+<span id="cb96-139"><a href="shiny-tricks.html#cb96-139" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb96-140"><a href="shiny-tricks.html#cb96-140" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-141"><a href="shiny-tricks.html#cb96-141" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-142"><a href="shiny-tricks.html#cb96-142" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb96-143"><a href="shiny-tricks.html#cb96-143" aria-hidden="true" tabindex="-1"></a>}<span class="co">#End of Server function</span></span>
+<span id="cb96-144"><a href="shiny-tricks.html#cb96-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-145"><a href="shiny-tricks.html#cb96-145" aria-hidden="true" tabindex="-1"></a><span class="co">#Call Shiny App</span></span>
+<span id="cb96-146"><a href="shiny-tricks.html#cb96-146" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code></pre></div>
+<p><img src="series_files/figure-html/Mandatory%20Input%20demo-Final-1.png" width="672" /></p>
+</div>
+<p>More Coming Soon!</p>
+</div>
 </div>
             </section>
 

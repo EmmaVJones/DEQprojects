@@ -24,7 +24,15 @@ Coming Soon!
 
 ## Shiny Tricks
 
-Coming Soon!
+### Mandatory Shiny Inputs
+
+**Section Contact: Connor Brogan (connor.brogan@deq.virginia.gov)**
+
+```{r child = 'subchapters/mandatoryShinyInputs_Shiny.Rmd'}
+```
+
+
+More Coming Soon!
 
 ## Markdown and User-Friendly Output Files
 

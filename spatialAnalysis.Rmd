@@ -37,7 +37,7 @@ To familiarize yourself with common geospatial procedures in R, the following ch
 
 ## Using Spatial Datasets{#usingSpatialDatasets}
 
-Coming Soon!
+Coming Soon
 
 ## Interactive Mapping{#interactiveMapping}
 
@@ -61,5 +61,8 @@ Coming Soon
 
 ## Spatial joins
 
-Coming Soon
+**Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
+
+```{r child = 'subchapters/spatialJoins.Rmd'}
+```
 
