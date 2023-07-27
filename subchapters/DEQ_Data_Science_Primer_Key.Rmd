@@ -1,0 +1,202 @@
+
+---
+title: "DEQ Data Science Primer Key"
+author: "Joe Famularo"
+date: "7/27/2023"
+output: html_document
+---
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE, eval = F}
+library(tidyverse)
+library(pins)
+library(pool)
+library(dbplyr)
+library(leaflet)
+
+ con<-config::get(file="config.yml", "connectionSettings")
+ 
+ pins::board_register_rsconnect(key = con$CONNECT_API_KEY,
+                               server = con$CONNECT_SERVER)
+ 
+pool <- dbPool(
+  drv = odbc::odbc(), # (1)
+  Driver = "ODBC Driver 11 for SQL Server", # (2)
+  Server= "DEQ-SQLODS-PROD,50000", # (3)
+  database = "ODS", # (4)
+  trusted_connection = "yes" # (5)
+)
+```
+
+
+#### Challenge 1
+
+```{r, warning=FALSE, message=FALSE, eval = F}
+#Total number of records in the Field Data view
+pool%>%
+  tbl(in_schema("wqm", "Wqm_Field_Data_View"))%>%
+  as_tibble()%>%
+  nrow()
+
+#Oldest record in the Field Data view
+pool%>%
+  tbl(in_schema("wqm", "Wqm_Field_Data_View"))%>%
+  filter(Fdt_Date_Time == min(Fdt_Date_Time))%>%
+  as_tibble()%>%
+  pull(Fdt_Date_Time)
+
+```
+
+#### Challenge 2
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+#Pull temp data for 2022
+Temp_2022<-pool%>%
+  tbl(in_schema("wqm", "Wqm_Field_Data_View"))%>%
+  filter(year(Fdt_Date_Time) == "2022")%>%
+  mutate(Year = year(Fdt_Date_Time))%>%
+  select(Fdt_Date_Time, Fdt_Sta_Id, Fdt_Temp_Celcius, Year)%>%
+  as_tibble()
+
+#Plot 2022 water temperatures
+Temp_2022%>%
+  ggplot()+
+  geom_point(aes(Fdt_Date_Time, Fdt_Temp_Celcius))+
+  theme_classic()
+
+#Refine figure to include only stations within the James River Basin
+tempJamesRiver2022<-Temp_2022%>%
+  left_join(., pool%>%tbl(in_schema("wqm", "WQM_Sta_GIS_View"))%>%as_tibble(), by= c("Fdt_Sta_Id" = "Station_Id"))%>%
+  filter(Basin == "James River Basin")
+
+tempJamesRiver2022%>%
+  ggplot()+
+  geom_point(aes(Fdt_Date_Time, Fdt_Temp_Celcius))+
+  theme_classic()
+
+```
+
+#### Challenge 3
+
+```{r, warning=FALSE, message=FALSE, eval =FALSE}
+
+arsenicSamples<-pool%>%
+  tbl(in_schema("wqm", "Wqm_Analytes_View"))%>%
+  filter(Pg_Parm_Short_Name == "AS")%>%
+  left_join(., pool%>%tbl(in_schema("wqm", "Wqm_Field_Data_View")), by = c("Ana_Sam_Fdt_Id" = "Fdt_Id"))%>% #Join with field data view to get station IDs
+  left_join(., pool%>%tbl(in_schema("wqm", "WQM_Sta_GIS_View")), by= c("Fdt_Sta_Id" = "Station_Id"))%>% #capture the lat long for mapping
+  filter(Basin == "James River Basin")%>%
+  as_tibble()%>%
+  drop_na(Ana_Value)%>%
+  mutate(Year = year(Fdt_Date_Time))%>%
+  filter(Year >= "2000")%>%
+  group_by(Fdt_Sta_Id, Latitude, Longitude)%>%
+   summarise(Median = median(Ana_Value), n_samples = n()) #use radius = ~n_samples below to use point size as indicator of n 
+
+pal<-colorNumeric(palette = c("#D1DDE2FF", "#96ABC6FF", "#204D88FF", "#112040FF"), domain = arsenicSamples$Median)
+
+arsenicSamples%>%
+  leaflet()%>%
+  addCircleMarkers(fillColor = ~pal(Median), fillOpacity = 1, radius = 7, stroke = FALSE)%>%
+  addProviderTiles(providers$Esri.WorldTopoMap)%>%
+  addLegend(pal = pal, values = ~Median)
+
+```
+
+#### Challenge 4
+
+```{r, warning=FALSE, message=FALSE, eval = F}
+
+LynnhavenAU_Stations2022<- pool %>% tbl(in_schema("wqa", "WQA Assessment Unit Details"))%>%
+  filter(`Water Name` %like% "%Lynnhaven%" & `Assessment Cycle` == "2022")%>%
+  left_join(., pool%>%tbl(in_schema("wqa", "WQA Station Details")), "Assessment Unit Detail Id")%>% # join to add lat long and exceedance values
+  select(Latitude = `GIS Latitude`, Longitude = `GIS Longitude`, `Station Id`, `Enterococci Exceedances`)%>%
+  as_tibble()%>%
+  mutate(`Enterococci Exceedances` = factor(`Enterococci Exceedances`))
+
+pal<-colorFactor("Reds", LynnhavenAU_Stations2022$`Enterococci Exceedances`)
+
+LynnhavenAU_Stations2022%>%
+  leaflet()%>%
+  addCircleMarkers(color = ~pal(`Enterococci Exceedances`))%>%
+  addProviderTiles(providers$Esri.WorldStreetMap)%>%
+  addLegend(pal = pal, values = ~`Enterococci Exceedances`)
+```
+
+#### Challenge 5
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+#Determine count and concentration by HUC8
+pin_get("jfamularo/PFAS-Data")%>%
+  filter(ANALYTE == "Total PFAS" & MEDIUM_DESC == "Surface Water Sample")%>%
+  group_by(HUC8_NAME)%>%
+  summarise(`Number of Samples` = n(), 
+            `Median Concentration (ppt)` = median(ANA_VALUE))
+
+#Determine count and concentration by Program
+pin_get("jfamularo/PFAS-Data")%>%
+  filter(ANALYTE == "Total PFAS" & MEDIUM_DESC == "Surface Water Sample")%>%
+  group_by(PROGRAM)%>%
+  summarise(`Number of Samples` = n(), 
+            `Median Concentration (ppt)` = median(ANA_VALUE)) 
+```
+
+#### Challenge 6
+
+```{r, warning=FALSE, message=FALSE, eval = F}
+# First, bring in the assessment regions as a spatial object and keep just the SWRO polygon
+library(sf)
+SWRO <- st_as_sf(pin_get("ejones/AssessmentRegions_simple", board = "rsconnect")) %>%
+  filter(ASSESS_REG == 'SWRO')
+
+# pull all VSCI scores for the SWRO sites
+SWRO_VSCI <- pin_get('ejones/VSCIresults', board = 'rsconnect') %>% 
+  filter(`Target Count` == 110) %>%  # only keep rarified samples
+  left_join(pin_get('ejones/WQM-Stations-Spatial', board = 'rsconnect'), by = 'StationID') %>% 
+  filter(ASSESS_REG == 'SWRO')
+
+# pull Sp Cond field data from each of these sites
+SpCond <- pool%>%
+  tbl(in_schema("wqm", "Wqm_Field_Data_View"))%>%
+  filter(Fdt_Sta_Id %in% !! SWRO_VSCI$StationID) %>%
+  filter(Fdt_Spg_Code != 'QA') %>% 
+  as_tibble()
+
+
+  
+
+# Keep only field data associated with each benthic collection event
+SWRO_VSCI_SpCond <- left_join(SWRO_VSCI, 
+                              dplyr::select(SpCond, StationID = Fdt_Sta_Id, `Collection Date` = Fdt_Date_Time, SpCond = Fdt_Specific_Conductance), 
+                              by = c('StationID', 'Collection Date'))
+
+# But wait, there are more records in SWRO_VSCI_SpCond than SWRO_VSCI using a left join. That means even with removing QA records, there are still records with >1 Sp Cond result per `Collection Date`. We will average those results and then try to join again.
+# How to verify this theory:
+# SpCond %>% 
+#   dplyr::select(StationID = Fdt_Sta_Id, `Collection Date` = Fdt_Date_Time, SpCond = Fdt_Specific_Conductance, Fdt_Spg_Code) %>% 
+#   group_by(StationID, `Collection Date`) %>% 
+#   mutate(n = n()) %>% 
+#   arrange(desc(n)) %>% 
+#   View()
+
+SpCond <- SpCond %>% 
+  dplyr::select(StationID = Fdt_Sta_Id, `Collection Date` = Fdt_Date_Time, SpCond = Fdt_Specific_Conductance) %>% # don't need Fdt_Spg_Code anymore
+  group_by(StationID, `Collection Date`) %>% 
+  summarise(SpCond = mean(SpCond, na.rm = T))
+
+
+# Try again to keep only field data associated with each benthic collection event
+SWRO_VSCI_SpCond <- left_join(SWRO_VSCI, 
+                              SpCond, 
+                              by = c('StationID', 'Collection Date'))
+# much better because nrow(SWRO_VSCI_SpCond) == nrow(SWRO_VSCI)
+
+
+# Now make a basic scatter plot of VSCI vs SpCond
+SWRO_VSCI_SpCond %>%
+  ggplot(aes(x = `SCI Score`, SpCond))+
+  geom_point()+
+  geom_smooth(method = 'loess')+ # add a simple loess model to ease visualization
+  theme_classic()
+# There certainly are some outliers to dig into, but broadly speaking, VSCI scores increase where sites measure lower Specific Conductance
+```
+

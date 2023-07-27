@@ -54,3 +54,25 @@ Coming Soon!
 
 Coming Soon!
 
+## Test Your Knowledge: Data Science Learning Activity
+
+**Section Contact: Joe Famularo (joe.famularo@deq.virginia.gov)**
+
+Often the best way to learn a coding language or database environment (or both!) is to just dig in and try to answer some questions. It can be difficult at first to create new questions to ask of a dataset if you are unfamiliar with what common questions might need to be asked. The R Team has pulled together some questions to challenge your data science problem solving abilities and allow you to explore multiple data resources using your R environment. 
+
+In order to complete some of these activities, you will need access to ODS and pinned data on the R server. Please see these articles prior to attempting the following exercises:
+
+* [Connecting to R Connect (for Pinned Data)](#connectToConnectPins)
+* [Connect to ODS](#connectToODS)
+
+One method to solve each activity is provided in the [key](#data-science-activity-key). There can often be multiple ways to solve a problem, so don't be discouraged if your method does not follow the key methodology. Use the key as a learning tool to familiarize yourself with efficient problem solving skills.  
+
+### Data Science Activity
+
+```{r child = 'subchapters/DEQ_Data_Science_Primer.Rmd'}
+```
+
+### Data Science Activity Key
+
+```{r child = 'subchapters/DEQ_Data_Science_Primer_Key.Rmd'}
+```

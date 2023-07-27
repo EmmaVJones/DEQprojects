@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.8 Test Your Knowledge: Data Science Learning Activity | DEQ Data Science Primer Key</title>
+  <meta name="description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.8 Test Your Knowledge: Data Science Learning Activity | DEQ Data Science Primer Key" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  <meta name="github-repo" content="openscapes/series" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.8 Test Your Knowledge: Data Science Learning Activity | DEQ Data Science Primer Key" />
+  
+  <meta name="twitter:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
+  
+
+<meta name="author" content="Joe Famularo" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="commonTMDLqueries.html"/>
+<link rel="next" href="spatialAnalysis.html"/>
+<script src="libs/header-attrs-2.6/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.49.4/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.49.4/plotly-latest.min.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.13/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.3/leaflet.js"></script>
+<link href="libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="libs/pagedtable-1.1/js/pagedtable.js"></script>
+<script src="assets/book.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="lib/css/bootstrap.min.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/style.css" type="text/css" />
+<link rel="stylesheet" href="lib/css/lesson.css" type="text/css" />
+<link rel="stylesheet" href="assets/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">DEQ R Methods Encyclopedia</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Background</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="whyR.html"><a href="whyR.html"><i class="fa fa-check"></i><b>1.1</b> Why R?</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="whyR.html"><a href="whyR.html#accessible-open-source-software"><i class="fa fa-check"></i><b>1.1.1</b> Accessible, Open Source Software</a></li>
+<li class="chapter" data-level="1.1.2" data-path="whyR.html"><a href="whyR.html#automation-and-reproducibility"><i class="fa fa-check"></i><b>1.1.2</b> Automation and Reproducibility</a></li>
+<li class="chapter" data-level="1.1.3" data-path="whyR.html"><a href="whyR.html#r-products"><i class="fa fa-check"></i><b>1.1.3</b> R Products</a></li>
+<li class="chapter" data-level="1.1.4" data-path="whyR.html"><a href="whyR.html#summary"><i class="fa fa-check"></i><b>1.1.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html"><i class="fa fa-check"></i><b>1.2</b> Getting Started With R</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#downloading-r-and-rstudio"><i class="fa fa-check"></i><b>1.2.1</b> Downloading R and RStudio</a></li>
+<li class="chapter" data-level="1.2.2" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#configuring-rstudio"><i class="fa fa-check"></i><b>1.2.2</b> Configuring RStudio</a></li>
+<li class="chapter" data-level="1.2.3" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#downloading-packages"><i class="fa fa-check"></i><b>1.2.3</b> Downloading Packages</a></li>
+<li class="chapter" data-level="1.2.4" data-path="gettingStartedWithR.html"><a href="gettingStartedWithR.html#how-to-learn-or-continue-learning-r"><i class="fa fa-check"></i><b>1.2.4</b> How to Learn (or Continue Learning) R?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="wantToContribute.html"><a href="wantToContribute.html"><i class="fa fa-check"></i><b>1.3</b> Want to Contribute?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="queryInternalDataSources.html"><a href="queryInternalDataSources.html"><i class="fa fa-check"></i><b>2</b> Query Internal Data Sources</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html"><i class="fa fa-check"></i><b>2.1</b> Connecting to R Connect (for Pinned Data)</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#api-keys"><i class="fa fa-check"></i><b>2.1.1</b> API Keys</a></li>
+<li class="chapter" data-level="2.1.2" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#connect-to-the-r-server"><i class="fa fa-check"></i><b>2.1.2</b> Connect to the R server</a></li>
+<li class="chapter" data-level="2.1.3" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#browse-available-pins"><i class="fa fa-check"></i><b>2.1.3</b> Browse Available Pins</a></li>
+<li class="chapter" data-level="2.1.4" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#access-a-pin"><i class="fa fa-check"></i><b>2.1.4</b> Access a Pin</a></li>
+<li class="chapter" data-level="2.1.5" data-path="connectToConnectPins.html"><a href="connectToConnectPins.html#query-some-of-a-pin"><i class="fa fa-check"></i><b>2.1.5</b> Query (some of) a Pin</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="connectToODS.html"><a href="connectToODS.html"><i class="fa fa-check"></i><b>2.2</b> Connect to ODS</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="connectToODS.html"><a href="connectToODS.html#credentials-local-vs-remote"><i class="fa fa-check"></i><b>2.2.1</b> Credentials (Local vs Remote)</a></li>
+<li class="chapter" data-level="2.2.2" data-path="connectToODS.html"><a href="connectToODS.html#required-packages"><i class="fa fa-check"></i><b>2.2.2</b> Required Packages</a></li>
+<li class="chapter" data-level="2.2.3" data-path="connectToODS.html"><a href="connectToODS.html#dbi-method-for-ods-connection"><i class="fa fa-check"></i><b>2.2.3</b> DBI Method for ODS Connection</a></li>
+<li class="chapter" data-level="2.2.4" data-path="connectToODS.html"><a href="connectToODS.html#pool-method-for-ods-connection"><i class="fa fa-check"></i><b>2.2.4</b> Pool Method for ODS Connection</a></li>
+<li class="chapter" data-level="2.2.5" data-path="connectToODS.html"><a href="connectToODS.html#pool-method-query-data"><i class="fa fa-check"></i><b>2.2.5</b> Pool Method: Query Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html"><i class="fa fa-check"></i><b>2.3</b> Querying Data from ODS</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#connecting-and-disconnecting-from-a-database"><i class="fa fa-check"></i><b>2.3.1</b> Connecting and Disconnecting from a Database</a></li>
+<li class="chapter" data-level="2.3.2" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#data-schema"><i class="fa fa-check"></i><b>2.3.2</b> Data Schema</a></li>
+<li class="chapter" data-level="2.3.3" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#data-views-interaction"><i class="fa fa-check"></i><b>2.3.3</b> Data Views Interaction</a></li>
+<li class="chapter" data-level="2.3.4" data-path="queryDataFromODS.html"><a href="queryDataFromODS.html#data-update-frequency"><i class="fa fa-check"></i><b>2.3.4</b> Data Update Frequency</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html"><i class="fa fa-check"></i><b>2.4</b> Common WQM queries</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html#connect-to-internal-data-resources"><i class="fa fa-check"></i><b>2.4.1</b> Connect to Internal Data Resources</a></li>
+<li class="chapter" data-level="2.4.2" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html#query-all-water-monitoring-data-from-a-provided-watershed"><i class="fa fa-check"></i><b>2.4.2</b> Query All Water Monitoring Data from a Provided Watershed</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="commonBenthicqueries.html"><a href="commonBenthicqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common Benthic queries</a></li>
+<li class="chapter" data-level="2.6" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common WQA queries</a></li>
+<li class="chapter" data-level="2.7" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.7</b> Common TMDL queries</a></li>
+<li class="chapter" data-level="2.8" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html"><i class="fa fa-check"></i><b>2.8</b> Test Your Knowledge: Data Science Learning Activity</a>
+<ul>
+<li class="chapter" data-level="2.8.1" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity"><i class="fa fa-check"></i><b>2.8.1</b> Data Science Activity</a></li>
+<li class="chapter" data-level="2.8.2" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity-key"><i class="fa fa-check"></i><b>2.8.2</b> Data Science Activity Key</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>3</b> Spatial Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="spatialDataFromTabularData.html"><a href="spatialDataFromTabularData.html"><i class="fa fa-check"></i><b>3.1</b> Spatial Data from Tabular Data</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="spatialDataFromTabularData.html"><a href="spatialDataFromTabularData.html#removing-spatial-information"><i class="fa fa-check"></i><b>3.1.1</b> Removing Spatial Information</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html"><i class="fa fa-check"></i><b>3.2</b> Consuming GIS REST Services in R</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#gis-rest-service-data"><i class="fa fa-check"></i><b>3.2.1</b> GIS Rest Service Data</a></li>
+<li class="chapter" data-level="3.2.2" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#primary-deq-rest-endpoints"><i class="fa fa-check"></i><b>3.2.2</b> Primary DEQ REST Endpoints:</a></li>
+<li class="chapter" data-level="3.2.3" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#how-do-you-know-what-fieldscriteria-to-query-on"><i class="fa fa-check"></i><b>3.2.3</b> How do you know what fields/criteria to query on?</a></li>
+<li class="chapter" data-level="3.2.4" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#okaylets-build-a-simple-query-and-see-it-in-r"><i class="fa fa-check"></i><b>3.2.4</b> Okay…let’s build a simple query and see it in R…</a></li>
+<li class="chapter" data-level="3.2.5" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#querying-multiple-records"><i class="fa fa-check"></i><b>3.2.5</b> Querying multiple records:</a></li>
+<li class="chapter" data-level="3.2.6" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#this-works-on-lines-and-polygons-as-well"><i class="fa fa-check"></i><b>3.2.6</b> This works on lines and polygons as well!:</a></li>
+<li class="chapter" data-level="3.2.7" data-path="consumingGISRESTservices.html"><a href="consumingGISRESTservices.html#building-more-advanced-queries"><i class="fa fa-check"></i><b>3.2.7</b> Building more advanced queries</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html"><i class="fa fa-check"></i><b>3.3</b> Spatial Operations on GIS REST Services in R</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#gis-rest-service-data-1"><i class="fa fa-check"></i><b>3.3.1</b> GIS Rest Service Data</a></li>
+<li class="chapter" data-level="3.3.2" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#level-up-your-querying-game"><i class="fa fa-check"></i><b>3.3.2</b> Level Up Your Querying Game</a></li>
+<li class="chapter" data-level="3.3.3" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#set-up-your-environment"><i class="fa fa-check"></i><b>3.3.3</b> Set Up Your Environment</a></li>
+<li class="chapter" data-level="3.3.4" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#query-one-layer"><i class="fa fa-check"></i><b>3.3.4</b> Query One Layer</a></li>
+<li class="chapter" data-level="3.3.5" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#query-layer-two-based-on-information-from-layer-one"><i class="fa fa-check"></i><b>3.3.5</b> Query Layer Two Based On Information From Layer One</a></li>
+<li class="chapter" data-level="3.3.6" data-path="spatialOperationsGISRESTservices.html"><a href="spatialOperationsGISRESTservices.html#spatially-intersect-layers"><i class="fa fa-check"></i><b>3.3.6</b> Spatially Intersect Layers</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="usingSpatialDatasets.html"><a href="usingSpatialDatasets.html"><i class="fa fa-check"></i><b>3.4</b> Using Spatial Datasets</a></li>
+<li class="chapter" data-level="3.5" data-path="interactiveMapping.html"><a href="interactiveMapping.html"><i class="fa fa-check"></i><b>3.5</b> Interactive Mapping</a></li>
+<li class="chapter" data-level="3.6" data-path="watershed-delineation.html"><a href="watershed-delineation.html"><i class="fa fa-check"></i><b>3.6</b> Watershed Delineation</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="watershed-delineation.html"><a href="watershed-delineation.html#single-station-delineation"><i class="fa fa-check"></i><b>3.6.1</b> Single Station Delineation</a></li>
+<li class="chapter" data-level="3.6.2" data-path="watershed-delineation.html"><a href="watershed-delineation.html#multiple-station-delineation"><i class="fa fa-check"></i><b>3.6.2</b> Multiple Station Delineation</a></li>
+<li class="chapter" data-level="3.6.3" data-path="watershed-delineation.html"><a href="watershed-delineation.html#qa"><i class="fa fa-check"></i><b>3.6.3</b> QA</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="landcover-analysis.html"><a href="landcover-analysis.html"><i class="fa fa-check"></i><b>3.7</b> Landcover analysis</a></li>
+<li class="chapter" data-level="3.8" data-path="spatial-joins.html"><a href="spatial-joins.html"><i class="fa fa-check"></i><b>3.8</b> Spatial joins</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="spatial-joins.html"><a href="spatial-joins.html#case-study-water-permit-review"><i class="fa fa-check"></i><b>3.8.1</b> Case Study: Water Permit Review</a></li>
+<li class="chapter" data-level="3.8.2" data-path="spatial-joins.html"><a href="spatial-joins.html#polygons-of-interest"><i class="fa fa-check"></i><b>3.8.2</b> Polygons of Interest</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="shinyAppHelp.html"><a href="shinyAppHelp.html"><i class="fa fa-check"></i><b>4</b> Shiny App Pro Tips</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="shiny-file-organization.html"><a href="shiny-file-organization.html"><i class="fa fa-check"></i><b>4.1</b> Shiny file organization</a></li>
+<li class="chapter" data-level="4.2" data-path="shiny-tricks.html"><a href="shiny-tricks.html"><i class="fa fa-check"></i><b>4.2</b> Shiny Tricks</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="shiny-tricks.html"><a href="shiny-tricks.html#mandatory-shiny-inputs"><i class="fa fa-check"></i><b>4.2.1</b> Mandatory Shiny Inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="markdown-and-user-friendly-output-files.html"><a href="markdown-and-user-friendly-output-files.html"><i class="fa fa-check"></i><b>4.3</b> Markdown and User-Friendly Output Files</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="bestPractices.html"><a href="bestPractices.html"><i class="fa fa-check"></i><b>5</b> Best Practices</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="versionControl.html"><a href="versionControl.html"><i class="fa fa-check"></i><b>5.1</b> Version Control</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="versionControl.html"><a href="versionControl.html#what-is-version-control"><i class="fa fa-check"></i><b>5.1.1</b> What is Version Control?</a></li>
+<li class="chapter" data-level="5.1.2" data-path="versionControl.html"><a href="versionControl.html#git-basics"><i class="fa fa-check"></i><b>5.1.2</b> Git Basics</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="miscTips.html"><a href="miscTips.html"><i class="fa fa-check"></i><b>6</b> Miscellaeous Tips and Tricks</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html"><i class="fa fa-check"></i><b>6.1</b> Regular expression and pattern matching</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexOverview"><i class="fa fa-check"></i><b>6.1.1</b> Example Data Overview</a></li>
+<li class="chapter" data-level="6.1.2" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexInR"><i class="fa fa-check"></i><b>6.1.2</b> Common R Commands and How to Use Them</a></li>
+<li class="chapter" data-level="6.1.3" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexBasics"><i class="fa fa-check"></i><b>6.1.3</b> Basic Regular Expressions</a></li>
+<li class="chapter" data-level="6.1.4" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexCharacters"><i class="fa fa-check"></i><b>6.1.4</b> Character Classes</a></li>
+<li class="chapter" data-level="6.1.5" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexQuantifiers"><i class="fa fa-check"></i><b>6.1.5</b> Quantifiers</a></li>
+<li class="chapter" data-level="6.1.6" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexAnchors"><i class="fa fa-check"></i><b>6.1.6</b> Anchors</a></li>
+<li class="chapter" data-level="6.1.7" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexExamples"><i class="fa fa-check"></i><b>6.1.7</b> Common or Useful Patterns</a></li>
+<li class="chapter" data-level="6.1.8" data-path="regular-expression-and-pattern-matching.html"><a href="regular-expression-and-pattern-matching.html#regexResources"><i class="fa fa-check"></i><b>6.1.8</b> Additional Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="non-standard-evaluation.html"><a href="non-standard-evaluation.html"><i class="fa fa-check"></i><b>6.2</b> Non standard evaluation</a></li>
+<li class="chapter" data-level="6.3" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html"><i class="fa fa-check"></i><b>6.3</b> Accessing APIs from R</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html#what-is-an-api"><i class="fa fa-check"></i><b>6.3.1</b> What is an API</a></li>
+<li class="chapter" data-level="6.3.2" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html#CMCuseCase"><i class="fa fa-check"></i><b>6.3.2</b> CMC API Use Case</a></li>
+<li class="chapter" data-level="6.3.3" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html#required-packages-1"><i class="fa fa-check"></i><b>6.3.3</b> Required Packages</a></li>
+<li class="chapter" data-level="6.3.4" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html#explore-the-endpoint-in-a-browser"><i class="fa fa-check"></i><b>6.3.4</b> Explore the endpoint in a browser</a></li>
+<li class="chapter" data-level="6.3.5" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html#query-api-with-r"><i class="fa fa-check"></i><b>6.3.5</b> Query API with R</a></li>
+<li class="chapter" data-level="6.3.6" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html#example-query-cmc-api-for-assessment-uses"><i class="fa fa-check"></i><b>6.3.6</b> Example: Query CMC API for Assessment Uses</a></li>
+<li class="chapter" data-level="6.3.7" data-path="accessAPIfromR.html"><a href="accessAPIfromR.html#parting-challenge"><i class="fa fa-check"></i><b>6.3.7</b> Parting Challenge</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="scrapeDataFromFTP.html"><a href="scrapeDataFromFTP.html"><i class="fa fa-check"></i><b>6.4</b> Scrape Data from an FTP Site</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="scrapeDataFromFTP.html"><a href="scrapeDataFromFTP.html#what-is-an-ftp"><i class="fa fa-check"></i><b>6.4.1</b> What is an FTP?</a></li>
+<li class="chapter" data-level="6.4.2" data-path="scrapeDataFromFTP.html"><a href="scrapeDataFromFTP.html#tiger-dataset-use-case"><i class="fa fa-check"></i><b>6.4.2</b> TIGER Dataset Use Case</a></li>
+<li class="chapter" data-level="6.4.3" data-path="scrapeDataFromFTP.html"><a href="scrapeDataFromFTP.html#required-packages-2"><i class="fa fa-check"></i><b>6.4.3</b> Required Packages</a></li>
+<li class="chapter" data-level="6.4.4" data-path="scrapeDataFromFTP.html"><a href="scrapeDataFromFTP.html#build-base-ftp-web-address-call"><i class="fa fa-check"></i><b>6.4.4</b> Build Base FTP Web Address Call</a></li>
+<li class="chapter" data-level="6.4.5" data-path="scrapeDataFromFTP.html"><a href="scrapeDataFromFTP.html#custom-tigerroads-ftp-function"><i class="fa fa-check"></i><b>6.4.5</b> Custom TIGERroads FTP function</a></li>
+<li class="chapter" data-level="6.4.6" data-path="scrapeDataFromFTP.html"><a href="scrapeDataFromFTP.html#parse-data-into-single-file"><i class="fa fa-check"></i><b>6.4.6</b> Parse Data into Single File</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DEQ Data Science Primer Key</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="test-your-knowledge-data-science-learning-activity" class="section level2" number="2.8">
+<h2><span class="header-section-number">2.8</span> Test Your Knowledge: Data Science Learning Activity</h2>
+<p><strong>Section Contact: Joe Famularo (<a href="mailto:joe.famularo@deq.virginia.gov" class="email">joe.famularo@deq.virginia.gov</a>)</strong></p>
+<p>Often the best way to learn a coding language or database environment (or both!) is to just dig in and try to answer some questions. It can be difficult at first to create new questions to ask of a dataset if you are unfamiliar with what common questions might need to be asked. The R Team has pulled together some questions to challenge your data science problem solving abilities and allow you to explore multiple data resources using your R environment.</p>
+<p>In order to complete some of these activities, you will need access to ODS and pinned data on the R server. Please see these articles prior to attempting the following exercises:</p>
+<ul>
+<li><a href="connectToConnectPins.html#connectToConnectPins">Connecting to R Connect (for Pinned Data)</a></li>
+<li><a href="connectToODS.html#connectToODS">Connect to ODS</a></li>
+</ul>
+<p>One method to solve each activity is provided in the <a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity-key">key</a>. There can often be multiple ways to solve a problem, so don’t be discouraged if your method does not follow the key methodology. Use the key as a learning tool to familiarize yourself with efficient problem solving skills.</p>
+<div id="data-science-activity" class="section level3" number="2.8.1">
+<h3><span class="header-section-number">2.8.1</span> Data Science Activity</h3>
+<div id="deq-data-science-primer" class="section level4" number="2.8.1.1">
+<h4><span class="header-section-number">2.8.1.1</span> DEQ Data Science Primer</h4>
+<p>The goal of this chapter is to provide some exercises to help new users get oriented with the ODS, CEDS, and pinned data on the Connect server.</p>
+<p>For a refresher (or introduction) on how to connect to, and query, the ODS or the Connect server check out [Chapter 2] of the encyclopedia.</p>
+<div id="challenge-1" class="section level5" number="2.8.1.1.1">
+<h5><span class="header-section-number">2.8.1.1.1</span> Challenge 1</h5>
+<p>Lets start simple. How many field data records (e.g., individual rows) are there in the ODS? The field data table houses quantitative and qualitative data that are captured in the field. These field data can be joined with associated analytical results (nutrients, metals, TSS, etc.), which are contained in WQM_Analytes_View. What’s the earliest record in the field data view?</p>
+<p>Head over to CEDS and see if you can find this field data record in the wqm field data module. Where was the station located?</p>
+</div>
+<div id="challenge-2" class="section level5" number="2.8.1.1.2">
+<h5><span class="header-section-number">2.8.1.1.2</span> Challenge 2</h5>
+<p>Next, lets make a figure displaying all of the temperature records for 2022. After you get done with that, let’s take it a step further and refine the figure to include only the stations within the James River Basin. Hint: look for a table that includes the field “Basin,” find the key between the field data table and this other table, and join them by that key.</p>
+</div>
+<div id="challenge-3" class="section level5" number="2.8.1.1.3">
+<h5><span class="header-section-number">2.8.1.1.3</span> Challenge 3</h5>
+<p>Let’s make a map to visualize the station-specific median concentration of arsenic samples collected in the James River basin since 2000. Hint: you’ll need to find the view that identifies samples by Analyte (not parameter group, which provides a code for groups of multiple analytes), find the date that those samples were collected, and then join the spatial data for those stations to allow you to map the median concentration. Try changing the parameter or basin you’re visualizing. You could also use number of samples as an additional aesthetic to control point size.</p>
+</div>
+<div id="challenge-4" class="section level5" number="2.8.1.1.4">
+<h5><span class="header-section-number">2.8.1.1.4</span> Challenge 4</h5>
+<p>We’ve spent our time in the wqm (water quality monitoring) ODS module so far. Let’s take a look at the wqa (water quality assessment) module. Note that there are 2 groups of “views” in the wqa module, Tableau views and Logi views. The Tableau views include spaces in their names, and the Logi views do not (e.g., WQA AU History ~ Tableau ; WQA_AU_History_View ~ Logi). The tableau views are more condensed, meaning in some cases they have list fields that are contained in seperate tables in the Logi views. The tableau views are expected to fully replace the Logi views, but for now both exist to support the assessment as this transition occurs. The same transition is expected to occur with WQM, but there are not currently Tableau views in the wqm module.</p>
+<p>Now, let’s go ahead and pull the stations associated with assessment units associated with the Lynnhaven River. We’ll want to make a map of enterococci exceedances that occurred at these stations during the 2022 assessment cycle. Hint: you’ll want to search for “Lynnhaven” within a field containing “water name” strings to narrow down the assessment units that are returned to you. Using stringr, a tidyverse package, is not possible before you convert your query into a tibble(). This is a limitation of dbplyr’s ability to translate tidyverse syntax into SQL statements. You could return the whole table and filter after converting the query results to a tibble, but this has an outsized impact on performance since you are requesting an entire table from the ODS. Alternatively, you can use the SQL term %like% “%string%” in a filter statement before converting to tibble and dbplyr will be able to handle this. As an example: filter(colname %like% “%Lynnhaven%”).</p>
+<p>Once you wrap up with the figure above, take a look at the assessment module in CEDS and see how closely you can replicate this query.</p>
+</div>
+<div id="challenge-5" class="section level5" number="2.8.1.1.5">
+<h5><span class="header-section-number">2.8.1.1.5</span> Challenge 5</h5>
+<p>Sometimes DEQ collects data that do not yet have a home within the ODS. The PFAS data collected within the past several years is a good example of this. This condition is also true with fish metals and fish PCB data. The connect server offers a solution to store these data until the ODS environment can house them. Of equal or greater importance, we use the Connect server to store curated data views from the ODS to support applications and end users.</p>
+<p>For this challenge, make a table that displays the number of PFAS surface water samples and the median Total PFAS concentration of those samples within each HUC8 watershed. Change this up and look at number of samples and the median concentration by sampling program.</p>
+</div>
+<div id="challenge-6" class="section level5" number="2.8.1.1.6">
+<h5><span class="header-section-number">2.8.1.1.6</span> Challenge 6</h5>
+<p>Pinned data on the R server is useful to incorporate into your workflow as “pre analyzed” data that can expedite analyses. Benthic data fall into this category.</p>
+<p>Raw benthic macroinvertebrate data (what bugs where collected where, when, and how many) are stored in CEDS, but to understand the ecological implications of this data, DEQ evaluates the raw data using stream condition indicies (SCI). Pulling the raw benthic data, running the appropriate SCI analysis, and then applying these results to answer a larger question can be burdensome, so the R Biological Team makes the analyzed SCI scores available to anyone on the DEQ network.</p>
+<p>Let’s work with high gradient sites in the Southwest office and see if there are any relationships between benthic SCI scores (using the VSCI) and Specific Conductivity collected at these sites. Pinned benthic VSCI scores can be found on the R server as the pin named ‘ejones/VSCIresults.’</p>
+</div>
+</div>
+</div>
+<div id="data-science-activity-key" class="section level3" number="2.8.2">
+<h3><span class="header-section-number">2.8.2</span> Data Science Activity Key</h3>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb45-2"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pins)</span>
+<span id="cb45-3"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pool)</span>
+<span id="cb45-4"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
+<span id="cb45-5"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb45-6"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-7" aria-hidden="true" tabindex="-1"></a> con<span class="ot">&lt;-</span>config<span class="sc">::</span><span class="fu">get</span>(<span class="at">file=</span><span class="st">&quot;config.yml&quot;</span>, <span class="st">&quot;connectionSettings&quot;</span>)</span>
+<span id="cb45-8"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-8" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb45-9"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-9" aria-hidden="true" tabindex="-1"></a> pins<span class="sc">::</span><span class="fu">board_register_rsconnect</span>(<span class="at">key =</span> con<span class="sc">$</span>CONNECT_API_KEY,</span>
+<span id="cb45-10"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">server =</span> con<span class="sc">$</span>CONNECT_SERVER)</span>
+<span id="cb45-11"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-11" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb45-12"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-12" aria-hidden="true" tabindex="-1"></a>pool <span class="ot">&lt;-</span> <span class="fu">dbPool</span>(</span>
+<span id="cb45-13"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">drv =</span> odbc<span class="sc">::</span><span class="fu">odbc</span>(), <span class="co"># (1)</span></span>
+<span id="cb45-14"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Driver =</span> <span class="st">&quot;ODBC Driver 11 for SQL Server&quot;</span>, <span class="co"># (2)</span></span>
+<span id="cb45-15"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Server=</span> <span class="st">&quot;DEQ-SQLODS-PROD,50000&quot;</span>, <span class="co"># (3)</span></span>
+<span id="cb45-16"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">database =</span> <span class="st">&quot;ODS&quot;</span>, <span class="co"># (4)</span></span>
+<span id="cb45-17"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">trusted_connection =</span> <span class="st">&quot;yes&quot;</span> <span class="co"># (5)</span></span>
+<span id="cb45-18"><a href="test-your-knowledge-data-science-learning-activity.html#cb45-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div id="challenge-1-1" class="section level4" number="2.8.2.1">
+<h4><span class="header-section-number">2.8.2.1</span> Challenge 1</h4>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Total number of records in the Field Data view</span></span>
+<span id="cb46-2"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-2" aria-hidden="true" tabindex="-1"></a>pool<span class="sc">%&gt;%</span></span>
+<span id="cb46-3"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;Wqm_Field_Data_View&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb46-4"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb46-5"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span>
+<span id="cb46-6"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Oldest record in the Field Data view</span></span>
+<span id="cb46-8"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-8" aria-hidden="true" tabindex="-1"></a>pool<span class="sc">%&gt;%</span></span>
+<span id="cb46-9"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;Wqm_Field_Data_View&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb46-10"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Fdt_Date_Time <span class="sc">==</span> <span class="fu">min</span>(Fdt_Date_Time))<span class="sc">%&gt;%</span></span>
+<span id="cb46-11"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb46-12"><a href="test-your-knowledge-data-science-learning-activity.html#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(Fdt_Date_Time)</span></code></pre></div>
+</div>
+<div id="challenge-2-1" class="section level4" number="2.8.2.2">
+<h4><span class="header-section-number">2.8.2.2</span> Challenge 2</h4>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Pull temp data for 2022</span></span>
+<span id="cb47-2"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-2" aria-hidden="true" tabindex="-1"></a>Temp_2022<span class="ot">&lt;-</span>pool<span class="sc">%&gt;%</span></span>
+<span id="cb47-3"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;Wqm_Field_Data_View&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb47-4"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(Fdt_Date_Time) <span class="sc">==</span> <span class="st">&quot;2022&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb47-5"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">year</span>(Fdt_Date_Time))<span class="sc">%&gt;%</span></span>
+<span id="cb47-6"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Fdt_Date_Time, Fdt_Sta_Id, Fdt_Temp_Celcius, Year)<span class="sc">%&gt;%</span></span>
+<span id="cb47-7"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb47-8"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-9"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot 2022 water temperatures</span></span>
+<span id="cb47-10"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-10" aria-hidden="true" tabindex="-1"></a>Temp_2022<span class="sc">%&gt;%</span></span>
+<span id="cb47-11"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb47-12"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(Fdt_Date_Time, Fdt_Temp_Celcius))<span class="sc">+</span></span>
+<span id="cb47-13"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb47-14"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Refine figure to include only stations within the James River Basin</span></span>
+<span id="cb47-16"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-16" aria-hidden="true" tabindex="-1"></a>tempJamesRiver2022<span class="ot">&lt;-</span>Temp_2022<span class="sc">%&gt;%</span></span>
+<span id="cb47-17"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(., pool<span class="sc">%&gt;%</span><span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;WQM_Sta_GIS_View&quot;</span>))<span class="sc">%&gt;%</span><span class="fu">as_tibble</span>(), <span class="at">by=</span> <span class="fu">c</span>(<span class="st">&quot;Fdt_Sta_Id&quot;</span> <span class="ot">=</span> <span class="st">&quot;Station_Id&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb47-18"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Basin <span class="sc">==</span> <span class="st">&quot;James River Basin&quot;</span>)</span>
+<span id="cb47-19"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-20"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-20" aria-hidden="true" tabindex="-1"></a>tempJamesRiver2022<span class="sc">%&gt;%</span></span>
+<span id="cb47-21"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb47-22"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(Fdt_Date_Time, Fdt_Temp_Celcius))<span class="sc">+</span></span>
+<span id="cb47-23"><a href="test-your-knowledge-data-science-learning-activity.html#cb47-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div>
+</div>
+<div id="challenge-3-1" class="section level4" number="2.8.2.3">
+<h4><span class="header-section-number">2.8.2.3</span> Challenge 3</h4>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-1" aria-hidden="true" tabindex="-1"></a>arsenicSamples<span class="ot">&lt;-</span>pool<span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;Wqm_Analytes_View&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb48-3"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Pg_Parm_Short_Name <span class="sc">==</span> <span class="st">&quot;AS&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb48-4"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(., pool<span class="sc">%&gt;%</span><span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;Wqm_Field_Data_View&quot;</span>)), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;Ana_Sam_Fdt_Id&quot;</span> <span class="ot">=</span> <span class="st">&quot;Fdt_Id&quot;</span>))<span class="sc">%&gt;%</span> <span class="co">#Join with field data view to get station IDs</span></span>
+<span id="cb48-5"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(., pool<span class="sc">%&gt;%</span><span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;WQM_Sta_GIS_View&quot;</span>)), <span class="at">by=</span> <span class="fu">c</span>(<span class="st">&quot;Fdt_Sta_Id&quot;</span> <span class="ot">=</span> <span class="st">&quot;Station_Id&quot;</span>))<span class="sc">%&gt;%</span> <span class="co">#capture the lat long for mapping</span></span>
+<span id="cb48-6"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Basin <span class="sc">==</span> <span class="st">&quot;James River Basin&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb48-7"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb48-8"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(Ana_Value)<span class="sc">%&gt;%</span></span>
+<span id="cb48-9"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">year</span>(Fdt_Date_Time))<span class="sc">%&gt;%</span></span>
+<span id="cb48-10"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">&gt;=</span> <span class="st">&quot;2000&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb48-11"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Fdt_Sta_Id, Latitude, Longitude)<span class="sc">%&gt;%</span></span>
+<span id="cb48-12"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-12" aria-hidden="true" tabindex="-1"></a>   <span class="fu">summarise</span>(<span class="at">Median =</span> <span class="fu">median</span>(Ana_Value), <span class="at">n_samples =</span> <span class="fu">n</span>()) <span class="co">#use radius = ~n_samples below to use point size as indicator of n </span></span>
+<span id="cb48-13"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-14"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-14" aria-hidden="true" tabindex="-1"></a>pal<span class="ot">&lt;-</span><span class="fu">colorNumeric</span>(<span class="at">palette =</span> <span class="fu">c</span>(<span class="st">&quot;#D1DDE2FF&quot;</span>, <span class="st">&quot;#96ABC6FF&quot;</span>, <span class="st">&quot;#204D88FF&quot;</span>, <span class="st">&quot;#112040FF&quot;</span>), <span class="at">domain =</span> arsenicSamples<span class="sc">$</span>Median)</span>
+<span id="cb48-15"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-16"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-16" aria-hidden="true" tabindex="-1"></a>arsenicSamples<span class="sc">%&gt;%</span></span>
+<span id="cb48-17"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">leaflet</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb48-18"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircleMarkers</span>(<span class="at">fillColor =</span> <span class="sc">~</span><span class="fu">pal</span>(Median), <span class="at">fillOpacity =</span> <span class="dv">1</span>, <span class="at">radius =</span> <span class="dv">7</span>, <span class="at">stroke =</span> <span class="cn">FALSE</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb48-19"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>Esri.WorldTopoMap)<span class="sc">%&gt;%</span></span>
+<span id="cb48-20"><a href="test-your-knowledge-data-science-learning-activity.html#cb48-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addLegend</span>(<span class="at">pal =</span> pal, <span class="at">values =</span> <span class="sc">~</span>Median)</span></code></pre></div>
+</div>
+<div id="challenge-4-1" class="section level4" number="2.8.2.4">
+<h4><span class="header-section-number">2.8.2.4</span> Challenge 4</h4>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-1" aria-hidden="true" tabindex="-1"></a>LynnhavenAU_Stations2022<span class="ot">&lt;-</span> pool <span class="sc">%&gt;%</span> <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqa&quot;</span>, <span class="st">&quot;WQA Assessment Unit Details&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Water Name</span><span class="st">`</span> <span class="sc">%like%</span> <span class="st">&quot;%Lynnhaven%&quot;</span> <span class="sc">&amp;</span> <span class="st">`</span><span class="at">Assessment Cycle</span><span class="st">`</span> <span class="sc">==</span> <span class="st">&quot;2022&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(., pool<span class="sc">%&gt;%</span><span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqa&quot;</span>, <span class="st">&quot;WQA Station Details&quot;</span>)), <span class="st">&quot;Assessment Unit Detail Id&quot;</span>)<span class="sc">%&gt;%</span> <span class="co"># join to add lat long and exceedance values</span></span>
+<span id="cb49-4"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">Latitude =</span> <span class="st">`</span><span class="at">GIS Latitude</span><span class="st">`</span>, <span class="at">Longitude =</span> <span class="st">`</span><span class="at">GIS Longitude</span><span class="st">`</span>, <span class="st">`</span><span class="at">Station Id</span><span class="st">`</span>, <span class="st">`</span><span class="at">Enterococci Exceedances</span><span class="st">`</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb49-5"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb49-6"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">Enterococci Exceedances</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">factor</span>(<span class="st">`</span><span class="at">Enterococci Exceedances</span><span class="st">`</span>))</span>
+<span id="cb49-7"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-8" aria-hidden="true" tabindex="-1"></a>pal<span class="ot">&lt;-</span><span class="fu">colorFactor</span>(<span class="st">&quot;Reds&quot;</span>, LynnhavenAU_Stations2022<span class="sc">$</span><span class="st">`</span><span class="at">Enterococci Exceedances</span><span class="st">`</span>)</span>
+<span id="cb49-9"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-10" aria-hidden="true" tabindex="-1"></a>LynnhavenAU_Stations2022<span class="sc">%&gt;%</span></span>
+<span id="cb49-11"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">leaflet</span>()<span class="sc">%&gt;%</span></span>
+<span id="cb49-12"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCircleMarkers</span>(<span class="at">color =</span> <span class="sc">~</span><span class="fu">pal</span>(<span class="st">`</span><span class="at">Enterococci Exceedances</span><span class="st">`</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb49-13"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>Esri.WorldStreetMap)<span class="sc">%&gt;%</span></span>
+<span id="cb49-14"><a href="test-your-knowledge-data-science-learning-activity.html#cb49-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addLegend</span>(<span class="at">pal =</span> pal, <span class="at">values =</span> <span class="sc">~</span><span class="st">`</span><span class="at">Enterococci Exceedances</span><span class="st">`</span>)</span></code></pre></div>
+</div>
+<div id="challenge-5-1" class="section level4" number="2.8.2.5">
+<h4><span class="header-section-number">2.8.2.5</span> Challenge 5</h4>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Determine count and concentration by HUC8</span></span>
+<span id="cb50-2"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pin_get</span>(<span class="st">&quot;jfamularo/PFAS-Data&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ANALYTE <span class="sc">==</span> <span class="st">&quot;Total PFAS&quot;</span> <span class="sc">&amp;</span> MEDIUM_DESC <span class="sc">==</span> <span class="st">&quot;Surface Water Sample&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb50-4"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(HUC8_NAME)<span class="sc">%&gt;%</span></span>
+<span id="cb50-5"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Number of Samples</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(), </span>
+<span id="cb50-6"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Median Concentration (ppt)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">median</span>(ANA_VALUE))</span>
+<span id="cb50-7"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-8"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Determine count and concentration by Program</span></span>
+<span id="cb50-9"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="fu">pin_get</span>(<span class="st">&quot;jfamularo/PFAS-Data&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb50-10"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ANALYTE <span class="sc">==</span> <span class="st">&quot;Total PFAS&quot;</span> <span class="sc">&amp;</span> MEDIUM_DESC <span class="sc">==</span> <span class="st">&quot;Surface Water Sample&quot;</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb50-11"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PROGRAM)<span class="sc">%&gt;%</span></span>
+<span id="cb50-12"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="st">`</span><span class="at">Number of Samples</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">n</span>(), </span>
+<span id="cb50-13"><a href="test-your-knowledge-data-science-learning-activity.html#cb50-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">`</span><span class="at">Median Concentration (ppt)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">median</span>(ANA_VALUE)) </span></code></pre></div>
+</div>
+<div id="challenge-6-1" class="section level4" number="2.8.2.6">
+<h4><span class="header-section-number">2.8.2.6</span> Challenge 6</h4>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First, bring in the assessment regions as a spatial object and keep just the SWRO polygon</span></span>
+<span id="cb51-2"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb51-3"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-3" aria-hidden="true" tabindex="-1"></a>SWRO <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="fu">pin_get</span>(<span class="st">&quot;ejones/AssessmentRegions_simple&quot;</span>, <span class="at">board =</span> <span class="st">&quot;rsconnect&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb51-4"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ASSESS_REG <span class="sc">==</span> <span class="st">&#39;SWRO&#39;</span>)</span>
+<span id="cb51-5"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># pull all VSCI scores for the SWRO sites</span></span>
+<span id="cb51-7"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-7" aria-hidden="true" tabindex="-1"></a>SWRO_VSCI <span class="ot">&lt;-</span> <span class="fu">pin_get</span>(<span class="st">&#39;ejones/VSCIresults&#39;</span>, <span class="at">board =</span> <span class="st">&#39;rsconnect&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-8"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">Target Count</span><span class="st">`</span> <span class="sc">==</span> <span class="dv">110</span>) <span class="sc">%&gt;%</span>  <span class="co"># only keep rarified samples</span></span>
+<span id="cb51-9"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">pin_get</span>(<span class="st">&#39;ejones/WQM-Stations-Spatial&#39;</span>, <span class="at">board =</span> <span class="st">&#39;rsconnect&#39;</span>), <span class="at">by =</span> <span class="st">&#39;StationID&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-10"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ASSESS_REG <span class="sc">==</span> <span class="st">&#39;SWRO&#39;</span>)</span>
+<span id="cb51-11"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-12"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="co"># pull Sp Cond field data from each of these sites</span></span>
+<span id="cb51-13"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-13" aria-hidden="true" tabindex="-1"></a>SpCond <span class="ot">&lt;-</span> pool<span class="sc">%&gt;%</span></span>
+<span id="cb51-14"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tbl</span>(<span class="fu">in_schema</span>(<span class="st">&quot;wqm&quot;</span>, <span class="st">&quot;Wqm_Field_Data_View&quot;</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb51-15"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Fdt_Sta_Id <span class="sc">%in%</span> <span class="sc">!!</span> SWRO_VSCI<span class="sc">$</span>StationID) <span class="sc">%&gt;%</span></span>
+<span id="cb51-16"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Fdt_Spg_Code <span class="sc">!=</span> <span class="st">&#39;QA&#39;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-17"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb51-18"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-19"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-20"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb51-21"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-22"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only field data associated with each benthic collection event</span></span>
+<span id="cb51-23"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-23" aria-hidden="true" tabindex="-1"></a>SWRO_VSCI_SpCond <span class="ot">&lt;-</span> <span class="fu">left_join</span>(SWRO_VSCI, </span>
+<span id="cb51-24"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-24" aria-hidden="true" tabindex="-1"></a>                              dplyr<span class="sc">::</span><span class="fu">select</span>(SpCond, <span class="at">StationID =</span> Fdt_Sta_Id, <span class="st">`</span><span class="at">Collection Date</span><span class="st">`</span> <span class="ot">=</span> Fdt_Date_Time, <span class="at">SpCond =</span> Fdt_Specific_Conductance), </span>
+<span id="cb51-25"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-25" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&#39;StationID&#39;</span>, <span class="st">&#39;Collection Date&#39;</span>))</span>
+<span id="cb51-26"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-27"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-27" aria-hidden="true" tabindex="-1"></a><span class="co"># But wait, there are more records in SWRO_VSCI_SpCond than SWRO_VSCI using a left join. That means even with removing QA records, there are still records with &gt;1 Sp Cond result per `Collection Date`. We will average those results and then try to join again.</span></span>
+<span id="cb51-28"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-28" aria-hidden="true" tabindex="-1"></a><span class="co"># How to verify this theory:</span></span>
+<span id="cb51-29"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-29" aria-hidden="true" tabindex="-1"></a><span class="co"># SpCond %&gt;% </span></span>
+<span id="cb51-30"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-30" aria-hidden="true" tabindex="-1"></a><span class="co">#   dplyr::select(StationID = Fdt_Sta_Id, `Collection Date` = Fdt_Date_Time, SpCond = Fdt_Specific_Conductance, Fdt_Spg_Code) %&gt;% </span></span>
+<span id="cb51-31"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-31" aria-hidden="true" tabindex="-1"></a><span class="co">#   group_by(StationID, `Collection Date`) %&gt;% </span></span>
+<span id="cb51-32"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-32" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(n = n()) %&gt;% </span></span>
+<span id="cb51-33"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-33" aria-hidden="true" tabindex="-1"></a><span class="co">#   arrange(desc(n)) %&gt;% </span></span>
+<span id="cb51-34"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-34" aria-hidden="true" tabindex="-1"></a><span class="co">#   View()</span></span>
+<span id="cb51-35"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-36"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-36" aria-hidden="true" tabindex="-1"></a>SpCond <span class="ot">&lt;-</span> SpCond <span class="sc">%&gt;%</span> </span>
+<span id="cb51-37"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-37" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">StationID =</span> Fdt_Sta_Id, <span class="st">`</span><span class="at">Collection Date</span><span class="st">`</span> <span class="ot">=</span> Fdt_Date_Time, <span class="at">SpCond =</span> Fdt_Specific_Conductance) <span class="sc">%&gt;%</span> <span class="co"># don&#39;t need Fdt_Spg_Code anymore</span></span>
+<span id="cb51-38"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(StationID, <span class="st">`</span><span class="at">Collection Date</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-39"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">SpCond =</span> <span class="fu">mean</span>(SpCond, <span class="at">na.rm =</span> T))</span>
+<span id="cb51-40"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-41"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-42"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Try again to keep only field data associated with each benthic collection event</span></span>
+<span id="cb51-43"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-43" aria-hidden="true" tabindex="-1"></a>SWRO_VSCI_SpCond <span class="ot">&lt;-</span> <span class="fu">left_join</span>(SWRO_VSCI, </span>
+<span id="cb51-44"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-44" aria-hidden="true" tabindex="-1"></a>                              SpCond, </span>
+<span id="cb51-45"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-45" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&#39;StationID&#39;</span>, <span class="st">&#39;Collection Date&#39;</span>))</span>
+<span id="cb51-46"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-46" aria-hidden="true" tabindex="-1"></a><span class="co"># much better because nrow(SWRO_VSCI_SpCond) == nrow(SWRO_VSCI)</span></span>
+<span id="cb51-47"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-48"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-49"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Now make a basic scatter plot of VSCI vs SpCond</span></span>
+<span id="cb51-50"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-50" aria-hidden="true" tabindex="-1"></a>SWRO_VSCI_SpCond <span class="sc">%&gt;%</span></span>
+<span id="cb51-51"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">SCI Score</span><span class="st">`</span>, SpCond))<span class="sc">+</span></span>
+<span id="cb51-52"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb51-53"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&#39;loess&#39;</span>)<span class="sc">+</span> <span class="co"># add a simple loess model to ease visualization</span></span>
+<span id="cb51-54"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span>
+<span id="cb51-55"><a href="test-your-knowledge-data-science-learning-activity.html#cb51-55" aria-hidden="true" tabindex="-1"></a><span class="co"># There certainly are some outliers to dig into, but broadly speaking, VSCI scores increase where sites measure lower Specific Conductance</span></span></code></pre></div>
+
+</div>
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="commonTMDLqueries.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="spatialAnalysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": null
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["series.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

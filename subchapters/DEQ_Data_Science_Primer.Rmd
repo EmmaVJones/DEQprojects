@@ -1,0 +1,49 @@
+---
+title: "DEQ Data Science Primer"
+author: "Joe Famularo"
+date: "7/27/2023"
+output: html_document
+---
+
+#### DEQ Data Science Primer
+
+The goal of this chapter is to provide some exercises to help new users get oriented with the ODS, CEDS, and pinned data on the Connect server.
+
+For a refresher (or introduction) on how to connect to, and query, the ODS or the Connect server check out [Chapter 2] of the encyclopedia.
+
+##### Challenge 1
+
+Lets start simple. How many field data records (e.g., individual rows) are there in the ODS? The field data table houses quantitative and qualitative data that are captured in the field. These field data can be joined with associated analytical results (nutrients, metals, TSS, etc.), which are contained in WQM_Analytes_View. What's the earliest record in the field data view?
+
+Head over to CEDS and see if you can find this field data record in the wqm field data module. Where was the station located?
+
+##### Challenge 2
+
+Next, lets make a figure displaying all of the temperature records for 2022. After you get done with that, let's take it a step further and refine the figure to include only the stations within the James River Basin. Hint: look for a table that includes the field "Basin", find the key between the field data table and this other table, and join them by that key.
+
+##### Challenge 3
+
+Let's make a map to visualize the station-specific median concentration of arsenic samples collected in the James River basin since 2000. Hint: you'll need to find the view that identifies samples by Analyte (not parameter group, which provides a code for groups of multiple analytes), find the date that those samples were collected, and then join the spatial data for those stations to allow you to map the median concentration. Try changing the parameter or basin you're visualizing. You could also use number of samples as an additional aesthetic to control point size.
+
+##### Challenge 4
+
+We've spent our time in the wqm (water quality monitoring) ODS module so far. Let's take a look at the wqa (water quality assessment) module. Note that there are 2 groups of "views" in the wqa module, Tableau views and Logi views. The Tableau views include spaces in their names, and the Logi views do not (e.g., WQA AU History \~ Tableau ; WQA_AU_History_View \~ Logi). The tableau views are more condensed, meaning in some cases they have list fields that are contained in seperate tables in the Logi views. The tableau views are expected to fully replace the Logi views, but for now both exist to support the assessment as this transition occurs. The same transition is expected to occur with WQM, but there are not currently Tableau views in the wqm module.
+
+Now, let's go ahead and pull the stations associated with assessment units associated with the Lynnhaven River. We'll want to make a map of enterococci exceedances that occurred at these stations during the 2022 assessment cycle. Hint: you'll want to search for "Lynnhaven" within a field containing "water name" strings to narrow down the assessment units that are returned to you. Using stringr, a tidyverse package, is not possible before you convert your query into a tibble(). This is a limitation of dbplyr's ability to translate tidyverse syntax into SQL statements. You could return the whole table and filter after converting the query results to a tibble, but this has an outsized impact on performance since you are requesting an entire table from the ODS. Alternatively, you can use the SQL term %like% "%string%" in a filter statement before converting to tibble and dbplyr will be able to handle this. As an example: filter(colname %like% "%Lynnhaven%"). 
+
+Once you wrap up with the figure above, take a look at the assessment module in CEDS and see how closely you can replicate this query.
+
+##### Challenge 5
+
+Sometimes DEQ collects data that do not yet have a home within the ODS. The PFAS data collected within the past several years is a good example of this. This condition is also true with fish metals and fish PCB data. The connect server offers a solution to store these data until the ODS environment can house them. Of equal or greater importance, we use the Connect server to store curated data views from the ODS to support applications and end users. 
+
+For this challenge, make a table that displays the number of PFAS surface water samples and the median Total PFAS concentration of those samples within each HUC8 watershed. Change this up and look at number of samples and the median concentration by sampling program.
+
+##### Challenge 6
+
+Pinned data on the R server is useful to incorporate into your workflow as "pre analyzed" data that can expedite analyses. Benthic data fall into this category. 
+
+Raw benthic macroinvertebrate data (what bugs where collected where, when, and how many) are stored in CEDS, but to understand the ecological implications of this data, DEQ evaluates the raw data using stream condition indicies (SCI). Pulling the raw benthic data, running the appropriate SCI analysis, and then applying these results to answer a larger question can be burdensome, so the R Biological Team makes the analyzed SCI scores available to anyone on the DEQ network. 
+
+Let's work with high gradient sites in the Southwest office and see if there are any relationships between benthic SCI scores (using the VSCI) and Specific Conductivity collected at these sites. Pinned benthic VSCI scores can be found on the R server as the pin named 'ejones/VSCIresults'.
+
