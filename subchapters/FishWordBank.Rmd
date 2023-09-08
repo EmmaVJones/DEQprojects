@@ -1,0 +1,231 @@
+---
+title: "Fish Word Bank Automated Pull"
+output: html_document
+---
+
+```{r fishwordbank setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+### Background
+
+The purpose of this script is to create a workflow that automates the querying of potential fish taxa lists for sites DEQ will sample in the future. A use case is demonstrated in the Freshwater ProbMon program. Each fall, biologists collect fish community data from randomly selected sites throughout Virginia in addition to other collocated biological (algae and benthic macroinvertebrate), chemical (field parameter and analyte), and habitat (relative bed stability and rapid biological protocols) data. 
+
+In order to provide the biological staff the best "word bank" of potential taxa at a given site, the [Fish EDAS](https://rconnect.deq.virginia.gov/FishEDAS/) tool allows users to input a site or coordinates and retrieve all the fish taxa collected in the HUC 8 watershed containing the site/location. By having this "word bank" handy in the field, biologists can improve their field taxa identification, expediting the end of year fish voucher QA work and data entry. 
+
+While the shiny app version of this taxa word bank tool is handy for a few sites, it is not practical to use that user interface for many sites. This case study will demonstrate a workflow that uses the underlying methods and functions that make the Taxa Word Bank feature work in the shiny app, but it will operationalize it to run the analysis for every site that needs to be sampled in 2023. The end result of this analysis will output a workbook for all sites within each region with each site's potential taxa list saved as a sheet in the workbook. 
+
+### Workflow
+
+One way to tackle this problem is to follow the workflow specified below. As with everything in programming languages, there are multiple potential avenues to get to the same result.
+
+First, load some necessary packages.
+
+```{r fishwordbank packages, warning=FALSE, message=FALSE, eval = F}
+library(tidyverse)
+library(pins)
+library(config)
+library(readxl)
+library(sf)
+```
+
+
+#### Identify Sites That Need Taxa Lists
+
+First we need a list of sites to operate on. We can use the [2023 "regional results" spreadsheet](https://covgov-my.sharepoint.com/:x:/g/personal/emma_jones_deq_virginia_gov/Ecc_cIUDRjdIkmo6w-Hv0GoBF5NCsts7_tAHkdhLP8nk6Q?e=qnPUdq) published by the Freshwater ProbMon program to communicate which sites are in the Freshwater ProbMon sample draw for a given year. We need to use the information on the sheet called "Planning" as it contains all the sites that the biological teams will sample during the fall. To use this dataset, you can download a copy and source it locally, or you can "Copy to" your personal OneDrive and source the workbook like the example below. *Remember: your absolute file path will differ from the example provided!*
+
+```{r fishwordbank siteList, warning=FALSE, message=FALSE, eval = F}
+regionalResults <- read_excel('C:/Users/wmu43954/OneDrive - Commonwealth of Virginia/Freshwater ProbMon/2023/RegionalResults2023.xlsx',
+                              sheet = 'Planning')
+```
+
+Let's reduce the noise in this dataset and limit just to the information we will need. We will also convert this to a spatial object.
+
+```{r fishwordbank siteList2, warning=FALSE, message=FALSE, eval = F}
+regionalResults <- dplyr::select(regionalResults, Region, StationID, Latitude, Longitude) %>% 
+   st_as_sf(coords = c("Longitude", "Latitude"),  # make spatial layer using these columns
+            remove = F, # remove these lat/lon cols from df
+            crs = 4326) #epsg wgs84 
+```
+
+
+#### Bring in Fish Data
+
+We can use pinned data on the R server to help answer these questions. We will need a HUC8 watershed layer and fish taxa occurrence by HUC8 to solve this problem. We will also need the full fish master taxa list and a dataset describing native/non native status to improve the output data utility.
+
+```{r fishwordbank fishdata, warning=FALSE, message=FALSE, eval = F}
+# connect to the R server
+conn <- config::get(file = "C:/HardDriveBackup/R/configFile/config.yml", # point this to your local config file
+                    "connectionSettings")
+
+board_register_rsconnect(key = conn$CONNECT_API_KEY,  
+                         server = conn$CONNECT_SERVER)
+
+
+# pull pins
+huc8 <- st_as_sf(pin_get('ejones/huc8', board = 'rsconnect')) # immediately convert this into a spatial object
+taxaByHUC8 <- pin_get('ejones/fishTaxaByHUC8', board = 'rsconnect')
+fishesMasterTaxa <- pin_get("ejones/fishesMasterTaxa", board = "rsconnect")
+nativeStatus <- pin_get("ejones/fishNativeStatusByHUC", board = "rsconnect")
+```
+
+#### Geospatial Connections
+
+Next, let's link each site to the appropriate HUC8. We will do this using a spatial join and add a new field with this information.
+
+```{r fishwordbank HUC8 link, warning=FALSE, message=FALSE, eval = F}
+regionalResults <-  st_intersection(regionalResults, huc8) 
+```
+
+#### Build a Taxa Word Bank
+
+Now we can use the station to HUC8 link and the `taxaByHUC8` dataset to isolate a potential taxa list for each site. The `taxaWordBankFunction()` is great to use if you just need an answer, but digging in to what custom functions do is helpful to improve your understanding of functional scripting for automation. 
+
+```{r fishwordbank function, warning=FALSE, message=FALSE, eval = F}
+
+taxaWordBankFunction <- function( HUCSelected, taxaByHUC8, fishesMasterTaxa, nativeStatus){
+   taxaWordBank <- dplyr::select(taxaByHUC8, Taxa, !! HUCSelected)
+   
+   taxaWordBank <- taxaWordBank %>% 
+     drop_na() %>%
+     left_join(dplyr::select(fishesMasterTaxa, FinalID, Family, Genus, Species), by = c('Taxa' = 'FinalID')) %>% 
+     mutate(joinColumn = paste(Genus, Species)) %>% 
+     left_join(nativeStatus %>% 
+                 mutate(HUC8 = paste0(0,HUC8)) %>% # add back leading zero that excel drops
+                 filter(HUC8 %in% !! HUCSelected) %>% 
+                 dplyr::select(BINOMEN, `Native/Non Native Status` = STATUS, `Native/Non Native Status Comments` = COMMENTS), by = c('joinColumn' = 'BINOMEN')) %>%
+     dplyr::select(Family, Genus, Species, `Common Name` = Taxa, everything(), -joinColumn) %>% 
+     arrange(Family, Genus) %>% 
+     mutate_at(vars(contains(HUCSelected)), funs(as.numeric(.)))
+   names(taxaWordBank)[5] <- paste0('n Collected in ', HUCSelected)
+   
+   return(taxaWordBank)
+   }
+
+# how to use function
+taxaWordBankFunction('03010201', taxaByHUC8, fishesMasterTaxa, nativeStatus) %>% View()
+```
+
+#### Operationalize the Taxa Word Bank
+
+The function above works well to pull taxa collection information and native/non native status by individual HUC8's. However, we can't throw our entire `regionalresults` object into the function and get the result we anticipate (try it just to verify this for yourself!). What we need to do next is pull together this information for each site and save it as a sheet in a workbook named by the site. Let's build the workbook saving operation next and then throw it all together into a single workflow. 
+
+*Pro Tip: identifying and breaking out each part of the problem you are trying to solve individually and then combining into a single solution is a great way to make larger problems more manageable when learning how to program workflows.*
+
+#### Write many sheets to a single workbook
+
+We can use the openxlsx package to write multiple datasets to a single MS Excel workbook. First, let's make two example datasets using the function above and test this works.
+
+```{r fishwordbank testworkbook, warning=FALSE, message=FALSE, eval = F}
+library(openxlsx)
+
+x1 <- regionalResults[1,] %>%
+  pull(HUC8) %>% as.character() %>% 
+  taxaWordBankFunction(taxaByHUC8, fishesMasterTaxa, nativeStatus)
+
+x2 <- regionalResults[2,] %>%
+  pull(HUC8) %>% as.character() %>% 
+  taxaWordBankFunction(taxaByHUC8, fishesMasterTaxa, nativeStatus)
+
+list_of_datasets <- list(x1, x2)
+names(list_of_datasets) <- regionalResults$StationID[1:2]
+write.xlsx(list_of_datasets, file = "testWorkbook.xlsx")
+```
+
+That did the trick! 
+
+
+#### Workflow at scale with Loop
+
+Now let's scale this to report on all the BRRO sites in the `regionalresults` object. By breaking our workflow into individual workbooks for each region, we can best meet the needs of our regional biologists. Each workbook will contain one spreadsheet per site.
+
+There are two ways to solve this problem from here. 
+
+1) Use the purrr package for a more function and list-based solution
+2) Shove what we have into a loop.
+
+For this example, we will stick with the loop method to keep the workflow at the lowest coding level possible to get the job done. 
+
+#### An aside on loops
+
+Loops are great. Loops are slow. Loops are usually the first way people learn to make things happen in a programming language over a lot of stuff. As you are learning a language, you will need to know how to loop processes over multiple arguments, but as you develop as a programmer, you will need to learn how to optimize your code. Learning how to work with the purrr library is a better solution for computational effort and analysis time; however, it can take a higher programming baseline knowledge base to build these solutions. Read up on [purrr](https://jennybc.github.io/purrr-tutorial/) to up your programming game. [Here is another great resource](https://www.rebeccabarter.com/blog/2019-08-19_purrr). 
+
+#### Save One Region to a Workbook
+
+Isolating regions into individual workbooks makes the most sense for how the end user will interact with the data. Let's start with BRRO and demonstrate the loop method to save one region's worth of sites into a single workbook.
+
+```{r fishwordbank go time, warning=FALSE, message=FALSE, eval = F}
+BRROregionalResults <- filter(regionalResults, Region == 'BRRO') %>% 
+  distinct(StationID, .keep_all = T) %>% # make sure we don't have any duplicate sites, keep all other info about sites
+  mutate(HUC8 = as.character(HUC8)) %>% # change the HUC8 column from a factor to character so the taxaWordBankFunction() can accept the input
+  st_drop_geometry() # drop spatial component bc unneccessary from here out
+
+outputList <- list()
+
+for(i in 1:nrow(BRROregionalResults)){
+  outputList[[i]] <- BRROregionalResults[i,] %>%
+                       pull(HUC8) %>% 
+                       taxaWordBankFunction(taxaByHUC8, fishesMasterTaxa, nativeStatus)
+}
+names(outputList) <- BRROregionalResults$StationID
+write.xlsx(outputList, file = "BRRO_2023fishTaxaWordBank.xlsx")
+```
+
+
+#### Workflow at scale with purrr::map
+
+Once you understand the loop example, test yourself by using a purrr::map solution instead. You will learn two ways of using map here. Solution 1 outputs a list just like the loop example that can easily work with the write.xlsx function. Solution 2 introduces listcolumns inside tibbles. This is a more practical use, though it does not accomplish the quick utility with write.xlsx; however, this solution is worth mentioning because of the "sticky" nature of listcolumns and how one can iterate over tibbles with embedded listcolumns to expose the superpowers of tibbles.
+
+#### Solution 1: list output
+
+This solution creates a list object by iterating over the BRROregionalResults$HUC8 field in the taxaWordBankFunction() function. See how .x and .f are defined in the simple map() call. We rename the tibbles inside the list the same way as above. Note how pluck() or baseR brackets can reveal the contents of the list object. Using View() on the list object shows you all the contents and allows you to explore more details about each item using the GUI viewer buttons on the right of each element.
+
+```{r fishwordbank purrr solution1, warning=FALSE, message=FALSE, eval = F}
+purrrSolution1 <- map(.x = BRROregionalResults$HUC8,
+                      .f = ~{taxaWordBankFunction(.x, taxaByHUC8, fishesMasterTaxa, nativeStatus )})
+names(purrrSolution1) <- BRROregionalResults$StationID
+
+# how to preview one tibble inside the list object
+purrrSolution1 %>% pluck(20) 
+purrrSolution1[[20]]
+purrrSolution1 %>% View()
+
+write.xlsx(purrrSolution1, file = "BRRO_2023fishTaxaWordBank2.xlsx")
+```
+
+#### Solution 2: listcolumns
+
+Solution 2 leverages listcolumns, potentially the most powerful element of tibbles. As stated above, the results of this solution do not easily work with write.xlsx(), but that is fine because this solution creates a more flexible output for further analyses. By embedding the results of taxaWordBankFunction() inside a listcolumn in the tibble that contains additional metadata about the analysis, we can use better data management practices should we require this result to carry into future iterative steps. See below how to extract information using tidy or base R commands from the `purrrSolution2` object.
+
+*Note: We had to change the function slightly to only accept one argument for this use case. That is okay because the additional arguments were input datasets that really shouldn't change (for this workflow). Best practices would specify that users name all inputs to a function. Be aware of best practices, and then make a solution that you need to work, documenting the weaknesses where applicable.*
+
+```{r fishwordbank purrr solution2, warning=FALSE, message=FALSE, eval = F}
+taxaWordBankFunction2 <- function( HUCSelected){
+   taxaWordBank <- dplyr::select(taxaByHUC8, Taxa, !! HUCSelected)
+   
+   taxaWordBank <- taxaWordBank %>% 
+     drop_na() %>%
+     left_join(dplyr::select(fishesMasterTaxa, FinalID, Family, Genus, Species), by = c('Taxa' = 'FinalID')) %>% 
+     mutate(joinColumn = paste(Genus, Species)) %>% 
+     left_join(nativeStatus %>% 
+                 mutate(HUC8 = paste0(0,HUC8)) %>% # add back leading zero that excel drops
+                 filter(HUC8 %in% !! HUCSelected) %>% 
+                 dplyr::select(BINOMEN, `Native/Non Native Status` = STATUS, `Native/Non Native Status Comments` = COMMENTS), by = c('joinColumn' = 'BINOMEN')) %>%
+     dplyr::select(Family, Genus, Species, `Common Name` = Taxa, everything()) %>% 
+     arrange(Family, Genus) %>% 
+     mutate_at(vars(contains(HUCSelected)), funs(as.numeric(.)))
+   names(taxaWordBank)[5] <- paste0('n Collected in ', HUCSelected)
+   
+   return(taxaWordBank)
+   }
+
+purrrSolution2 <- BRROregionalResults %>% 
+  mutate(resultsAsListColumn = map(HUC8, taxaWordBankFunction2)) 
+
+
+# Look at contents
+View(purrrSolution2)
+purrrSolution2 %>% filter(StationID == '4AGSE015.67') %>% unnest(resultsAsListColumn)
+purrrSolution2[3,]$resultsAsListColumn
+```

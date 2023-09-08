@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.7 Landcover analysis | DEQ Data Science Primer Key</title>
+  <title>3.7 Landcover analysis | DEQ R Methods Encyclopedia</title>
   <meta name="description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.7 Landcover analysis | DEQ Data Science Primer Key" />
+  <meta property="og:title" content="3.7 Landcover analysis | DEQ R Methods Encyclopedia" />
   <meta property="og:type" content="book" />
   
   
@@ -16,14 +16,15 @@
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.7 Landcover analysis | DEQ Data Science Primer Key" />
+  <meta name="twitter:title" content="3.7 Landcover analysis | DEQ R Methods Encyclopedia" />
   
   <meta name="twitter:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   
 
-<meta name="author" content="Joe Famularo" />
+<meta name="author" content="DEQ R Development Team" />
 
 
+<meta name="date" content="2023-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -206,12 +207,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4.2" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html#query-all-water-monitoring-data-from-a-provided-watershed"><i class="fa fa-check"></i><b>2.4.2</b> Query All Water Monitoring Data from a Provided Watershed</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="commonBenthicqueries.html"><a href="commonBenthicqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common Benthic queries</a></li>
-<li class="chapter" data-level="2.6" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common WQA queries</a></li>
-<li class="chapter" data-level="2.7" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.7</b> Common TMDL queries</a></li>
-<li class="chapter" data-level="2.8" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html"><i class="fa fa-check"></i><b>2.8</b> Test Your Knowledge: Data Science Learning Activity</a>
+<li class="chapter" data-level="2.6" data-path="common-fish-queries.html"><a href="common-fish-queries.html"><i class="fa fa-check"></i><b>2.6</b> Common Fish queries</a>
 <ul>
-<li class="chapter" data-level="2.8.1" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity"><i class="fa fa-check"></i><b>2.8.1</b> Data Science Activity</a></li>
-<li class="chapter" data-level="2.8.2" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity-key"><i class="fa fa-check"></i><b>2.8.2</b> Data Science Activity Key</a></li>
+<li class="chapter" data-level="2.6.1" data-path="common-fish-queries.html"><a href="common-fish-queries.html#use-case-automating-a-fish-word-bank-query"><i class="fa fa-check"></i><b>2.6.1</b> Use Case: Automating a Fish Word Bank Query</a></li>
+<li class="chapter" data-level="2.6.2" data-path="common-fish-queries.html"><a href="common-fish-queries.html#background-1"><i class="fa fa-check"></i><b>2.6.2</b> Background</a></li>
+<li class="chapter" data-level="2.6.3" data-path="common-fish-queries.html"><a href="common-fish-queries.html#workflow"><i class="fa fa-check"></i><b>2.6.3</b> Workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.7</b> Common WQA queries</a></li>
+<li class="chapter" data-level="2.8" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.8</b> Common TMDL queries</a></li>
+<li class="chapter" data-level="2.9" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html"><i class="fa fa-check"></i><b>2.9</b> Test Your Knowledge: Data Science Learning Activity</a>
+<ul>
+<li class="chapter" data-level="2.9.1" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity"><i class="fa fa-check"></i><b>2.9.1</b> Data Science Activity</a></li>
+<li class="chapter" data-level="2.9.2" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity-key"><i class="fa fa-check"></i><b>2.9.2</b> Data Science Activity Key</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>3</b> Spatial Analysis</a>
@@ -317,7 +324,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DEQ Data Science Primer Key</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DEQ R Methods Encyclopedia</a>
           </h1>
         </div>
 

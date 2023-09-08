@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6.4 Scrape Data from an FTP Site | DEQ Data Science Primer Key</title>
+  <title>6.4 Scrape Data from an FTP Site | DEQ R Methods Encyclopedia</title>
   <meta name="description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6.4 Scrape Data from an FTP Site | DEQ Data Science Primer Key" />
+  <meta property="og:title" content="6.4 Scrape Data from an FTP Site | DEQ R Methods Encyclopedia" />
   <meta property="og:type" content="book" />
   
   
@@ -16,14 +16,15 @@
   <meta name="github-repo" content="openscapes/series" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6.4 Scrape Data from an FTP Site | DEQ Data Science Primer Key" />
+  <meta name="twitter:title" content="6.4 Scrape Data from an FTP Site | DEQ R Methods Encyclopedia" />
   
   <meta name="twitter:description" content="Simple reprex of common tasks DEQ staff encounter and how to complete them with R." />
   
 
-<meta name="author" content="Joe Famularo" />
+<meta name="author" content="DEQ R Development Team" />
 
 
+<meta name="date" content="2023-09-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -206,12 +207,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4.2" data-path="commonWQMqueries.html"><a href="commonWQMqueries.html#query-all-water-monitoring-data-from-a-provided-watershed"><i class="fa fa-check"></i><b>2.4.2</b> Query All Water Monitoring Data from a Provided Watershed</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="commonBenthicqueries.html"><a href="commonBenthicqueries.html"><i class="fa fa-check"></i><b>2.5</b> Common Benthic queries</a></li>
-<li class="chapter" data-level="2.6" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.6</b> Common WQA queries</a></li>
-<li class="chapter" data-level="2.7" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.7</b> Common TMDL queries</a></li>
-<li class="chapter" data-level="2.8" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html"><i class="fa fa-check"></i><b>2.8</b> Test Your Knowledge: Data Science Learning Activity</a>
+<li class="chapter" data-level="2.6" data-path="common-fish-queries.html"><a href="common-fish-queries.html"><i class="fa fa-check"></i><b>2.6</b> Common Fish queries</a>
 <ul>
-<li class="chapter" data-level="2.8.1" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity"><i class="fa fa-check"></i><b>2.8.1</b> Data Science Activity</a></li>
-<li class="chapter" data-level="2.8.2" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity-key"><i class="fa fa-check"></i><b>2.8.2</b> Data Science Activity Key</a></li>
+<li class="chapter" data-level="2.6.1" data-path="common-fish-queries.html"><a href="common-fish-queries.html#use-case-automating-a-fish-word-bank-query"><i class="fa fa-check"></i><b>2.6.1</b> Use Case: Automating a Fish Word Bank Query</a></li>
+<li class="chapter" data-level="2.6.2" data-path="common-fish-queries.html"><a href="common-fish-queries.html#background-1"><i class="fa fa-check"></i><b>2.6.2</b> Background</a></li>
+<li class="chapter" data-level="2.6.3" data-path="common-fish-queries.html"><a href="common-fish-queries.html#workflow"><i class="fa fa-check"></i><b>2.6.3</b> Workflow</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="commonWQAqueries.html"><a href="commonWQAqueries.html"><i class="fa fa-check"></i><b>2.7</b> Common WQA queries</a></li>
+<li class="chapter" data-level="2.8" data-path="commonTMDLqueries.html"><a href="commonTMDLqueries.html"><i class="fa fa-check"></i><b>2.8</b> Common TMDL queries</a></li>
+<li class="chapter" data-level="2.9" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html"><i class="fa fa-check"></i><b>2.9</b> Test Your Knowledge: Data Science Learning Activity</a>
+<ul>
+<li class="chapter" data-level="2.9.1" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity"><i class="fa fa-check"></i><b>2.9.1</b> Data Science Activity</a></li>
+<li class="chapter" data-level="2.9.2" data-path="test-your-knowledge-data-science-learning-activity.html"><a href="test-your-knowledge-data-science-learning-activity.html#data-science-activity-key"><i class="fa fa-check"></i><b>2.9.2</b> Data Science Activity Key</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spatialAnalysis.html"><a href="spatialAnalysis.html"><i class="fa fa-check"></i><b>3</b> Spatial Analysis</a>
@@ -317,7 +324,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DEQ Data Science Primer Key</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">DEQ R Methods Encyclopedia</a>
           </h1>
         </div>
 
@@ -340,78 +347,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="required-packages-2" class="section level3" number="6.4.3">
 <h3><span class="header-section-number">6.4.3</span> Required Packages</h3>
 <p>In order to pull data from the US Census FTP site using R, users must have the following packaged loaded into your environment.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="scrapeDataFromFTP.html#cb189-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest) </span>
-<span id="cb189-2"><a href="scrapeDataFromFTP.html#cb189-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb189-3"><a href="scrapeDataFromFTP.html#cb189-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) </span>
-<span id="cb189-4"><a href="scrapeDataFromFTP.html#cb189-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) </span></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="scrapeDataFromFTP.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest) </span>
+<span id="cb199-2"><a href="scrapeDataFromFTP.html#cb199-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb199-3"><a href="scrapeDataFromFTP.html#cb199-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr) </span>
+<span id="cb199-4"><a href="scrapeDataFromFTP.html#cb199-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf) </span></code></pre></div>
 </div>
 <div id="build-base-ftp-web-address-call" class="section level3" number="6.4.4">
 <h3><span class="header-section-number">6.4.4</span> Build Base FTP Web Address Call</h3>
 <p>Next, we will build the web address call that will send our desired data request to the FTP server. It is best to test these URL requests iteratively in a web browser. One can parse the URL call to operationalize the logic for more automated use by separating out the year statement like the example below.</p>
 <p>The chunk also establishes the name of a directory where all data retrieved will be stored using the object name <code>dirName</code>. It is important to create this directory locally before pulling data or the operation will not complete because it has nowhere to place the data.</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="scrapeDataFromFTP.html#cb190-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify year to pull data from. This is critical to getting the FTP web address correct for </span></span>
-<span id="cb190-2"><a href="scrapeDataFromFTP.html#cb190-2" aria-hidden="true" tabindex="-1"></a><span class="co">#         all subsequent analyses. If the web address fed to the subsequent function is incorrect, then</span></span>
-<span id="cb190-3"><a href="scrapeDataFromFTP.html#cb190-3" aria-hidden="true" tabindex="-1"></a><span class="co">#         no data can be pulled.</span></span>
-<span id="cb190-4"><a href="scrapeDataFromFTP.html#cb190-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb190-5"><a href="scrapeDataFromFTP.html#cb190-5" aria-hidden="true" tabindex="-1"></a><span class="co"># e.g. https://www2.census.gov/geo/tiger/TIGER2018/  is the appropriate web address for 2018 data.</span></span>
-<span id="cb190-6"><a href="scrapeDataFromFTP.html#cb190-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb190-7"><a href="scrapeDataFromFTP.html#cb190-7" aria-hidden="true" tabindex="-1"></a>year <span class="ot">&lt;-</span> <span class="dv">2021</span></span>
-<span id="cb190-8"><a href="scrapeDataFromFTP.html#cb190-8" aria-hidden="true" tabindex="-1"></a>FTPaddress <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://www2.census.gov/geo/tiger/TIGER&quot;</span>,year,<span class="st">&quot;/ROADS&quot;</span>)</span>
-<span id="cb190-9"><a href="scrapeDataFromFTP.html#cb190-9" aria-hidden="true" tabindex="-1"></a>dirName <span class="ot">&lt;-</span> <span class="st">&#39;tigerRoadsPull&#39;</span> <span class="co"># create a folder in the project directory with this exact name to store all downloaded zip files</span></span></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="scrapeDataFromFTP.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify year to pull data from. This is critical to getting the FTP web address correct for </span></span>
+<span id="cb200-2"><a href="scrapeDataFromFTP.html#cb200-2" aria-hidden="true" tabindex="-1"></a><span class="co">#         all subsequent analyses. If the web address fed to the subsequent function is incorrect, then</span></span>
+<span id="cb200-3"><a href="scrapeDataFromFTP.html#cb200-3" aria-hidden="true" tabindex="-1"></a><span class="co">#         no data can be pulled.</span></span>
+<span id="cb200-4"><a href="scrapeDataFromFTP.html#cb200-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb200-5"><a href="scrapeDataFromFTP.html#cb200-5" aria-hidden="true" tabindex="-1"></a><span class="co"># e.g. https://www2.census.gov/geo/tiger/TIGER2018/  is the appropriate web address for 2018 data.</span></span>
+<span id="cb200-6"><a href="scrapeDataFromFTP.html#cb200-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb200-7"><a href="scrapeDataFromFTP.html#cb200-7" aria-hidden="true" tabindex="-1"></a>year <span class="ot">&lt;-</span> <span class="dv">2021</span></span>
+<span id="cb200-8"><a href="scrapeDataFromFTP.html#cb200-8" aria-hidden="true" tabindex="-1"></a>FTPaddress <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;https://www2.census.gov/geo/tiger/TIGER&quot;</span>,year,<span class="st">&quot;/ROADS&quot;</span>)</span>
+<span id="cb200-9"><a href="scrapeDataFromFTP.html#cb200-9" aria-hidden="true" tabindex="-1"></a>dirName <span class="ot">&lt;-</span> <span class="st">&#39;tigerRoadsPull&#39;</span> <span class="co"># create a folder in the project directory with this exact name to store all downloaded zip files</span></span></code></pre></div>
 </div>
 <div id="custom-tigerroads-ftp-function" class="section level3" number="6.4.5">
 <h3><span class="header-section-number">6.4.5</span> Custom TIGERroads FTP function</h3>
 <p>Building this workflow into a custom function makes this process more reproducible and efficient. The below function uses the <code>year</code> and <code>dirName</code> objects created above to efficiently pull data from the TIGER FTP site. This function will go to the area of the TIGER FTP site specified in the custom URL, look for the file provided in the <code>fileName</code> argument, and download that file to the directory specified in the <code>outDirectory</code> argument. This function is built to handle multiple requests, so users can provided multiple <code>fileName</code> arguments in the form of a vector for the embedded loop to iterate over.</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="scrapeDataFromFTP.html#cb191-1" aria-hidden="true" tabindex="-1"></a>downloadTigerRoadsByYear <span class="ot">&lt;-</span> <span class="cf">function</span>(year, <span class="co"># year we want data from</span></span>
-<span id="cb191-2"><a href="scrapeDataFromFTP.html#cb191-2" aria-hidden="true" tabindex="-1"></a>                                     fileName, <span class="co"># structured file name to retrieve</span></span>
-<span id="cb191-3"><a href="scrapeDataFromFTP.html#cb191-3" aria-hidden="true" tabindex="-1"></a>                                     outDirectory <span class="co"># where we want to save the results</span></span>
-<span id="cb191-4"><a href="scrapeDataFromFTP.html#cb191-4" aria-hidden="true" tabindex="-1"></a>                                     ){</span>
-<span id="cb191-5"><a href="scrapeDataFromFTP.html#cb191-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(fileName)){</span>
-<span id="cb191-6"><a href="scrapeDataFromFTP.html#cb191-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">download.file</span>(<span class="at">url =</span> <span class="fu">paste0</span>(<span class="st">&#39;https://www2.census.gov/geo/tiger/TIGER&#39;</span>,</span>
-<span id="cb191-7"><a href="scrapeDataFromFTP.html#cb191-7" aria-hidden="true" tabindex="-1"></a>                               year,<span class="st">&#39;/ROADS/&#39;</span>, fileName[i]),</span>
-<span id="cb191-8"><a href="scrapeDataFromFTP.html#cb191-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">destfile =</span> <span class="fu">paste0</span>(outDirectory,<span class="st">&#39;/&#39;</span>, fileName[i]))</span>
-<span id="cb191-9"><a href="scrapeDataFromFTP.html#cb191-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb191-10"><a href="scrapeDataFromFTP.html#cb191-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="scrapeDataFromFTP.html#cb201-1" aria-hidden="true" tabindex="-1"></a>downloadTigerRoadsByYear <span class="ot">&lt;-</span> <span class="cf">function</span>(year, <span class="co"># year we want data from</span></span>
+<span id="cb201-2"><a href="scrapeDataFromFTP.html#cb201-2" aria-hidden="true" tabindex="-1"></a>                                     fileName, <span class="co"># structured file name to retrieve</span></span>
+<span id="cb201-3"><a href="scrapeDataFromFTP.html#cb201-3" aria-hidden="true" tabindex="-1"></a>                                     outDirectory <span class="co"># where we want to save the results</span></span>
+<span id="cb201-4"><a href="scrapeDataFromFTP.html#cb201-4" aria-hidden="true" tabindex="-1"></a>                                     ){</span>
+<span id="cb201-5"><a href="scrapeDataFromFTP.html#cb201-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(fileName)){</span>
+<span id="cb201-6"><a href="scrapeDataFromFTP.html#cb201-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">download.file</span>(<span class="at">url =</span> <span class="fu">paste0</span>(<span class="st">&#39;https://www2.census.gov/geo/tiger/TIGER&#39;</span>,</span>
+<span id="cb201-7"><a href="scrapeDataFromFTP.html#cb201-7" aria-hidden="true" tabindex="-1"></a>                               year,<span class="st">&#39;/ROADS/&#39;</span>, fileName[i]),</span>
+<span id="cb201-8"><a href="scrapeDataFromFTP.html#cb201-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">destfile =</span> <span class="fu">paste0</span>(outDirectory,<span class="st">&#39;/&#39;</span>, fileName[i]))</span>
+<span id="cb201-9"><a href="scrapeDataFromFTP.html#cb201-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb201-10"><a href="scrapeDataFromFTP.html#cb201-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p>To use the <code>downloadTigerRoadsByYear()</code> function, users need to provide one or more files to look for on the FTP site. The FTP stores each road file by concatenated state and county FIPS codes. For this example, we will pull three counties in Virginia by the appropriate FIPS codes: 51775, 51121, 51735, which equate to Salem City, Montgomery County, and Poquoson City.</p>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="scrapeDataFromFTP.html#cb192-1" aria-hidden="true" tabindex="-1"></a>FIPScodes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;51775&quot;</span>, <span class="st">&quot;51121&quot;</span>, <span class="st">&quot;51735&quot;</span>)</span>
-<span id="cb192-2"><a href="scrapeDataFromFTP.html#cb192-2" aria-hidden="true" tabindex="-1"></a><span class="fu">downloadTigerRoadsByYear</span>(year,</span>
-<span id="cb192-3"><a href="scrapeDataFromFTP.html#cb192-3" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">paste0</span>(<span class="st">&#39;tl_&#39;</span>,year,<span class="st">&#39;_&#39;</span>, <span class="fu">as.character</span>(FIPScodes),<span class="st">&#39;_roads.zip&#39;</span>),</span>
-<span id="cb192-4"><a href="scrapeDataFromFTP.html#cb192-4" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">paste0</span>(dirName,<span class="st">&#39;/&#39;</span>, year))</span></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="scrapeDataFromFTP.html#cb202-1" aria-hidden="true" tabindex="-1"></a>FIPScodes <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;51775&quot;</span>, <span class="st">&quot;51121&quot;</span>, <span class="st">&quot;51735&quot;</span>)</span>
+<span id="cb202-2"><a href="scrapeDataFromFTP.html#cb202-2" aria-hidden="true" tabindex="-1"></a><span class="fu">downloadTigerRoadsByYear</span>(year,</span>
+<span id="cb202-3"><a href="scrapeDataFromFTP.html#cb202-3" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">paste0</span>(<span class="st">&#39;tl_&#39;</span>,year,<span class="st">&#39;_&#39;</span>, <span class="fu">as.character</span>(FIPScodes),<span class="st">&#39;_roads.zip&#39;</span>),</span>
+<span id="cb202-4"><a href="scrapeDataFromFTP.html#cb202-4" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">paste0</span>(dirName,<span class="st">&#39;/&#39;</span>, year))</span></code></pre></div>
 <p>When the function has completed running, the directory the data was placed in will be filled with three zip files.</p>
 <p><img src="images/FTP1.png" /></p>
 </div>
 <div id="parse-data-into-single-file" class="section level3" number="6.4.6">
 <h3><span class="header-section-number">6.4.6</span> Parse Data into Single File</h3>
 <p>To use this data efficiently, we will extract each .zip file and combine them into a single spatial dataset. First, create a new directory named ‘unzipped’ inside the <code>dirName</code> directory to house all the unzipped files. Inside this new directory named ‘unzipped,’ create a new directory named the year specified in the <code>year</code> object. This next chunk will unzip all the files downloaded from the FTP site and place them inside the appropriate <code>year</code> directory in the ‘unzipped’ directory.</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="scrapeDataFromFTP.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Unzip and combine all files in the dirName directory into one shapefile</span></span>
-<span id="cb193-2"><a href="scrapeDataFromFTP.html#cb193-2" aria-hidden="true" tabindex="-1"></a>filenames <span class="ot">&lt;-</span> <span class="fu">list.files</span>( <span class="fu">paste0</span>(dirName,<span class="st">&#39;/&#39;</span>, year), <span class="at">pattern=</span><span class="st">&quot;*.zip&quot;</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb193-3"><a href="scrapeDataFromFTP.html#cb193-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb193-4"><a href="scrapeDataFromFTP.html#cb193-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(filenames, unzip, <span class="at">exdir=</span><span class="fu">paste0</span>(<span class="st">&#39;tigerRoadsPull/unzipped/&#39;</span>,year)) <span class="co"># unzip all filenames that end in zip into folder named unzipped</span></span>
-<span id="cb193-5"><a href="scrapeDataFromFTP.html#cb193-5" aria-hidden="true" tabindex="-1"></a>filenames_slim <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&#39;.zip&#39;</span>, <span class="st">&#39;&#39;</span> , <span class="fu">gsub</span>(<span class="fu">paste0</span>(<span class="st">&#39;tigerRoadsPull/&#39;</span>,year,<span class="st">&#39;/&#39;</span>),<span class="st">&#39;&#39;</span>, filenames ))</span></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="scrapeDataFromFTP.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Unzip and combine all files in the dirName directory into one shapefile</span></span>
+<span id="cb203-2"><a href="scrapeDataFromFTP.html#cb203-2" aria-hidden="true" tabindex="-1"></a>filenames <span class="ot">&lt;-</span> <span class="fu">list.files</span>( <span class="fu">paste0</span>(dirName,<span class="st">&#39;/&#39;</span>, year), <span class="at">pattern=</span><span class="st">&quot;*.zip&quot;</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb203-3"><a href="scrapeDataFromFTP.html#cb203-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb203-4"><a href="scrapeDataFromFTP.html#cb203-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(filenames, unzip, <span class="at">exdir=</span><span class="fu">paste0</span>(<span class="st">&#39;tigerRoadsPull/unzipped/&#39;</span>,year)) <span class="co"># unzip all filenames that end in zip into folder named unzipped</span></span>
+<span id="cb203-5"><a href="scrapeDataFromFTP.html#cb203-5" aria-hidden="true" tabindex="-1"></a>filenames_slim <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&#39;.zip&#39;</span>, <span class="st">&#39;&#39;</span> , <span class="fu">gsub</span>(<span class="fu">paste0</span>(<span class="st">&#39;tigerRoadsPull/&#39;</span>,year,<span class="st">&#39;/&#39;</span>),<span class="st">&#39;&#39;</span>, filenames ))</span></code></pre></div>
 <p>When pulling lots of data, there can be momentary interruptions in server connectivity that could result in a file or files not downloaded. In this chunk, we will double check that all desired files were downloaded and extracted.</p>
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="scrapeDataFromFTP.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check to make sure all downloaded files were unzipped correctly</span></span>
-<span id="cb194-2"><a href="scrapeDataFromFTP.html#cb194-2" aria-hidden="true" tabindex="-1"></a>filenamesUnzipped <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="fu">paste0</span>(dirName,<span class="st">&#39;/unzipped/&#39;</span>,year), <span class="at">pattern=</span><span class="st">&quot;*.shx&quot;</span>, <span class="at">full.names=</span>F) <span class="co"># search by .cpg bc .shp has a few extension options and duplicates unique names</span></span>
-<span id="cb194-3"><a href="scrapeDataFromFTP.html#cb194-3" aria-hidden="true" tabindex="-1"></a>filenamesUnzipped_slim <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&#39;.shx&#39;</span>,<span class="st">&#39;&#39;</span>,filenamesUnzipped)</span>
-<span id="cb194-4"><a href="scrapeDataFromFTP.html#cb194-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb194-5"><a href="scrapeDataFromFTP.html#cb194-5" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(filenames_slim <span class="sc">%in%</span> filenamesUnzipped_slim )</span>
-<span id="cb194-6"><a href="scrapeDataFromFTP.html#cb194-6" aria-hidden="true" tabindex="-1"></a><span class="co"># if true then cool</span></span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="scrapeDataFromFTP.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check to make sure all downloaded files were unzipped correctly</span></span>
+<span id="cb204-2"><a href="scrapeDataFromFTP.html#cb204-2" aria-hidden="true" tabindex="-1"></a>filenamesUnzipped <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="fu">paste0</span>(dirName,<span class="st">&#39;/unzipped/&#39;</span>,year), <span class="at">pattern=</span><span class="st">&quot;*.shx&quot;</span>, <span class="at">full.names=</span>F) <span class="co"># search by .cpg bc .shp has a few extension options and duplicates unique names</span></span>
+<span id="cb204-3"><a href="scrapeDataFromFTP.html#cb204-3" aria-hidden="true" tabindex="-1"></a>filenamesUnzipped_slim <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&#39;.shx&#39;</span>,<span class="st">&#39;&#39;</span>,filenamesUnzipped)</span>
+<span id="cb204-4"><a href="scrapeDataFromFTP.html#cb204-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb204-5"><a href="scrapeDataFromFTP.html#cb204-5" aria-hidden="true" tabindex="-1"></a><span class="fu">all</span>(filenames_slim <span class="sc">%in%</span> filenamesUnzipped_slim )</span>
+<span id="cb204-6"><a href="scrapeDataFromFTP.html#cb204-6" aria-hidden="true" tabindex="-1"></a><span class="co"># if true then cool</span></span></code></pre></div>
 <p>The ‘unzipped’ directory will now look like this:</p>
 <p><img src="images/FTP2.png" /></p>
 <p>If files are missing, you should rerun the <code>downloadTigerRoadsByYear()</code> function with just the missing files, extract the data, and rerun the QA check. Here is a bit of code to help you identify which files might be missing.</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="scrapeDataFromFTP.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if not then find out which missing</span></span>
-<span id="cb195-2"><a href="scrapeDataFromFTP.html#cb195-2" aria-hidden="true" tabindex="-1"></a>filenames_slim [<span class="sc">!</span>(filenames_slim <span class="sc">%in%</span> filenamesUnzipped_slim )]</span>
-<span id="cb195-3"><a href="scrapeDataFromFTP.html#cb195-3" aria-hidden="true" tabindex="-1"></a><span class="co"># an output of character(0) is good because it means there are none missing</span></span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="scrapeDataFromFTP.html#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if not then find out which missing</span></span>
+<span id="cb205-2"><a href="scrapeDataFromFTP.html#cb205-2" aria-hidden="true" tabindex="-1"></a>filenames_slim [<span class="sc">!</span>(filenames_slim <span class="sc">%in%</span> filenamesUnzipped_slim )]</span>
+<span id="cb205-3"><a href="scrapeDataFromFTP.html#cb205-3" aria-hidden="true" tabindex="-1"></a><span class="co"># an output of character(0) is good because it means there are none missing</span></span></code></pre></div>
 <p>Lastly, we will combine all the individual county files into a single shapefile to make the dataset most useful. The purrr library is very useful to map the sf::st_read function across all the files in the directory, parsing them into a single object. The last step in this chunk saves the <code>shapefiles</code> object locally using a specified directory schema as a shapefile for use in further analyses. You should update the directory schema to match your local environment.</p>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="scrapeDataFromFTP.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in unzipped files and combine to single object</span></span>
-<span id="cb196-2"><a href="scrapeDataFromFTP.html#cb196-2" aria-hidden="true" tabindex="-1"></a>filenamesUnzipped <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dirName,<span class="st">&#39;/unzipped/&#39;</span>,year,<span class="st">&#39;/&#39;</span>,<span class="fu">gsub</span>(<span class="st">&#39;.shx&#39;</span>,<span class="st">&#39;.shp&#39;</span>, filenamesUnzipped)) </span>
-<span id="cb196-3"><a href="scrapeDataFromFTP.html#cb196-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb196-4"><a href="scrapeDataFromFTP.html#cb196-4" aria-hidden="true" tabindex="-1"></a>shapefiles <span class="ot">&lt;-</span> filenamesUnzipped <span class="sc">%&gt;%</span></span>
-<span id="cb196-5"><a href="scrapeDataFromFTP.html#cb196-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(st_read) <span class="sc">%&gt;%</span></span>
-<span id="cb196-6"><a href="scrapeDataFromFTP.html#cb196-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(rbind)</span>
-<span id="cb196-7"><a href="scrapeDataFromFTP.html#cb196-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb196-8"><a href="scrapeDataFromFTP.html#cb196-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb196-9"><a href="scrapeDataFromFTP.html#cb196-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Save out shapefile</span></span>
-<span id="cb196-10"><a href="scrapeDataFromFTP.html#cb196-10" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(shapefiles, <span class="fu">paste0</span>(<span class="st">&#39;GISdata/TIGERroads/&#39;</span>, year, <span class="st">&#39;tigerRoads.shp&#39;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="scrapeDataFromFTP.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in unzipped files and combine to single object</span></span>
+<span id="cb206-2"><a href="scrapeDataFromFTP.html#cb206-2" aria-hidden="true" tabindex="-1"></a>filenamesUnzipped <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dirName,<span class="st">&#39;/unzipped/&#39;</span>,year,<span class="st">&#39;/&#39;</span>,<span class="fu">gsub</span>(<span class="st">&#39;.shx&#39;</span>,<span class="st">&#39;.shp&#39;</span>, filenamesUnzipped)) </span>
+<span id="cb206-3"><a href="scrapeDataFromFTP.html#cb206-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-4"><a href="scrapeDataFromFTP.html#cb206-4" aria-hidden="true" tabindex="-1"></a>shapefiles <span class="ot">&lt;-</span> filenamesUnzipped <span class="sc">%&gt;%</span></span>
+<span id="cb206-5"><a href="scrapeDataFromFTP.html#cb206-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(st_read) <span class="sc">%&gt;%</span></span>
+<span id="cb206-6"><a href="scrapeDataFromFTP.html#cb206-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(rbind)</span>
+<span id="cb206-7"><a href="scrapeDataFromFTP.html#cb206-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb206-8"><a href="scrapeDataFromFTP.html#cb206-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-9"><a href="scrapeDataFromFTP.html#cb206-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Save out shapefile</span></span>
+<span id="cb206-10"><a href="scrapeDataFromFTP.html#cb206-10" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(shapefiles, <span class="fu">paste0</span>(<span class="st">&#39;GISdata/TIGERroads/&#39;</span>, year, <span class="st">&#39;tigerRoads.shp&#39;</span>))</span></code></pre></div>
 
 </div>
 </div>

@@ -22,7 +22,7 @@ DEQ's GIS REST endpoints enable easy access to geospatial data for querying and 
 
 The final example of [Consuming GIS REST Services in R](#consumingGISRESTservices) highlights how to use more complicated queries to limit data from within a single spatial layer. What about using information from one layer to limit the information provided on a second layer? 
 
-![](../images/explodingHead.jpg)
+![](images/explodingHead.jpg)
 Yeah, that's where we are going. 
 
 But first, why would we want to do this? Besides using the GIS REST services to retrieve the most up to date version of spatial data, we also like to use these services to limit the amount of redundant data that we maintain on our local machines. Instead of, say, bringing back an entire polygon layer and a point layer, spatially intersecting them to find commonalities, and then doing something with said intersected data, we can go straight to the "doing something with intersected data" step by forcing the GIS REST service to perform our spatial operations. This reduces the amount of data we need to bring back to our machine initially, and reduces the number of associated files that we create during analysis steps. Win win.

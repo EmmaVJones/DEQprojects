@@ -46,6 +46,19 @@ Alternatively, data "pinned" on the R server are available to all staff (on the 
 
 Coming Soon!
 
+## Common Fish queries
+
+**Section Contact: Emma Jones (emma.jones@deq.virginia.gov)**
+
+DEQ's fish data do not live in CEDS at present. the BRRO water monitoring team makes this data available via the [Fish EDAS](https://rconnect.deq.virginia.gov/FishEDAS/) shiny app on the R Connect server, which is great for quick queries, visualizing data, or answering basic questions. When you need to dig in deeper to the data, you need access to the raw data. The only way to access raw fish data are by contacting the BRRO monitoring team (jason.hill@deq.virginia.gov, royce.steiner@deq.virginia.gov, & adam.walker@deq.virginia.gov) to acquire the Access database or by pulling the pinned versions of this data hosted on the R connect server. 
+
+
+### Use Case: Automating a Fish Word Bank Query
+
+```{r child = 'subchapters/FishWordBank.Rmd'}
+```
+
+
 ## Common WQA queries{#commonWQAqueries}
 
 Coming Soon!
@@ -76,3 +89,4 @@ One method to solve each activity is provided in the [key](#data-science-activit
 
 ```{r child = 'subchapters/DEQ_Data_Science_Primer_Key.Rmd'}
 ```
+

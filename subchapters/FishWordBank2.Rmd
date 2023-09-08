@@ -1,0 +1,31 @@
+---
+title: "Fish Word Bank Automated Pull"
+output: html_document
+---
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE, eval = F}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+### Background
+
+The purpose of this script is to create a workflow that automates the querying of potential fish taxa lists for sites DEQ will sample in the future. A use case is demonstrated in the Freshwater ProbMon program. Each fall, biologists collect fish community data from randomly selected sites throughout Virginia in addition to other collocated biological (algae and benthic macroinvertebrate), chemical (field parameter and analyte), and habitat (relative bed stability and rapid biological protocols) data. 
+
+In order to provide the biological staff the best "word bank" of potential taxa at a given site, the [Fish EDAS](https://rconnect.deq.virginia.gov/FishEDAS/) tool allows users to input a site or coordinates and retrieve all the fish taxa collected in the HUC 8 watershed containing the site/location. By having this "word bank" handy in the field, biologists can improve their field taxa identification, expediting the end of year fish voucher QA work and data entry. 
+
+While the shiny app version of this taxa word bank tool is handy for a few sites, it is not practical to use that user interface for many sites. This case study will demonstrate a workflow that uses the underlying methods and functions that make the Taxa Word Bank feature work in the shiny app, but it will operationalize it to run the analysis for every site that needs to be sampled in 2023. The end result of this analysis will output a workbook for all sites within each region with each site's potential taxa list saved as a sheet in the workbook. 
+
+### Workflow
+
+One way to tackle this problem is to follow the workflow specified below. As with everything in programming languages, there are multiple potential avenues to get to the same result.
+
+First, load some necessary packages.
+
+```{r fishwordbank packages, warning=FALSE, message=FALSE, eval = F}
+library(tidyverse)
+library(pins)
+library(config)
+library(readxl)
+library(sf)
+```
+

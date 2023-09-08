@@ -1,4 +1,3 @@
-
 ---
 title: "DEQ Data Science Primer Key"
 author: "Joe Famularo"
